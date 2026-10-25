@@ -1,0 +1,1116 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Luca's Spanish Lab — Lección 2</title>
+<style>
+:root{
+  color-scheme: light;
+  --ink:#1a1f2e;
+  --ink-soft:#3b4255;
+  --paper:#faf8f3;
+  --paper-2:#f3efe6;
+  --card:#ffffff;
+  --accent:#2f6b55;
+  --accent-soft:#e4efe9;
+  --warm:#d97642;
+  --warm-soft:#fbe8dc;
+  --rule:#e4ddcf;
+  --ok:#2f6b55;
+  --no:#b94a2b;
+  --shadow: 0 1px 2px rgba(26,31,46,.05), 0 8px 24px rgba(26,31,46,.06);
+  --radius: 16px;
+  --sans: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  --serif: ui-serif, Georgia, "Iowan Old Style", "Palatino Linotype", serif;
+}
+*{box-sizing:border-box}
+html,body{margin:0;padding:0;background:var(--paper);color:var(--ink);font-family:var(--sans);line-height:1.55;-webkit-font-smoothing:antialiased}
+h1,h2,h3,h4{font-family:var(--serif);font-weight:600;letter-spacing:-.01em;color:var(--ink);margin:0 0 .4em}
+h1{font-size: clamp(2rem, 4vw, 3rem); line-height:1.08}
+h2{font-size: clamp(1.4rem, 2.4vw, 1.9rem); line-height:1.15; margin-top:0}
+h3{font-size:1.15rem}
+p{margin:.4em 0}
+a{color:var(--accent)}
+.container{max-width:1040px;margin:0 auto;padding:28px 22px 80px}
+.topbar{position:sticky;top:0;z-index:40;backdrop-filter:saturate(140%) blur(10px);background:rgba(250,248,243,.85);border-bottom:1px solid var(--rule)}
+.topbar-inner{max-width:1040px;margin:0 auto;padding:10px 22px;display:flex;align-items:center;gap:14px}
+.brand{font-family:var(--serif);font-weight:600;font-size:1.05rem}
+.brand .dot{display:inline-block;width:10px;height:10px;border-radius:50%;background:var(--accent);margin-right:8px;vertical-align:middle}
+.nav{display:flex;gap:4px;margin-left:auto;flex-wrap:wrap}
+.nav a{font-size:.85rem;color:var(--ink-soft);text-decoration:none;padding:6px 10px;border-radius:999px}
+.nav a:hover{background:var(--paper-2);color:var(--ink)}
+.progress-wrap{display:flex;align-items:center;gap:10px;min-width:160px}
+.progress{flex:1;height:8px;background:var(--paper-2);border-radius:999px;overflow:hidden;border:1px solid var(--rule)}
+.progress > span{display:block;height:100%;width:0%;background:linear-gradient(90deg,var(--accent),#4a9d7f);transition:width .4s ease}
+.progress-label{font-size:.75rem;color:var(--ink-soft);min-width:34px;text-align:right}
+
+/* HERO */
+.hero{padding:40px 0 10px}
+.hero .eyebrow{display:inline-block;font-size:.78rem;letter-spacing:.14em;text-transform:uppercase;color:var(--accent);background:var(--accent-soft);padding:4px 10px;border-radius:999px;font-weight:600}
+.hero h1{margin-top:14px}
+.hero .lead{font-size:1.1rem;color:var(--ink-soft);max-width:62ch}
+.hero .meta{display:flex;flex-wrap:wrap;gap:10px;margin-top:18px}
+.chip{display:inline-flex;align-items:center;gap:6px;background:var(--card);border:1px solid var(--rule);padding:6px 12px;border-radius:999px;font-size:.85rem;color:var(--ink-soft);box-shadow:var(--shadow)}
+.chip b{color:var(--ink);font-weight:600}
+.chip .d{width:6px;height:6px;border-radius:50%;background:var(--warm)}
+.mastery{margin-top:28px;background:var(--card);border:1px solid var(--rule);border-radius:var(--radius);padding:18px 20px;box-shadow:var(--shadow)}
+.mastery h3{margin:0 0 10px;font-family:var(--sans);font-size:.85rem;letter-spacing:.08em;text-transform:uppercase;color:var(--ink-soft);font-weight:600}
+.mastery-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:14px}
+.mbar{font-size:.85rem}
+.mbar .label{display:flex;justify-content:space-between;margin-bottom:5px;color:var(--ink-soft)}
+.mbar .label b{color:var(--ink);font-weight:600}
+.mbar .track{height:8px;background:var(--paper-2);border-radius:999px;overflow:hidden;border:1px solid var(--rule)}
+.mbar .fill{height:100%;background:linear-gradient(90deg,var(--accent),#4a9d7f);width:0%;transition:width .5s ease}
+
+/* SECTIONS */
+section.block{margin-top:48px}
+section.block > header{display:flex;align-items:baseline;gap:14px;margin-bottom:16px}
+section.block > header .num{font-family:var(--serif);font-size:1.1rem;color:var(--warm);font-weight:600}
+section.block > header .sub{font-size:.9rem;color:var(--ink-soft)}
+
+/* Concept cards */
+.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:16px}
+.card{background:var(--card);border:1px solid var(--rule);border-radius:var(--radius);padding:20px;box-shadow:var(--shadow);display:flex;flex-direction:column;gap:10px}
+.card h3{margin:0}
+.card .why{font-size:.9rem;color:var(--ink-soft);border-left:3px solid var(--warm);padding-left:10px}
+.card details{margin-top:4px;background:var(--paper-2);border-radius:12px;padding:0;border:1px solid var(--rule)}
+.card details summary{cursor:pointer;padding:10px 14px;font-weight:600;font-size:.9rem;color:var(--accent);list-style:none}
+.card details summary::-webkit-details-marker{display:none}
+.card details[open] summary{border-bottom:1px solid var(--rule)}
+.card details .inner{padding:12px 14px}
+.card details .inner .step{margin-bottom:8px}
+.card details .inner .step b{color:var(--ink);font-family:var(--serif)}
+.quick{background:var(--accent-soft);border:1px solid #c7dcd1;border-radius:12px;padding:12px 14px;margin-top:4px}
+.quick .q{font-weight:600;font-size:.92rem;margin-bottom:6px}
+.quick input{width:100%;padding:9px 12px;border:1px solid var(--rule);border-radius:10px;font:inherit;background:var(--card)}
+.quick input:focus{outline:2px solid var(--accent);outline-offset:1px;border-color:var(--accent)}
+.quick .feedback{margin-top:6px;font-size:.85rem;min-height:1.2em}
+.quick .feedback.ok{color:var(--ok)}
+.quick .feedback.no{color:var(--no)}
+
+/* Conjugation table */
+.conj{width:100%;border-collapse:collapse;font-size:.95rem;margin-top:6px;background:var(--card);border-radius:12px;overflow:hidden;border:1px solid var(--rule)}
+.conj th,.conj td{padding:8px 12px;text-align:left;border-bottom:1px solid var(--rule)}
+.conj th{background:var(--paper-2);font-family:var(--serif);font-weight:600;font-size:.9rem;color:var(--ink-soft)}
+.conj tr:last-child td{border-bottom:0}
+.conj .end{color:var(--warm);font-weight:700}
+.conj .stem{color:var(--ink)}
+
+/* Flashcards */
+.flash-wrap{background:var(--card);border:1px solid var(--rule);border-radius:var(--radius);padding:20px;box-shadow:var(--shadow)}
+.flash-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;flex-wrap:wrap;gap:10px}
+.flash-head .counter{font-size:.85rem;color:var(--ink-soft)}
+.flash{perspective:1200px;height:220px;margin:0 auto;max-width:460px;cursor:pointer}
+.flash .face{position:absolute;inset:0;backface-visibility:hidden;border-radius:14px;display:flex;align-items:center;justify-content:center;padding:20px;text-align:center;transition:transform .55s ease;box-shadow:var(--shadow)}
+.flash .inner{position:relative;width:100%;height:100%;transition:transform .55s ease;transform-style:preserve-3d}
+.flash.flipped .inner{transform:rotateY(180deg)}
+.flash .front{background:var(--card);border:1px solid var(--rule)}
+.flash .back{background:var(--accent);color:#fff;transform:rotateY(180deg);border:1px solid var(--accent)}
+.flash .term{font-family:var(--serif);font-size:1.8rem}
+.flash .pos{font-size:.8rem;color:var(--ink-soft);margin-top:6px;text-transform:uppercase;letter-spacing:.1em}
+.flash .back .def{font-size:1.15rem;line-height:1.4}
+.flash .back .ex{font-size:.9rem;opacity:.9;margin-top:10px;font-style:italic}
+.flash-controls{display:flex;gap:8px;justify-content:center;margin-top:14px;flex-wrap:wrap}
+.btn{appearance:none;border:1px solid var(--rule);background:var(--card);color:var(--ink);padding:9px 16px;border-radius:999px;font:inherit;font-size:.9rem;cursor:pointer;transition:transform .1s ease, background .15s ease, border-color .15s ease}
+.btn:hover{background:var(--paper-2)}
+.btn:active{transform:translateY(1px)}
+.btn.primary{background:var(--accent);color:#fff;border-color:var(--accent)}
+.btn.primary:hover{background:#245544}
+.btn.warm{background:var(--warm);color:#fff;border-color:var(--warm)}
+.btn.warm:hover{background:#bf5d2b}
+.btn.ghost{background:transparent}
+.btn.sm{font-size:.8rem;padding:6px 12px}
+.flash-tags{display:flex;gap:8px;justify-content:center;margin-top:10px;font-size:.8rem;color:var(--ink-soft);flex-wrap:wrap}
+
+/* Visual explainers */
+.visuals{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:16px}
+.vcard{background:var(--card);border:1px solid var(--rule);border-radius:var(--radius);padding:18px;box-shadow:var(--shadow)}
+.vcard h3{margin:0 0 10px}
+.vcard svg{width:100%;height:auto;display:block}
+.vcard .cap{font-size:.85rem;color:var(--ink-soft);margin-top:8px}
+
+/* Practice + Test */
+.panel{background:var(--card);border:1px solid var(--rule);border-radius:var(--radius);padding:22px;box-shadow:var(--shadow)}
+.q-row{padding:14px 0;border-bottom:1px dashed var(--rule)}
+.q-row:last-child{border-bottom:0}
+.q-row .qp{font-weight:600;margin-bottom:8px}
+.q-row .qp .tag{display:inline-block;font-size:.7rem;background:var(--paper-2);color:var(--ink-soft);padding:2px 8px;border-radius:999px;margin-right:6px;letter-spacing:.08em;text-transform:uppercase;font-weight:600;border:1px solid var(--rule)}
+.q-row input[type=text]{width:100%;padding:9px 12px;border:1px solid var(--rule);border-radius:10px;font:inherit;background:var(--card);max-width:520px}
+.q-row input[type=text]:focus{outline:2px solid var(--accent);outline-offset:1px;border-color:var(--accent)}
+.q-row .choices{display:flex;flex-wrap:wrap;gap:8px;margin-top:4px}
+.q-row .choices label{background:var(--paper-2);border:1px solid var(--rule);padding:7px 12px;border-radius:999px;cursor:pointer;font-size:.9rem}
+.q-row .choices label:hover{background:var(--accent-soft)}
+.q-row .choices input{margin-right:6px}
+.q-row .fb{margin-top:8px;font-size:.9rem;min-height:1.2em}
+.q-row .fb.ok{color:var(--ok)}
+.q-row .fb.no{color:var(--no)}
+.q-row .fb .ref{color:var(--ink-soft);font-size:.82rem;display:block;margin-top:3px}
+.row-actions{display:flex;gap:8px;margin-top:6px;flex-wrap:wrap}
+
+/* Test */
+.test-head{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:12px}
+.timer{font-family:var(--serif);font-size:1.1rem;background:var(--warm-soft);color:var(--ink);padding:5px 12px;border-radius:999px;border:1px solid #f0cfb6}
+.timer.off{opacity:.5}
+.testrail{display:flex;gap:4px;margin-bottom:16px;flex-wrap:wrap}
+.testrail span{width:22px;height:6px;border-radius:3px;background:var(--paper-2);border:1px solid var(--rule)}
+.testrail span.done{background:var(--accent);border-color:var(--accent)}
+.testrail span.cur{background:var(--warm);border-color:var(--warm)}
+.test-q{padding:14px 0}
+.test-q .qp{font-weight:600;font-size:1.05rem;margin-bottom:12px}
+.test-nav{display:flex;justify-content:space-between;margin-top:14px;gap:10px}
+.score{text-align:center;padding:10px 0 24px}
+.score .big{font-family:var(--serif);font-size:3.4rem;color:var(--accent);line-height:1}
+.score .big .den{color:var(--ink-soft);font-size:1.6rem}
+.score .pct{font-size:1rem;color:var(--ink-soft);margin-top:4px}
+.breakdown{margin-top:18px}
+.breakdown .row{display:flex;align-items:center;gap:12px;padding:10px 0;border-top:1px solid var(--rule)}
+.breakdown .row:first-child{border-top:0}
+.breakdown .nm{flex:1;min-width:140px}
+.breakdown .bar{flex:1.3;height:8px;background:var(--paper-2);border-radius:999px;overflow:hidden;border:1px solid var(--rule)}
+.breakdown .bar > span{display:block;height:100%}
+.breakdown .pct{min-width:52px;text-align:right;font-size:.9rem;color:var(--ink-soft)}
+.breakdown a{font-size:.85rem;text-decoration:none;background:var(--accent-soft);color:var(--accent);padding:4px 10px;border-radius:999px;border:1px solid #c7dcd1}
+
+/* Study plan */
+.plans{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:16px}
+.plan{background:var(--card);border:1px solid var(--rule);border-radius:var(--radius);padding:18px;box-shadow:var(--shadow)}
+.plan h3{color:var(--warm);font-family:var(--serif);display:flex;align-items:baseline;gap:6px}
+.plan h3 small{font-size:.75rem;color:var(--ink-soft);font-family:var(--sans);text-transform:uppercase;letter-spacing:.1em;font-weight:600}
+.plan ol{margin:6px 0 0 18px;padding:0}
+.plan li{margin:4px 0;font-size:.95rem}
+
+footer{margin-top:60px;text-align:center;color:var(--ink-soft);font-size:.85rem}
+.hidden{display:none !important}
+.toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%) translateY(20px);background:var(--ink);color:#fff;padding:10px 18px;border-radius:999px;font-size:.9rem;opacity:0;transition:all .3s ease;pointer-events:none;z-index:60}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+.pill-ok{background:var(--accent-soft);color:var(--accent);border:1px solid #c7dcd1;padding:3px 8px;border-radius:999px;font-size:.75rem;font-weight:600}
+
+@media (max-width: 640px){
+  .nav{display:none}
+  .flash{height:200px}
+}
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <div class="topbar-inner">
+    <div class="brand"><span class="dot"></span>Luca's Spanish Lab</div>
+    <nav class="nav">
+      <a href="#concepts">Concepts</a>
+      <a href="#vocab">Vocab</a>
+      <a href="#visuals">Visuals</a>
+      <a href="#practice">Practice</a>
+      <a href="#test">Test</a>
+      <a href="#plan">Plan</a>
+    </nav>
+    <div class="progress-wrap" title="Overall progress">
+      <div class="progress"><span id="overall-bar"></span></div>
+      <div class="progress-label" id="overall-label">0%</div>
+    </div>
+  </div>
+</div>
+
+<main class="container">
+
+  <!-- HERO -->
+  <section class="hero">
+    <span class="eyebrow">Lección 2 · Study Platform</span>
+    <h1>¡Hola, Luca! Let's own this quiz. 💪</h1>
+    <p class="lead">This is your personal lab for <b>Spanish 1, Lección 2</b> — the present tense of <b>-ar verbs</b>, the special verb <b>gustar</b>, and the verb <b>estar</b> with prepositions of location. Work through the concept cards, flip the flashcards, warm up on practice, then take the test when you're ready.</p>
+    <div class="meta">
+      <div class="chip"><span class="d"></span><b>Subject:</b>&nbsp;Spanish 1</div>
+      <div class="chip"><span class="d"></span><b>Lesson:</b>&nbsp;2.1 &amp; 2.3</div>
+      <div class="chip"><span class="d"></span><b>Topics:</b>&nbsp;-ar verbs · gustar · estar · location</div>
+      <div class="chip"><span class="d"></span><b>Est. time:</b>&nbsp;45–60 min</div>
+    </div>
+
+    <div class="mastery" aria-label="Concept mastery">
+      <h3>Live concept mastery</h3>
+      <div class="mastery-grid" id="mastery-grid"></div>
+    </div>
+  </section>
+
+  <!-- CONCEPTS -->
+  <section class="block" id="concepts">
+    <header>
+      <span class="num">01</span>
+      <h2>Concept cards</h2>
+      <span class="sub">Click the ▸ to expand the worked example.</span>
+    </header>
+    <div class="cards" id="concept-cards"></div>
+  </section>
+
+  <!-- VOCAB -->
+  <section class="block" id="vocab">
+    <header>
+      <span class="num">02</span>
+      <h2>Vocabulary flashcards</h2>
+      <span class="sub">Click to flip. ← → to navigate. Progress saves automatically.</span>
+    </header>
+    <div class="flash-wrap">
+      <div class="flash-head">
+        <div class="counter"><span id="flash-i">1</span> / <span id="flash-n">0</span></div>
+        <div style="display:flex;gap:6px;">
+          <button class="btn sm" id="flash-shuffle">Shuffle</button>
+          <button class="btn sm" id="flash-reset">Reset progress</button>
+        </div>
+      </div>
+      <div class="flash" id="flashcard" tabindex="0" role="button" aria-label="Flashcard, press to flip">
+        <div class="inner">
+          <div class="face front">
+            <div>
+              <div class="term" id="flash-term">—</div>
+              <div class="pos" id="flash-pos"></div>
+            </div>
+          </div>
+          <div class="face back">
+            <div>
+              <div class="def" id="flash-def">—</div>
+              <div class="ex" id="flash-ex"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="flash-controls">
+        <button class="btn" id="flash-prev">← Prev</button>
+        <button class="btn warm" id="flash-review">Review again</button>
+        <button class="btn primary" id="flash-got">Got it ✓</button>
+        <button class="btn" id="flash-next">Next →</button>
+      </div>
+      <div class="flash-tags">
+        <span>Got it: <b id="got-count">0</b></span>
+        <span>·</span>
+        <span>To review: <b id="rev-count">0</b></span>
+      </div>
+    </div>
+  </section>
+
+  <!-- VISUALS -->
+  <section class="block" id="visuals">
+    <header>
+      <span class="num">03</span>
+      <h2>Visual explainers</h2>
+      <span class="sub">The patterns, drawn out.</span>
+    </header>
+    <div class="visuals">
+
+      <div class="vcard">
+        <h3>-ar verb endings</h3>
+        <svg viewBox="0 0 420 260" xmlns="http://www.w3.org/2000/svg" aria-label="-ar verb endings diagram">
+          <defs>
+            <style>.stem-l{font:600 15px ui-serif,Georgia,serif;fill:#1a1f2e}.end-l{font:700 15px ui-sans-serif,system-ui,sans-serif;fill:#d97642}.sub-l{font:600 11px ui-sans-serif,system-ui,sans-serif;fill:#3b4255;letter-spacing:.1em}</style>
+          </defs>
+          <rect x="10" y="20" width="400" height="220" rx="14" fill="#faf8f3" stroke="#e4ddcf"/>
+          <text x="30" y="48" class="sub-l">PRONOUN</text>
+          <text x="200" y="48" class="sub-l">STEM</text>
+          <text x="320" y="48" class="sub-l">ENDING</text>
+          <g font-family="ui-sans-serif,system-ui,sans-serif" font-size="15">
+            <text x="30" y="78">yo</text>              <text x="200" y="78" class="stem-l">habl</text><text x="320" y="78" class="end-l">-o</text>
+            <text x="30" y="102">tú</text>             <text x="200" y="102" class="stem-l">habl</text><text x="320" y="102" class="end-l">-as</text>
+            <text x="30" y="126">él/ella/Ud.</text>    <text x="200" y="126" class="stem-l">habl</text><text x="320" y="126" class="end-l">-a</text>
+            <text x="30" y="150">nosotros</text>       <text x="200" y="150" class="stem-l">habl</text><text x="320" y="150" class="end-l">-amos</text>
+            <text x="30" y="174">vosotros</text>       <text x="200" y="174" class="stem-l">habl</text><text x="320" y="174" class="end-l">-áis</text>
+            <text x="30" y="198">ellos/ellas/Uds.</text><text x="200" y="198" class="stem-l">habl</text><text x="320" y="198" class="end-l">-an</text>
+          </g>
+          <text x="30" y="228" font-family="ui-sans-serif" font-size="11" fill="#3b4255">Drop <tspan font-weight="700">-ar</tspan> from the infinitive (hablar → habl-), then add the ending that matches the subject.</text>
+        </svg>
+        <div class="cap">The stem stays the same. Only the ending changes.</div>
+      </div>
+
+      <div class="vcard">
+        <h3>estar — present tense</h3>
+        <svg viewBox="0 0 420 240" xmlns="http://www.w3.org/2000/svg" aria-label="estar conjugation">
+          <rect x="10" y="20" width="400" height="200" rx="14" fill="#faf8f3" stroke="#e4ddcf"/>
+          <g font-family="ui-sans-serif,system-ui,sans-serif" font-size="15" fill="#1a1f2e">
+            <text x="30" y="56">yo</text><text x="230" y="56" font-family="ui-serif,Georgia,serif" font-weight="700" fill="#2f6b55">estoy</text>
+            <text x="30" y="84">tú</text><text x="230" y="84" font-family="ui-serif,Georgia,serif" font-weight="700" fill="#2f6b55">estás</text>
+            <text x="30" y="112">él/ella/Ud.</text><text x="230" y="112" font-family="ui-serif,Georgia,serif" font-weight="700" fill="#2f6b55">está</text>
+            <text x="30" y="140">nosotros</text><text x="230" y="140" font-family="ui-serif,Georgia,serif" font-weight="700" fill="#2f6b55">estamos</text>
+            <text x="30" y="168">vosotros</text><text x="230" y="168" font-family="ui-serif,Georgia,serif" font-weight="700" fill="#2f6b55">estáis</text>
+            <text x="30" y="196">ellos/ellas/Uds.</text><text x="230" y="196" font-family="ui-serif,Georgia,serif" font-weight="700" fill="#2f6b55">están</text>
+          </g>
+          <text x="30" y="40" font-size="11" fill="#d97642" font-weight="700" font-family="ui-sans-serif">Watch the accents on -ás, -á, -áis, -án!</text>
+        </svg>
+        <div class="cap">estar is irregular in the "yo" form and takes accent marks on 4 forms.</div>
+      </div>
+
+      <div class="vcard">
+        <h3>Prepositions of location</h3>
+        <svg viewBox="0 0 420 260" xmlns="http://www.w3.org/2000/svg" aria-label="prepositions of location">
+          <rect x="10" y="20" width="400" height="220" rx="14" fill="#faf8f3" stroke="#e4ddcf"/>
+          <!-- reference box -->
+          <rect x="180" y="110" width="60" height="40" rx="6" fill="#2f6b55"/>
+          <text x="210" y="135" text-anchor="middle" fill="#fff" font-family="ui-sans-serif" font-size="11" font-weight="700">libro</text>
+          <!-- arrows and labels -->
+          <g font-family="ui-sans-serif,system-ui,sans-serif" font-size="12" fill="#1a1f2e">
+            <!-- encima -->
+            <text x="210" y="70" text-anchor="middle" fill="#d97642" font-weight="700">encima de</text>
+            <line x1="210" y1="78" x2="210" y2="105" stroke="#d97642" stroke-width="2" marker-end="url(#ar)"/>
+            <!-- debajo -->
+            <text x="210" y="195" text-anchor="middle" fill="#d97642" font-weight="700">debajo de</text>
+            <line x1="210" y1="155" x2="210" y2="182" stroke="#d97642" stroke-width="2" marker-end="url(#ar)"/>
+            <!-- izquierda -->
+            <text x="90" y="135" text-anchor="middle" fill="#d97642" font-weight="700">a la izquierda</text>
+            <line x1="135" y1="130" x2="175" y2="130" stroke="#d97642" stroke-width="2" marker-end="url(#ar)"/>
+            <!-- derecha -->
+            <text x="330" y="135" text-anchor="middle" fill="#d97642" font-weight="700">a la derecha</text>
+            <line x1="285" y1="130" x2="245" y2="130" stroke="#d97642" stroke-width="2" marker-end="url(#ar)"/>
+            <!-- entre -->
+            <text x="210" y="225" text-anchor="middle" fill="#3b4255">detrás · delante · entre · cerca de · lejos de · al lado de · con · sin</text>
+          </g>
+          <defs>
+            <marker id="ar" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#d97642"/></marker>
+          </defs>
+        </svg>
+        <div class="cap">Most location phrases end in <b>de</b>. "entre" and "con" don't need it.</div>
+      </div>
+
+      <div class="vcard">
+        <h3>How gustar works (backwards!)</h3>
+        <svg viewBox="0 0 420 240" xmlns="http://www.w3.org/2000/svg" aria-label="gustar structure">
+          <rect x="10" y="20" width="400" height="200" rx="14" fill="#faf8f3" stroke="#e4ddcf"/>
+          <g font-family="ui-sans-serif,system-ui,sans-serif" font-size="13" fill="#1a1f2e">
+            <text x="30" y="55" font-weight="700" fill="#d97642">PRONOUN</text>
+            <text x="150" y="55" font-weight="700" fill="#2f6b55">gusta / gustan</text>
+            <text x="300" y="55" font-weight="700" fill="#1a1f2e">THING</text>
+
+            <text x="30" y="90">Me</text><text x="150" y="90">gusta</text><text x="300" y="90">la música.</text>
+            <text x="30" y="112">Te</text><text x="150" y="112">gusta</text><text x="300" y="112">dibujar.</text>
+            <text x="30" y="134">Le</text><text x="150" y="134">gustan</text><text x="300" y="134">los libros.</text>
+            <text x="30" y="156">Nos</text><text x="150" y="156">gusta</text><text x="300" y="156">bailar.</text>
+            <text x="30" y="178">Les</text><text x="150" y="178">gustan</text><text x="300" y="178">las clases.</text>
+          </g>
+          <text x="30" y="210" font-size="11" fill="#3b4255" font-family="ui-sans-serif">Literal meaning: "to me, the music is pleasing." Use <tspan font-weight="700" fill="#d97642">gustan</tspan> only when the thing liked is plural.</text>
+        </svg>
+        <div class="cap">The thing liked is the subject. The person is a pronoun before gusta.</div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- PRACTICE -->
+  <section class="block" id="practice">
+    <header>
+      <span class="num">04</span>
+      <h2>Practice (ungraded)</h2>
+      <span class="sub">Warm up. Instant feedback. No pressure.</span>
+    </header>
+    <div class="panel" id="practice-panel"></div>
+  </section>
+
+  <!-- TEST -->
+  <section class="block" id="test">
+    <header>
+      <span class="num">05</span>
+      <h2>The test</h2>
+      <span class="sub">Scored. One question at a time. You've got this.</span>
+    </header>
+    <div class="panel" id="test-panel">
+      <div class="test-head">
+        <div>
+          <div style="font-family:var(--serif);font-size:1.1rem;font-weight:600">Lección 2 — Scored test</div>
+          <div style="font-size:.85rem;color:var(--ink-soft)">Best score: <b id="best-score">—</b></div>
+        </div>
+        <div style="display:flex;gap:10px;align-items:center">
+          <label style="font-size:.85rem;color:var(--ink-soft);display:flex;align-items:center;gap:6px"><input type="checkbox" id="timer-toggle" checked> Timer</label>
+          <div class="timer" id="timer">20:00</div>
+        </div>
+      </div>
+      <div class="testrail" id="testrail"></div>
+      <div id="test-stage"></div>
+      <div class="test-nav">
+        <button class="btn" id="test-prev">← Previous</button>
+        <div style="display:flex;gap:8px">
+          <button class="btn ghost" id="test-reset">Restart</button>
+          <button class="btn primary" id="test-next">Next →</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- STUDY PLAN -->
+  <section class="block" id="plan">
+    <header>
+      <span class="num">06</span>
+      <h2>Before the quiz — study plan</h2>
+      <span class="sub">Pick the time you've got.</span>
+    </header>
+    <div class="plans">
+      <div class="plan">
+        <h3>10 <small>minutes</small></h3>
+        <ol>
+          <li>Scan the two conjugation diagrams.</li>
+          <li>Flip through 10 flashcards.</li>
+          <li>Do practice Q1–Q5 only.</li>
+        </ol>
+      </div>
+      <div class="plan">
+        <h3>30 <small>minutes</small></h3>
+        <ol>
+          <li>Read every concept card + open the worked examples.</li>
+          <li>Hit "Got it" on at least 15 flashcards.</li>
+          <li>Do all 15 practice questions.</li>
+        </ol>
+      </div>
+      <div class="plan">
+        <h3>60 <small>minutes</small></h3>
+        <ol>
+          <li>Full concept card walk-through.</li>
+          <li>Flashcards until all are "Got it".</li>
+          <li>All practice, then take the test.</li>
+          <li>Review the weak-concept breakdown.</li>
+        </ol>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    Built for Luca · Lección 2 study lab · Keep going — un paso a la vez. 🌱
+  </footer>
+
+</main>
+
+<div class="toast" id="toast">Saved ✓</div>
+
+<script>
+/* ====================== Safe storage ====================== */
+const LS = {
+  get(k, d){ try{ const v = localStorage.getItem(k); return v===null?d:JSON.parse(v); }catch(e){ return d; } },
+  set(k, v){ try{ localStorage.setItem(k, JSON.stringify(v)); }catch(e){} },
+  del(k){ try{ localStorage.removeItem(k); }catch(e){} }
+};
+const STORE_KEY = 'luca_spanish_lesson2_v1';
+const state = Object.assign({
+  conceptSeen: {},     // conceptId -> true
+  quickAnswered: {},   // conceptId -> true
+  flashStatus: {},     // term -> 'got' | 'review'
+  flashIndex: 0,
+  bestScore: null,
+}, LS.get(STORE_KEY, {}));
+function save(){ LS.set(STORE_KEY, state); }
+
+function toast(msg){
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  clearTimeout(toast._t);
+  toast._t = setTimeout(()=>t.classList.remove('show'), 1600);
+}
+
+/* ====================== Data ====================== */
+
+const CONCEPTS = [
+  {
+    id: 'ar-conj',
+    name: 'Present tense of -ar verbs',
+    explain: 'Spanish -ar verbs follow one pattern: drop the <b>-ar</b> from the infinitive, then add an ending that matches the subject. The stem stays the same every time.',
+    example: [
+      {b:'Infinitive:', t:'hablar (to speak)'},
+      {b:'Drop -ar:', t:'habl-'},
+      {b:'yo', t:'habl + <b>o</b> → <b>hablo</b> (I speak)'},
+      {b:'nosotros', t:'habl + <b>amos</b> → <b>hablamos</b> (we speak)'},
+      {b:'ellos', t:'habl + <b>an</b> → <b>hablan</b> (they speak)'},
+    ],
+    why: 'Almost half of all Spanish verbs are -ar verbs. Nail this pattern and you can conjugate hundreds of them.',
+    quick: { q: 'Conjugate <b>estudiar</b> for <b>yo</b>:', a: ['estudio'], hint: 'Drop -ar from estudiar → estudi-, then add -o for yo.' }
+  },
+  {
+    id: 'ar-vocab',
+    name: 'Common -ar verbs',
+    explain: 'These are the -ar verbs from Lección 2 you need to recognize instantly. They all follow the same conjugation rule.',
+    example: [
+      {b:'trabajar', t:'to work — <i>Trabajas mucho.</i> (You work a lot.)'},
+      {b:'tomar', t:'to take / drink — <i>Tomo una clase de arte.</i>'},
+      {b:'buscar', t:'to look for — <i>Busco un libro.</i>'},
+      {b:'estudiar', t:'to study — <i>Estudias contabilidad.</i>'},
+      {b:'desayunar', t:'to have breakfast — <i>Yo desayuno a las siete.</i>'},
+      {b:'mirar', t:'to watch / look at — <i>Miro televisión.</i>'},
+    ],
+    why: 'The quiz uses these verbs directly in fill-in-the-blank and sentence-writing sections.',
+    quick: { q: 'What does <b>buscar</b> mean?', a: ['to look for','look for','search','to search','to search for'], hint: 'Think "I\'m looking for my book." → <i>Busco mi libro.</i>' }
+  },
+  {
+    id: 'gustar',
+    name: 'The verb gustar (backwards verb)',
+    explain: '<b>Gustar</b> is weird: it literally means "to be pleasing to." The thing you like is the subject. The person who likes it is a pronoun (<b>me, te, le, nos, les</b>) placed <i>before</i> gusta.',
+    example: [
+      {b:'Rule:', t:'Use <b>gusta</b> if the thing liked is singular or an action. Use <b>gustan</b> if the thing liked is plural.'},
+      {b:'Me gusta la literatura.', t:'I like literature. (literatura = singular → gusta)'},
+      {b:'Te gustan las matemáticas.', t:'You like math. (matemáticas = plural → gustan)'},
+      {b:'Me gusta dibujar.', t:'I like to draw. (verb → always gusta)'},
+      {b:'No me gusta viajar.', t:'I don\'t like to travel. (no goes before me)'},
+    ],
+    why: 'The study guide matching section and fill-ins directly test gusta vs. gustan.',
+    quick: { q: 'Fill in: "Me ____ los libros."', a: ['gustan'], hint: 'los libros is plural → gustan.' }
+  },
+  {
+    id: 'estar',
+    name: 'The verb estar',
+    explain: '<b>Estar</b> means "to be" — but only for <b>location</b>, <b>condition</b>, and <b>emotion</b>. It is irregular: the yo form is <b>estoy</b>, and four forms carry accent marks.',
+    example: [
+      {b:'yo', t:'<b>estoy</b> — Yo estoy en casa.'},
+      {b:'tú', t:'<b>estás</b> — ¿Cómo estás?'},
+      {b:'él/ella/Ud.', t:'<b>está</b> — Usted está en la librería.'},
+      {b:'nosotros', t:'<b>estamos</b> — Nosotros estamos enfermos.'},
+      {b:'ellos/ellas/Uds.', t:'<b>están</b> — Paulina y Esteban están en el estadio.'},
+    ],
+    why: 'Section 4 of the test is 5 fill-in-the-blank items that are pure estar conjugation.',
+    quick: { q: 'Fill in: "Nosotros ____ enfermos."', a: ['estamos'], hint: 'nosotros + estar → estamos.' }
+  },
+  {
+    id: 'estar-uses',
+    name: 'When to use estar',
+    explain: 'Estar is used for three big things: <b>Location</b> (where something is), <b>Condition</b> (how someone feels physically), and <b>Emotion</b> (how someone feels). A quick trick: <b>PLACE</b> + <b>FEELING</b> = estar.',
+    example: [
+      {b:'Location:', t:'La librería <b>está</b> allá. (The bookstore is over there.)'},
+      {b:'Condition:', t:'Nosotros <b>estamos</b> enfermos. (We are sick.)'},
+      {b:'Emotion:', t:'Yo <b>estoy</b> contento. (I am happy.)'},
+      {b:'NOT for:', t:'Permanent traits like "I am tall" — that uses ser (next lesson).'},
+    ],
+    why: 'Any sentence about where something is located uses estar — never ser.',
+    quick: { q: 'True or false: Use estar to say "The stadium is between the library and cafeteria."', a: ['true','t','yes','sí','si'], hint: 'Yes — it\'s a location, so estar: <i>El estadio está entre…</i>' }
+  },
+  {
+    id: 'prepositions',
+    name: 'Prepositions of location',
+    explain: 'These words tell you <i>where</i> something is. Most are followed by <b>de</b> + the thing. Two important ones — <b>entre</b> and <b>con</b> — do NOT need de.',
+    example: [
+      {b:'detrás de', t:'behind — <i>Las mochilas están detrás de las sillas.</i>'},
+      {b:'a la derecha de', t:'to the right of — <i>La papelera está a la derecha del profesor.</i>'},
+      {b:'a la izquierda de', t:'to the left of'},
+      {b:'entre', t:'between (NO "de") — <i>El estadio está entre la biblioteca y la cafetería.</i>'},
+      {b:'con', t:'with (NO "de") — <i>Nosotros estamos con Ramiro.</i>'},
+      {b:'cerca de / lejos de', t:'near / far from'},
+      {b:'encima de / debajo de', t:'on top of / under'},
+      {b:'delante de / al lado de', t:'in front of / next to'},
+    ],
+    why: 'Section 5 asks you to build sentences with estar + a preposition. Every answer in Luca\'s study guide used one of these.',
+    quick: { q: 'Fill in the missing word: "El libro está ____ la mesa." (on top of)', a: ['encima de','encima'], hint: '"encima de" = on top of.' }
+  }
+];
+
+const VOCAB = [
+  {t:'trabajar', p:'verb', d:'to work', ex:'Trabajas mucho.'},
+  {t:'tomar', p:'verb', d:'to take; to drink', ex:'Tomo una clase de arte.'},
+  {t:'buscar', p:'verb', d:'to look for', ex:'Busco un libro.'},
+  {t:'estudiar', p:'verb', d:'to study', ex:'Estudias contabilidad.'},
+  {t:'desear', p:'verb', d:'to want; to wish', ex:'Deseo bailar.'},
+  {t:'bailar', p:'verb', d:'to dance', ex:'Nosotros deseamos bailar.'},
+  {t:'comprar', p:'verb', d:'to buy', ex:'Héctor y yo compramos libros.'},
+  {t:'escuchar', p:'verb', d:'to listen (to)', ex:'Enrique desea escuchar música.'},
+  {t:'desayunar', p:'verb', d:'to have breakfast', ex:'Yo desayuno a las siete.'},
+  {t:'mirar', p:'verb', d:'to watch; to look at', ex:'Miro televisión.'},
+  {t:'conversar', p:'verb', d:'to talk; to chat', ex:'Conversamos con el profesor.'},
+  {t:'regresar', p:'verb', d:'to return; to go back', ex:'Regresamos a la escuela.'},
+  {t:'necesitar', p:'verb', d:'to need', ex:'Tomás y Patricia necesitan llegar temprano.'},
+  {t:'enseñar', p:'verb', d:'to teach', ex:'El profesor enseña español.'},
+  {t:'dibujar', p:'verb', d:'to draw', ex:'Me gusta dibujar.'},
+  {t:'viajar', p:'verb', d:'to travel', ex:'No me gusta viajar.'},
+  {t:'descansar', p:'verb', d:'to rest', ex:'No te gusta descansar.'},
+  {t:'gustar', p:'verb (special)', d:'to be pleasing to (= to like)', ex:'Me gusta la literatura.'},
+  {t:'estar', p:'verb (irregular)', d:'to be (location / feeling)', ex:'Yo estoy en casa.'},
+  {t:'detrás de', p:'preposition', d:'behind', ex:'Las mochilas están detrás de las sillas.'},
+  {t:'delante de', p:'preposition', d:'in front of', ex:'El libro está delante de la silla.'},
+  {t:'a la derecha de', p:'preposition', d:'to the right of', ex:'La papelera está a la derecha del profesor.'},
+  {t:'a la izquierda de', p:'preposition', d:'to the left of', ex:'La ventana está a la izquierda de la puerta.'},
+  {t:'entre', p:'preposition', d:'between (no "de")', ex:'El estadio está entre la biblioteca y la cafetería.'},
+  {t:'con', p:'preposition', d:'with (no "de")', ex:'Nosotros estamos con Ramiro.'},
+  {t:'encima de', p:'preposition', d:'on top of', ex:'El libro está encima de la mesa.'},
+  {t:'debajo de', p:'preposition', d:'under; below', ex:'La mochila está debajo de la silla.'},
+  {t:'cerca de', p:'preposition', d:'near; close to', ex:'La escuela está cerca de mi casa.'},
+  {t:'lejos de', p:'preposition', d:'far from', ex:'El estadio está lejos de aquí.'},
+  {t:'al lado de', p:'preposition', d:'next to', ex:'Estoy al lado de Ramiro.'},
+  {t:'la librería', p:'noun', d:'bookstore', ex:'Usted está en la librería.'},
+  {t:'la biblioteca', p:'noun', d:'library', ex:'La biblioteca está cerca.'},
+  {t:'el estadio', p:'noun', d:'stadium', ex:'Están en el estadio.'},
+  {t:'la mochila', p:'noun', d:'backpack', ex:'Las mochilas están detrás de las sillas.'},
+  {t:'enfermo/a', p:'adjective', d:'sick', ex:'Nosotros estamos enfermos.'},
+];
+
+/* ====================== Mastery bars ====================== */
+
+const MASTERY = [
+  {id:'ar-conj', name:'-ar verbs'},
+  {id:'gustar', name:'gustar'},
+  {id:'estar', name:'estar'},
+  {id:'estar-uses', name:'uses of estar'},
+  {id:'prepositions', name:'prepositions'},
+];
+let masteryScores = {}; // conceptId -> {right, total}
+MASTERY.forEach(m => masteryScores[m.id] = {right:0,total:0});
+
+function renderMastery(){
+  const grid = document.getElementById('mastery-grid');
+  grid.innerHTML = MASTERY.map(m => {
+    const sc = masteryScores[m.id];
+    const pct = sc.total ? Math.round(100*sc.right/sc.total) : 0;
+    return `
+      <div class="mbar" data-id="${m.id}">
+        <div class="label"><b>${m.name}</b><span>${sc.right}/${sc.total}</span></div>
+        <div class="track"><div class="fill" style="width:${pct}%"></div></div>
+      </div>`;
+  }).join('');
+}
+function bumpMastery(id, right){
+  if(!masteryScores[id]) return;
+  masteryScores[id].total++;
+  if(right) masteryScores[id].right++;
+  renderMastery();
+}
+
+/* ====================== Overall progress ====================== */
+function updateOverall(){
+  // Weighted: concepts seen, quick checks, vocab got-it, test taken.
+  const totalConcepts = CONCEPTS.length;
+  const seen = Object.keys(state.conceptSeen).length;
+  const quick = Object.keys(state.quickAnswered).length;
+  const got = Object.values(state.flashStatus).filter(v=>v==='got').length;
+  const vocabTotal = VOCAB.length;
+  const testDone = state.bestScore != null ? 1 : 0;
+
+  const parts = [
+    seen/totalConcepts,          // 25
+    quick/totalConcepts,          // 25
+    got/vocabTotal,               // 25
+    testDone                      // 25
+  ];
+  const w = [25,25,25,25];
+  const pct = Math.round(parts.reduce((s,p,i)=>s + Math.min(1,p)*w[i], 0));
+  document.getElementById('overall-bar').style.width = pct + '%';
+  document.getElementById('overall-label').textContent = pct + '%';
+}
+
+/* ====================== Concept cards ====================== */
+function normalize(s){
+  return (s||'').toString().trim().toLowerCase()
+    .replace(/[¿¡?!.,;:]/g,'')
+    .replace(/á/g,'a').replace(/é/g,'e').replace(/í/g,'i').replace(/ó/g,'o').replace(/ú/g,'u').replace(/ñ/g,'n')
+    .replace(/\s+/g,' ');
+}
+function renderConcepts(){
+  const el = document.getElementById('concept-cards');
+  el.innerHTML = CONCEPTS.map(c => `
+    <article class="card" id="card-${c.id}">
+      <h3>${c.name}</h3>
+      <p>${c.explain}</p>
+      <div class="why"><b>Why it matters:</b> ${c.why}</div>
+      <details>
+        <summary>▸ Worked example</summary>
+        <div class="inner">
+          ${c.example.map(s=>`<div class="step"><b>${s.b}</b> ${s.t}</div>`).join('')}
+        </div>
+      </details>
+      <div class="quick" data-id="${c.id}">
+        <div class="q">Quick check: ${c.quick.q}</div>
+        <input type="text" placeholder="Type your answer…" aria-label="Quick check answer">
+        <div class="feedback" aria-live="polite"></div>
+      </div>
+    </article>
+  `).join('');
+  // Mark seen on card open
+  el.querySelectorAll('details').forEach(d => {
+    d.addEventListener('toggle', ()=>{
+      if(d.open){
+        const id = d.closest('.card').id.replace('card-','');
+        state.conceptSeen[id] = true; save(); updateOverall();
+      }
+    });
+  });
+  // Quick-check inputs
+  el.querySelectorAll('.quick').forEach(q => {
+    const id = q.dataset.id;
+    const c = CONCEPTS.find(x=>x.id===id);
+    const input = q.querySelector('input');
+    const fb = q.querySelector('.feedback');
+    input.addEventListener('keydown', e=>{
+      if(e.key==='Enter'){
+        const got = c.quick.a.some(a => normalize(a) === normalize(input.value));
+        if(got){
+          fb.textContent = '✓ Correct! ' + c.quick.hint;
+          fb.className = 'feedback ok';
+        } else {
+          fb.textContent = '✗ Not quite. ' + c.quick.hint;
+          fb.className = 'feedback no';
+        }
+        if(!state.quickAnswered[id]){
+          state.quickAnswered[id] = true;
+          state.conceptSeen[id] = true;
+          if(MASTERY.find(m=>m.id===id)) bumpMastery(id, got);
+          save(); updateOverall();
+        }
+      }
+    });
+  });
+}
+
+/* ====================== Flashcards ====================== */
+let flashOrder = VOCAB.map((_,i)=>i);
+let flashI = state.flashIndex || 0;
+function renderFlashCounts(){
+  const got = Object.values(state.flashStatus).filter(v=>v==='got').length;
+  const rev = Object.values(state.flashStatus).filter(v=>v==='review').length;
+  document.getElementById('got-count').textContent = got;
+  document.getElementById('rev-count').textContent = rev;
+}
+function showFlash(){
+  const idx = flashOrder[flashI % flashOrder.length];
+  const v = VOCAB[idx];
+  document.getElementById('flash-term').textContent = v.t;
+  document.getElementById('flash-pos').textContent = v.p;
+  document.getElementById('flash-def').textContent = v.d;
+  document.getElementById('flash-ex').textContent = v.ex;
+  document.getElementById('flash-i').textContent = (flashI%flashOrder.length)+1;
+  document.getElementById('flash-n').textContent = flashOrder.length;
+  const card = document.getElementById('flashcard');
+  card.classList.remove('flipped');
+  // tag indicator
+  const stat = state.flashStatus[v.t];
+  card.style.borderColor = stat==='got' ? 'var(--accent)' : (stat==='review' ? 'var(--warm)' : '');
+}
+function nextFlash(){ flashI = (flashI+1) % flashOrder.length; state.flashIndex=flashI; save(); showFlash(); }
+function prevFlash(){ flashI = (flashI-1+flashOrder.length) % flashOrder.length; state.flashIndex=flashI; save(); showFlash(); }
+function markFlash(status){
+  const idx = flashOrder[flashI % flashOrder.length];
+  const v = VOCAB[idx];
+  state.flashStatus[v.t] = status;
+  save(); renderFlashCounts(); updateOverall();
+  toast(status==='got' ? '¡Bien hecho! Got it ✓' : 'Added to review');
+  nextFlash();
+}
+function setupFlash(){
+  document.getElementById('flash-n').textContent = VOCAB.length;
+  const card = document.getElementById('flashcard');
+  card.addEventListener('click', ()=> card.classList.toggle('flipped'));
+  card.addEventListener('keydown', e=>{
+    if(e.key===' '||e.key==='Enter'){ e.preventDefault(); card.classList.toggle('flipped'); }
+    if(e.key==='ArrowRight'){ nextFlash(); }
+    if(e.key==='ArrowLeft'){ prevFlash(); }
+  });
+  document.getElementById('flash-next').onclick = nextFlash;
+  document.getElementById('flash-prev').onclick = prevFlash;
+  document.getElementById('flash-got').onclick = ()=>markFlash('got');
+  document.getElementById('flash-review').onclick = ()=>markFlash('review');
+  document.getElementById('flash-shuffle').onclick = ()=>{
+    for(let i=flashOrder.length-1;i>0;i--){
+      const j = Math.floor(Math.random()*(i+1));
+      [flashOrder[i],flashOrder[j]]=[flashOrder[j],flashOrder[i]];
+    }
+    flashI = 0; state.flashIndex=0; save(); showFlash();
+    toast('Shuffled!');
+  };
+  document.getElementById('flash-reset').onclick = ()=>{
+    state.flashStatus = {}; save(); renderFlashCounts(); showFlash(); updateOverall();
+    toast('Flashcard progress reset');
+  };
+  showFlash();
+  renderFlashCounts();
+}
+
+/* ====================== Practice ====================== */
+
+const PRACTICE = [
+  // -ar conjugation
+  {type:'text', concept:'ar-conj', prompt:'Conjugate <b>hablar</b> for <b>tú</b>.', a:['hablas'], hint:'tú → -as. hablar → hablas.'},
+  {type:'text', concept:'ar-conj', prompt:'Conjugate <b>trabajar</b> for <b>nosotros</b>.', a:['trabajamos'], hint:'nosotros → -amos.'},
+  {type:'mc', concept:'ar-conj', prompt:'Which is "they study"?', choices:['estudio','estudias','estudian','estudiamos'], correct:2, hint:'ellos → -an. estudiar → estudian.'},
+
+  // vocab recall
+  {type:'mc', concept:'ar-conj', prompt:'What does <b>regresar</b> mean?', choices:['to rest','to return','to need','to look for'], correct:1, hint:'regresar = to return / go back.'},
+  {type:'text', concept:'ar-conj', prompt:'How do you say "I draw" in Spanish?', a:['dibujo','yo dibujo'], hint:'dibujar → yo dibujo.'},
+
+  // gustar
+  {type:'mc', concept:'gustar', prompt:'Fill in: "Me ___ las matemáticas."', choices:['gusta','gustan','gustas','gusto'], correct:1, hint:'las matemáticas is plural → gustan.'},
+  {type:'text', concept:'gustar', prompt:'Fill in: "¿Te ___ dibujar?" (one word)', a:['gusta'], hint:'dibujar is a verb → always gusta.'},
+  {type:'text', concept:'gustar', prompt:'Translate: "I don\'t like to travel." (3 words after "No")', a:['no me gusta viajar'], hint:'Start with "No me gusta…"'},
+
+  // estar
+  {type:'text', concept:'estar', prompt:'Fill in: "Yo ___ en casa."', a:['estoy'], hint:'yo + estar → estoy.'},
+  {type:'text', concept:'estar', prompt:'Fill in: "Paulina y Esteban ___ en el estadio."', a:['estan','están'], hint:'ellos → están.'},
+  {type:'mc', concept:'estar', prompt:'Which form matches "tú"?', choices:['estoy','está','estás','estamos'], correct:2, hint:'tú → estás (with accent).'},
+
+  // uses of estar
+  {type:'mc', concept:'estar-uses', prompt:'Which sentence correctly uses estar?', choices:['Yo estoy alto.','La biblioteca está cerca.','Mi hermano está profesor.','Nosotros estamos de Chile.'], correct:1, hint:'Location → estar. "La biblioteca está cerca" (location).'},
+
+  // prepositions
+  {type:'mc', concept:'prepositions', prompt:'"between" in Spanish is:', choices:['detrás de','entre','encima de','cerca de'], correct:1, hint:'entre = between (no "de" after).'},
+  {type:'text', concept:'prepositions', prompt:'Fill in: "La papelera está ___ ___ ___ del profesor." (to the right of = 3 words)', a:['a la derecha'], hint:'"a la derecha de" = to the right of.'},
+  {type:'text', concept:'prepositions', prompt:'Write the full sentence: "las mochilas / detrás de / sillas"', a:['las mochilas estan detras de las sillas','las mochilas están detrás de las sillas'], hint:'ellos form → están. "Las mochilas están detrás de las sillas."'},
+];
+
+function renderPractice(){
+  const el = document.getElementById('practice-panel');
+  el.innerHTML = PRACTICE.map((q, i) => {
+    let body = '';
+    if(q.type==='text'){
+      body = `<input type="text" id="p-${i}" placeholder="Type your answer and press Enter…" aria-label="Answer">`;
+    } else {
+      body = `<div class="choices">${q.choices.map((c,ci)=>`<label><input type="radio" name="p-${i}" value="${ci}"> ${c}</label>`).join('')}</div>`;
+    }
+    return `
+      <div class="q-row" data-i="${i}">
+        <div class="qp"><span class="tag">${conceptShort(q.concept)}</span>${i+1}. ${q.prompt}</div>
+        ${body}
+        <div class="row-actions"><button class="btn sm" data-act="check">Check</button><button class="btn sm ghost" data-act="hint">Show hint</button></div>
+        <div class="fb" aria-live="polite"></div>
+      </div>
+    `;
+  }).join('');
+
+  el.querySelectorAll('.q-row').forEach(row=>{
+    const i = +row.dataset.i;
+    const q = PRACTICE[i];
+    const fb = row.querySelector('.fb');
+    function check(){
+      let got = false;
+      if(q.type==='text'){
+        const v = row.querySelector('input').value;
+        got = q.a.some(a => normalize(a) === normalize(v));
+      } else {
+        const sel = row.querySelector('input[type=radio]:checked');
+        got = sel && +sel.value === q.correct;
+      }
+      if(got){
+        fb.className = 'fb ok';
+        fb.innerHTML = '✓ Correct — ' + q.hint + ' <span class="ref">Concept: '+conceptName(q.concept)+'</span>';
+      } else {
+        fb.className = 'fb no';
+        fb.innerHTML = '✗ Not yet. ' + q.hint + ' <span class="ref">Review: <a href="#card-'+q.concept+'">'+conceptName(q.concept)+'</a></span>';
+      }
+      if(!row.dataset.answered){
+        row.dataset.answered='1';
+        if(MASTERY.find(m=>m.id===q.concept)) bumpMastery(q.concept, got);
+      }
+    }
+    row.querySelector('[data-act=check]').onclick = check;
+    row.querySelector('[data-act=hint]').onclick = ()=>{
+      fb.className = 'fb';
+      fb.innerHTML = '<span class="ref">Hint: '+q.hint+'</span>';
+    };
+    if(q.type==='text'){
+      row.querySelector('input').addEventListener('keydown', e=>{ if(e.key==='Enter') check(); });
+    }
+  });
+}
+function conceptName(id){ const c = CONCEPTS.find(c=>c.id===id); return c?c.name:id; }
+function conceptShort(id){
+  return ({
+    'ar-conj':'-ar verbs','ar-vocab':'-ar vocab','gustar':'gustar',
+    'estar':'estar','estar-uses':'uses of estar','prepositions':'prepositions'
+  })[id] || id;
+}
+
+/* ====================== Test ====================== */
+
+const TEST = [
+  {type:'text', concept:'ar-conj', prompt:'Conjugate <b>estudiar</b> for <b>nosotros</b>.', a:['estudiamos'], hint:'nosotros → -amos.'},
+  {type:'mc', concept:'ar-conj', prompt:'Which means "You (tú) buy"?', choices:['compro','compras','compra','compramos'], correct:1, hint:'tú → -as. comprar → compras.'},
+  {type:'text', concept:'ar-conj', prompt:'Fill in: "Héctor y yo ___ libros en la librería." (comprar)', a:['compramos'], hint:'"Héctor y yo" = nosotros → compramos.'},
+  {type:'mc', concept:'ar-conj', prompt:'"Enrique desea escuchar música" — what does <b>desea</b> mean?', choices:['I want','you want','he wants','we want'], correct:2, hint:'Enrique = él → desea = he wants.'},
+  {type:'text', concept:'gustar', prompt:'Fill in: "Me ___ los programas de ciencias." (gustar)', a:['gustan'], hint:'los programas is plural → gustan.'},
+  {type:'mc', concept:'gustar', prompt:'Which is correct?', choices:['Me gusta las matemáticas.','Me gustan las matemáticas.','Me gusto las matemáticas.','Me gustas las matemáticas.'], correct:1, hint:'Plural noun → gustan.'},
+  {type:'text', concept:'gustar', prompt:'Translate "Do you (tú) like psychology?" (start with ¿Te)', a:['te gusta la psicologia','¿te gusta la psicologia?','te gusta la psicología','¿te gusta la psicología?'], hint:'¿Te gusta la psicología?'},
+  {type:'text', concept:'estar', prompt:'Fill in: "Yo ___ en casa."', a:['estoy'], hint:'yo → estoy.'},
+  {type:'text', concept:'estar', prompt:'Fill in: "Hola, Mónica. ¿Cómo ___?"', a:['estas','estás'], hint:'tú → estás.'},
+  {type:'text', concept:'estar', prompt:'Fill in: "Usted ___ en la librería."', a:['esta','está'], hint:'Usted → está.'},
+  {type:'text', concept:'estar', prompt:'Fill in: "Nosotros ___ enfermos."', a:['estamos'], hint:'nosotros → estamos.'},
+  {type:'text', concept:'estar', prompt:'Fill in: "Paulina y Esteban ___ en el estadio."', a:['estan','están'], hint:'ellos → están.'},
+  {type:'mc', concept:'estar-uses', prompt:'Which sentence uses estar correctly?', choices:['Yo estoy estudiante.','La cafetería está al lado de la biblioteca.','Mi mamá está doctora.','El libro está rojo.'], correct:1, hint:'Location → estar. "La cafetería está al lado de la biblioteca."'},
+  {type:'mc', concept:'estar-uses', prompt:'Which is NOT a use of estar?', choices:['Location','Feelings/condition','Permanent traits like profession','How someone is doing today'], correct:2, hint:'Permanent traits (I am a student, she is tall) use ser, not estar.'},
+  {type:'text', concept:'prepositions', prompt:'Write the sentence: "las mochilas / detrás de / sillas"', a:['las mochilas estan detras de las sillas','las mochilas están detrás de las sillas'], hint:'"Las mochilas están detrás de las sillas."'},
+  {type:'text', concept:'prepositions', prompt:'Write the sentence: "nosotros / con / Ramiro"', a:['nosotros estamos con ramiro'], hint:'"Nosotros estamos con Ramiro." (con doesn\'t take "de")'},
+  {type:'text', concept:'prepositions', prompt:'Write: "¿(tú) / entre / las ventanas / y / puerta?"', a:['estas entre las ventanas y la puerta','¿estas entre las ventanas y la puerta?','estás entre las ventanas y la puerta','¿estás entre las ventanas y la puerta?'], hint:'"¿Estás entre las ventanas y la puerta?" (entre = no "de")'},
+  {type:'mc', concept:'prepositions', prompt:'Which word means "to the right of"?', choices:['a la izquierda de','a la derecha de','al lado de','detrás de'], correct:1, hint:'derecha = right.'},
+  {type:'text', concept:'prepositions', prompt:'Fill in: "La papelera está ___ del profesor." (to the right of — 3 words)', a:['a la derecha'], hint:'"a la derecha de" → with "del" (de + el) = "a la derecha del profesor."'},
+  {type:'mc', concept:'prepositions', prompt:'"El estadio está ___ la biblioteca y la cafetería."', choices:['detrás de','entre','encima de','lejos de'], correct:1, hint:'Between two things → entre.'},
+];
+
+let testI = 0;
+let testAnswers = Array(TEST.length).fill(null); // user input
+let testGraded = false;
+let timerSec = 20*60;
+let timerInt = null;
+let timerOn = true;
+
+function renderRail(){
+  const r = document.getElementById('testrail');
+  r.innerHTML = TEST.map((_,i)=>{
+    let cls = '';
+    if(i===testI) cls='cur';
+    else if(testAnswers[i]!=null && testAnswers[i]!=='') cls='done';
+    return `<span class="${cls}" title="Q${i+1}"></span>`;
+  }).join('');
+}
+
+function renderTestQ(){
+  const q = TEST[testI];
+  const stage = document.getElementById('test-stage');
+  const prev = testAnswers[testI] ?? '';
+  let body='';
+  if(q.type==='text'){
+    body = `<input type="text" id="t-input" placeholder="Type your answer…" value="${(''+prev).replace(/"/g,'&quot;')}" autofocus>`;
+  } else {
+    body = `<div class="choices">${q.choices.map((c,ci)=>`<label><input type="radio" name="t-mc" value="${ci}" ${prev===ci?'checked':''}> ${c}</label>`).join('')}</div>`;
+  }
+  stage.innerHTML = `
+    <div class="test-q">
+      <div class="qp"><span class="tag">${conceptShort(q.concept)}</span>Question ${testI+1} of ${TEST.length}</div>
+      <div style="margin-bottom:10px">${q.prompt}</div>
+      ${body}
+    </div>`;
+  renderRail();
+  document.getElementById('test-prev').disabled = testI===0;
+  document.getElementById('test-next').textContent = testI===TEST.length-1 ? 'Submit test' : 'Next →';
+
+  // Save on change
+  if(q.type==='text'){
+    const inp = stage.querySelector('#t-input');
+    inp.addEventListener('input', ()=> testAnswers[testI] = inp.value);
+    inp.addEventListener('keydown', e=>{
+      if(e.key==='Enter'){ e.preventDefault(); nextTest(); }
+    });
+    inp.focus();
+  } else {
+    stage.querySelectorAll('input[type=radio]').forEach(r=>{
+      r.addEventListener('change', ()=> testAnswers[testI] = +r.value);
+    });
+  }
+}
+
+function nextTest(){
+  if(testI < TEST.length-1){ testI++; renderTestQ(); }
+  else { submitTest(); }
+}
+function prevTest(){ if(testI>0){ testI--; renderTestQ(); } }
+
+function submitTest(){
+  // grade
+  let right=0;
+  const perConcept = {};
+  CONCEPTS.forEach(c=>perConcept[c.id]={right:0,total:0});
+  TEST.forEach((q,i)=>{
+    let got=false;
+    if(q.type==='text'){
+      got = q.a.some(a => normalize(a) === normalize(testAnswers[i]||''));
+    } else {
+      got = testAnswers[i] === q.correct;
+    }
+    if(got) right++;
+    if(perConcept[q.concept]){ perConcept[q.concept].total++; if(got) perConcept[q.concept].right++; }
+    // Also push to mastery bars
+    if(MASTERY.find(m=>m.id===q.concept) && !testGraded){ bumpMastery(q.concept, got); }
+  });
+  testGraded = true;
+  stopTimer();
+
+  // persist best score
+  const pct = Math.round(100*right/TEST.length);
+  if(state.bestScore==null || pct > state.bestScore){ state.bestScore = pct; }
+  save();
+  document.getElementById('best-score').textContent = state.bestScore + '%';
+  updateOverall();
+
+  // results view
+  const stage = document.getElementById('test-stage');
+  stage.innerHTML = `
+    <div class="score">
+      <div class="big">${right}<span class="den">/${TEST.length}</span></div>
+      <div class="pct">${pct}%  ·  ${pct>=85?'¡Excelente, Luca! 🌟':pct>=70?'Nice work — just a few spots to polish.':pct>=50?'Solid start. Review the weak spots below.':'All good — this is practice. Review and try again.'}</div>
+    </div>
+    <h3 style="font-family:var(--serif);margin-top:10px">By concept</h3>
+    <div class="breakdown">
+      ${Object.entries(perConcept).filter(([,v])=>v.total>0).map(([id,v])=>{
+        const p = Math.round(100*v.right/v.total);
+        const color = p>=80?'var(--accent)':p>=50?'var(--warm)':'#b94a2b';
+        return `<div class="row">
+          <div class="nm"><b>${conceptName(id)}</b><div style="font-size:.8rem;color:var(--ink-soft)">${v.right} of ${v.total} correct</div></div>
+          <div class="bar"><span style="width:${p}%;background:${color}"></span></div>
+          <div class="pct">${p}%</div>
+          <a href="#card-${id}">Review ↗</a>
+        </div>`;
+      }).join('')}
+    </div>
+    <h3 style="font-family:var(--serif);margin-top:18px">Answer key</h3>
+    <div class="breakdown">
+      ${TEST.map((q,i)=>{
+        let got=false, your='';
+        if(q.type==='text'){
+          your = testAnswers[i]||'(blank)';
+          got = q.a.some(a => normalize(a) === normalize(your));
+        } else {
+          your = testAnswers[i]!=null ? q.choices[testAnswers[i]] : '(blank)';
+          got = testAnswers[i] === q.correct;
+        }
+        const correct = q.type==='text' ? q.a[q.a.length-1] : q.choices[q.correct];
+        return `<div class="row" style="display:block">
+          <div><b>Q${i+1}.</b> <span style="color:var(--ink-soft)">${q.prompt}</span></div>
+          <div style="font-size:.9rem;margin-top:4px">
+            Your answer: <span style="color:${got?'var(--ok)':'var(--no)'}">${your}</span> ${got?'✓':'✗'}
+            ${got?'':`&nbsp; · &nbsp; Correct: <b>${correct}</b>`}
+          </div>
+          <div style="font-size:.82rem;color:var(--ink-soft);margin-top:3px">${q.hint} <a style="margin-left:6px" href="#card-${q.concept}">Review ${conceptShort(q.concept)}</a></div>
+        </div>`;
+      }).join('')}
+    </div>
+  `;
+  renderRail();
+  document.getElementById('test-next').textContent = 'Done';
+  document.getElementById('test-next').disabled = true;
+  document.getElementById('test-prev').disabled = true;
+}
+
+function resetTest(){
+  if(!confirm('Restart the test? Your answers so far will clear.')) return;
+  testI=0; testAnswers=Array(TEST.length).fill(null); testGraded=false;
+  timerSec = 20*60; renderTimer();
+  if(timerOn) startTimer();
+  document.getElementById('test-next').disabled=false;
+  renderTestQ();
+}
+
+function renderTimer(){
+  const m = Math.floor(timerSec/60), s = timerSec%60;
+  document.getElementById('timer').textContent = (m<10?'0':'')+m+':'+(s<10?'0':'')+s;
+}
+function startTimer(){
+  stopTimer();
+  if(!timerOn) return;
+  timerInt = setInterval(()=>{
+    timerSec--; renderTimer();
+    if(timerSec<=0){ stopTimer(); if(!testGraded) submitTest(); }
+  }, 1000);
+}
+function stopTimer(){ if(timerInt){ clearInterval(timerInt); timerInt=null; } }
+
+/* ====================== Boot ====================== */
+
+renderMastery();
+renderConcepts();
+setupFlash();
+renderPractice();
+renderTestQ();
+renderTimer();
+startTimer();
+document.getElementById('best-score').textContent = state.bestScore!=null ? state.bestScore+'%' : '—';
+document.getElementById('test-next').onclick = nextTest;
+document.getElementById('test-prev').onclick = prevTest;
+document.getElementById('test-reset').onclick = resetTest;
+document.getElementById('timer-toggle').onchange = e=>{
+  timerOn = e.target.checked;
+  document.getElementById('timer').classList.toggle('off', !timerOn);
+  if(timerOn) startTimer(); else stopTimer();
+};
+updateOverall();
+
+// Smooth scroll for nav
+document.querySelectorAll('.nav a').forEach(a=>a.addEventListener('click', e=>{
+  const id = a.getAttribute('href');
+  if(id && id.startsWith('#')){
+    e.preventDefault();
+    document.querySelector(id)?.scrollIntoView({behavior:'smooth', block:'start'});
+  }
+}));
+</script>
+</body>
+</html>
