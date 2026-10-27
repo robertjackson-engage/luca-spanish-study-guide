@@ -3,1114 +3,744 @@
 <head>
 <meta charset="utf-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1"/>
-<title>Luca's Spanish Lab — Lección 2</title>
+<title>Luca's Spanish Quest</title>
+<meta name="description" content="Game-style trainer for Spanish 1 Lección 2.1 & 2.3: -ar verbs, gustar, estar and location."/>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Nunito:wght@500;700;900&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
 <style>
 :root{
-  color-scheme: light;
-  --ink:#1a1f2e;
-  --ink-soft:#3b4255;
-  --paper:#faf8f3;
-  --paper-2:#f3efe6;
-  --card:#ffffff;
-  --accent:#2f6b55;
-  --accent-soft:#e4efe9;
-  --warm:#d97642;
-  --warm-soft:#fbe8dc;
-  --rule:#e4ddcf;
-  --ok:#2f6b55;
-  --no:#b94a2b;
-  --shadow: 0 1px 2px rgba(26,31,46,.05), 0 8px 24px rgba(26,31,46,.06);
-  --radius: 16px;
-  --sans: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
-  --serif: ui-serif, Georgia, "Iowan Old Style", "Palatino Linotype", serif;
+  --bg:#0b1020; --bg2:#121a33; --panel:#182246; --panel2:#1f2b57; --line:#2c3a6e;
+  --text:#eef2ff; --muted:#9aa7d6; --accent:#ffd166; --accent2:#06d6a0; --bad:#ef476f; --info:#4cc9f0; --purple:#b388ff;
+  --radius:16px; --pix:'Press Start 2P',monospace; --body:'Nunito',system-ui,sans-serif;
 }
 *{box-sizing:border-box}
-html,body{margin:0;padding:0;background:var(--paper);color:var(--ink);font-family:var(--sans);line-height:1.55;-webkit-font-smoothing:antialiased}
-h1,h2,h3,h4{font-family:var(--serif);font-weight:600;letter-spacing:-.01em;color:var(--ink);margin:0 0 .4em}
-h1{font-size: clamp(2rem, 4vw, 3rem); line-height:1.08}
-h2{font-size: clamp(1.4rem, 2.4vw, 1.9rem); line-height:1.15; margin-top:0}
-h3{font-size:1.15rem}
-p{margin:.4em 0}
-a{color:var(--accent)}
-.container{max-width:1040px;margin:0 auto;padding:28px 22px 80px}
-.topbar{position:sticky;top:0;z-index:40;backdrop-filter:saturate(140%) blur(10px);background:rgba(250,248,243,.85);border-bottom:1px solid var(--rule)}
-.topbar-inner{max-width:1040px;margin:0 auto;padding:10px 22px;display:flex;align-items:center;gap:14px}
-.brand{font-family:var(--serif);font-weight:600;font-size:1.05rem}
-.brand .dot{display:inline-block;width:10px;height:10px;border-radius:50%;background:var(--accent);margin-right:8px;vertical-align:middle}
-.nav{display:flex;gap:4px;margin-left:auto;flex-wrap:wrap}
-.nav a{font-size:.85rem;color:var(--ink-soft);text-decoration:none;padding:6px 10px;border-radius:999px}
-.nav a:hover{background:var(--paper-2);color:var(--ink)}
-.progress-wrap{display:flex;align-items:center;gap:10px;min-width:160px}
-.progress{flex:1;height:8px;background:var(--paper-2);border-radius:999px;overflow:hidden;border:1px solid var(--rule)}
-.progress > span{display:block;height:100%;width:0%;background:linear-gradient(90deg,var(--accent),#4a9d7f);transition:width .4s ease}
-.progress-label{font-size:.75rem;color:var(--ink-soft);min-width:34px;text-align:right}
-
-/* HERO */
-.hero{padding:40px 0 10px}
-.hero .eyebrow{display:inline-block;font-size:.78rem;letter-spacing:.14em;text-transform:uppercase;color:var(--accent);background:var(--accent-soft);padding:4px 10px;border-radius:999px;font-weight:600}
-.hero h1{margin-top:14px}
-.hero .lead{font-size:1.1rem;color:var(--ink-soft);max-width:62ch}
-.hero .meta{display:flex;flex-wrap:wrap;gap:10px;margin-top:18px}
-.chip{display:inline-flex;align-items:center;gap:6px;background:var(--card);border:1px solid var(--rule);padding:6px 12px;border-radius:999px;font-size:.85rem;color:var(--ink-soft);box-shadow:var(--shadow)}
-.chip b{color:var(--ink);font-weight:600}
-.chip .d{width:6px;height:6px;border-radius:50%;background:var(--warm)}
-.mastery{margin-top:28px;background:var(--card);border:1px solid var(--rule);border-radius:var(--radius);padding:18px 20px;box-shadow:var(--shadow)}
-.mastery h3{margin:0 0 10px;font-family:var(--sans);font-size:.85rem;letter-spacing:.08em;text-transform:uppercase;color:var(--ink-soft);font-weight:600}
-.mastery-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:14px}
-.mbar{font-size:.85rem}
-.mbar .label{display:flex;justify-content:space-between;margin-bottom:5px;color:var(--ink-soft)}
-.mbar .label b{color:var(--ink);font-weight:600}
-.mbar .track{height:8px;background:var(--paper-2);border-radius:999px;overflow:hidden;border:1px solid var(--rule)}
-.mbar .fill{height:100%;background:linear-gradient(90deg,var(--accent),#4a9d7f);width:0%;transition:width .5s ease}
-
-/* SECTIONS */
-section.block{margin-top:48px}
-section.block > header{display:flex;align-items:baseline;gap:14px;margin-bottom:16px}
-section.block > header .num{font-family:var(--serif);font-size:1.1rem;color:var(--warm);font-weight:600}
-section.block > header .sub{font-size:.9rem;color:var(--ink-soft)}
-
-/* Concept cards */
-.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:16px}
-.card{background:var(--card);border:1px solid var(--rule);border-radius:var(--radius);padding:20px;box-shadow:var(--shadow);display:flex;flex-direction:column;gap:10px}
-.card h3{margin:0}
-.card .why{font-size:.9rem;color:var(--ink-soft);border-left:3px solid var(--warm);padding-left:10px}
-.card details{margin-top:4px;background:var(--paper-2);border-radius:12px;padding:0;border:1px solid var(--rule)}
-.card details summary{cursor:pointer;padding:10px 14px;font-weight:600;font-size:.9rem;color:var(--accent);list-style:none}
-.card details summary::-webkit-details-marker{display:none}
-.card details[open] summary{border-bottom:1px solid var(--rule)}
-.card details .inner{padding:12px 14px}
-.card details .inner .step{margin-bottom:8px}
-.card details .inner .step b{color:var(--ink);font-family:var(--serif)}
-.quick{background:var(--accent-soft);border:1px solid #c7dcd1;border-radius:12px;padding:12px 14px;margin-top:4px}
-.quick .q{font-weight:600;font-size:.92rem;margin-bottom:6px}
-.quick input{width:100%;padding:9px 12px;border:1px solid var(--rule);border-radius:10px;font:inherit;background:var(--card)}
-.quick input:focus{outline:2px solid var(--accent);outline-offset:1px;border-color:var(--accent)}
-.quick .feedback{margin-top:6px;font-size:.85rem;min-height:1.2em}
-.quick .feedback.ok{color:var(--ok)}
-.quick .feedback.no{color:var(--no)}
-
-/* Conjugation table */
-.conj{width:100%;border-collapse:collapse;font-size:.95rem;margin-top:6px;background:var(--card);border-radius:12px;overflow:hidden;border:1px solid var(--rule)}
-.conj th,.conj td{padding:8px 12px;text-align:left;border-bottom:1px solid var(--rule)}
-.conj th{background:var(--paper-2);font-family:var(--serif);font-weight:600;font-size:.9rem;color:var(--ink-soft)}
-.conj tr:last-child td{border-bottom:0}
-.conj .end{color:var(--warm);font-weight:700}
-.conj .stem{color:var(--ink)}
-
-/* Flashcards */
-.flash-wrap{background:var(--card);border:1px solid var(--rule);border-radius:var(--radius);padding:20px;box-shadow:var(--shadow)}
-.flash-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;flex-wrap:wrap;gap:10px}
-.flash-head .counter{font-size:.85rem;color:var(--ink-soft)}
-.flash{perspective:1200px;height:220px;margin:0 auto;max-width:460px;cursor:pointer}
-.flash .face{position:absolute;inset:0;backface-visibility:hidden;border-radius:14px;display:flex;align-items:center;justify-content:center;padding:20px;text-align:center;transition:transform .55s ease;box-shadow:var(--shadow)}
-.flash .inner{position:relative;width:100%;height:100%;transition:transform .55s ease;transform-style:preserve-3d}
-.flash.flipped .inner{transform:rotateY(180deg)}
-.flash .front{background:var(--card);border:1px solid var(--rule)}
-.flash .back{background:var(--accent);color:#fff;transform:rotateY(180deg);border:1px solid var(--accent)}
-.flash .term{font-family:var(--serif);font-size:1.8rem}
-.flash .pos{font-size:.8rem;color:var(--ink-soft);margin-top:6px;text-transform:uppercase;letter-spacing:.1em}
-.flash .back .def{font-size:1.15rem;line-height:1.4}
-.flash .back .ex{font-size:.9rem;opacity:.9;margin-top:10px;font-style:italic}
-.flash-controls{display:flex;gap:8px;justify-content:center;margin-top:14px;flex-wrap:wrap}
-.btn{appearance:none;border:1px solid var(--rule);background:var(--card);color:var(--ink);padding:9px 16px;border-radius:999px;font:inherit;font-size:.9rem;cursor:pointer;transition:transform .1s ease, background .15s ease, border-color .15s ease}
-.btn:hover{background:var(--paper-2)}
-.btn:active{transform:translateY(1px)}
-.btn.primary{background:var(--accent);color:#fff;border-color:var(--accent)}
-.btn.primary:hover{background:#245544}
-.btn.warm{background:var(--warm);color:#fff;border-color:var(--warm)}
-.btn.warm:hover{background:#bf5d2b}
+html,body{margin:0;background:var(--bg);color:var(--text);font-family:var(--body);font-size:17px;line-height:1.45;-webkit-tap-highlight-color:transparent}
+body{background:radial-gradient(1200px 600px at 50% -10%,#1d2a5e 0%,var(--bg) 60%);min-height:100vh}
+button{font-family:inherit;font-size:inherit;cursor:pointer;border:0;color:inherit;background:none}
+button:disabled{opacity:.5;cursor:default}
+input{font-family:inherit;font-size:inherit}
+b{font-weight:900}
+.screen{display:none;max-width:980px;margin:0 auto;padding:16px 16px 48px}
+.screen.on{display:block;animation:pop .25s ease}
+@keyframes pop{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+.topbar{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:14px;flex-wrap:wrap}
+.pill{background:var(--panel);border:1px solid var(--line);border-radius:999px;padding:6px 12px;font-weight:800;font-size:14px;display:inline-flex;gap:6px;align-items:center}
+.pill.xp{color:var(--accent)}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;background:var(--panel2);border:2px solid var(--line);border-radius:14px;padding:12px 18px;font-weight:900;letter-spacing:.2px;transition:transform .08s,background .15s,border-color .15s;min-height:48px}
+.btn:hover{border-color:var(--info)}
+.btn:active{transform:scale(.97)}
+.btn.primary{background:linear-gradient(135deg,#ffd166,#ff9f1c);color:#1a1200;border-color:#ffe08a}
+.btn.good{background:linear-gradient(135deg,#06d6a0,#1b9aaa);color:#00261d;border-color:#7af3d4}
 .btn.ghost{background:transparent}
-.btn.sm{font-size:.8rem;padding:6px 12px}
-.flash-tags{display:flex;gap:8px;justify-content:center;margin-top:10px;font-size:.8rem;color:var(--ink-soft);flex-wrap:wrap}
-
-/* Visual explainers */
-.visuals{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:16px}
-.vcard{background:var(--card);border:1px solid var(--rule);border-radius:var(--radius);padding:18px;box-shadow:var(--shadow)}
-.vcard h3{margin:0 0 10px}
-.vcard svg{width:100%;height:auto;display:block}
-.vcard .cap{font-size:.85rem;color:var(--ink-soft);margin-top:8px}
-
-/* Practice + Test */
-.panel{background:var(--card);border:1px solid var(--rule);border-radius:var(--radius);padding:22px;box-shadow:var(--shadow)}
-.q-row{padding:14px 0;border-bottom:1px dashed var(--rule)}
-.q-row:last-child{border-bottom:0}
-.q-row .qp{font-weight:600;margin-bottom:8px}
-.q-row .qp .tag{display:inline-block;font-size:.7rem;background:var(--paper-2);color:var(--ink-soft);padding:2px 8px;border-radius:999px;margin-right:6px;letter-spacing:.08em;text-transform:uppercase;font-weight:600;border:1px solid var(--rule)}
-.q-row input[type=text]{width:100%;padding:9px 12px;border:1px solid var(--rule);border-radius:10px;font:inherit;background:var(--card);max-width:520px}
-.q-row input[type=text]:focus{outline:2px solid var(--accent);outline-offset:1px;border-color:var(--accent)}
-.q-row .choices{display:flex;flex-wrap:wrap;gap:8px;margin-top:4px}
-.q-row .choices label{background:var(--paper-2);border:1px solid var(--rule);padding:7px 12px;border-radius:999px;cursor:pointer;font-size:.9rem}
-.q-row .choices label:hover{background:var(--accent-soft)}
-.q-row .choices input{margin-right:6px}
-.q-row .fb{margin-top:8px;font-size:.9rem;min-height:1.2em}
-.q-row .fb.ok{color:var(--ok)}
-.q-row .fb.no{color:var(--no)}
-.q-row .fb .ref{color:var(--ink-soft);font-size:.82rem;display:block;margin-top:3px}
-.row-actions{display:flex;gap:8px;margin-top:6px;flex-wrap:wrap}
-
-/* Test */
-.test-head{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:12px}
-.timer{font-family:var(--serif);font-size:1.1rem;background:var(--warm-soft);color:var(--ink);padding:5px 12px;border-radius:999px;border:1px solid #f0cfb6}
-.timer.off{opacity:.5}
-.testrail{display:flex;gap:4px;margin-bottom:16px;flex-wrap:wrap}
-.testrail span{width:22px;height:6px;border-radius:3px;background:var(--paper-2);border:1px solid var(--rule)}
-.testrail span.done{background:var(--accent);border-color:var(--accent)}
-.testrail span.cur{background:var(--warm);border-color:var(--warm)}
-.test-q{padding:14px 0}
-.test-q .qp{font-weight:600;font-size:1.05rem;margin-bottom:12px}
-.test-nav{display:flex;justify-content:space-between;margin-top:14px;gap:10px}
-.score{text-align:center;padding:10px 0 24px}
-.score .big{font-family:var(--serif);font-size:3.4rem;color:var(--accent);line-height:1}
-.score .big .den{color:var(--ink-soft);font-size:1.6rem}
-.score .pct{font-size:1rem;color:var(--ink-soft);margin-top:4px}
-.breakdown{margin-top:18px}
-.breakdown .row{display:flex;align-items:center;gap:12px;padding:10px 0;border-top:1px solid var(--rule)}
-.breakdown .row:first-child{border-top:0}
-.breakdown .nm{flex:1;min-width:140px}
-.breakdown .bar{flex:1.3;height:8px;background:var(--paper-2);border-radius:999px;overflow:hidden;border:1px solid var(--rule)}
-.breakdown .bar > span{display:block;height:100%}
-.breakdown .pct{min-width:52px;text-align:right;font-size:.9rem;color:var(--ink-soft)}
-.breakdown a{font-size:.85rem;text-decoration:none;background:var(--accent-soft);color:var(--accent);padding:4px 10px;border-radius:999px;border:1px solid #c7dcd1}
-
-/* Study plan */
-.plans{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:16px}
-.plan{background:var(--card);border:1px solid var(--rule);border-radius:var(--radius);padding:18px;box-shadow:var(--shadow)}
-.plan h3{color:var(--warm);font-family:var(--serif);display:flex;align-items:baseline;gap:6px}
-.plan h3 small{font-size:.75rem;color:var(--ink-soft);font-family:var(--sans);text-transform:uppercase;letter-spacing:.1em;font-weight:600}
-.plan ol{margin:6px 0 0 18px;padding:0}
-.plan li{margin:4px 0;font-size:.95rem}
-
-footer{margin-top:60px;text-align:center;color:var(--ink-soft);font-size:.85rem}
-.hidden{display:none !important}
-.toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%) translateY(20px);background:var(--ink);color:#fff;padding:10px 18px;border-radius:999px;font-size:.9rem;opacity:0;transition:all .3s ease;pointer-events:none;z-index:60}
-.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
-.pill-ok{background:var(--accent-soft);color:var(--accent);border:1px solid #c7dcd1;padding:3px 8px;border-radius:999px;font-size:.75rem;font-weight:600}
-
-@media (max-width: 640px){
-  .nav{display:none}
-  .flash{height:200px}
-}
+.btn.sm{padding:8px 12px;min-height:38px;font-size:14px;border-radius:10px}
+.btn.wide{width:100%}
+h1.pix,h2.pix,.pix{font-family:var(--pix);line-height:1.6}
+h1.pix{font-size:clamp(15px,3.4vw,26px);margin:0 0 6px;color:var(--accent);text-shadow:3px 3px 0 #000}
+h2.pix{font-size:clamp(11px,2.2vw,16px);margin:0 0 12px;color:var(--info)}
+.sub{color:var(--muted);font-weight:700}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);padding:18px;box-shadow:0 10px 30px rgba(0,0,0,.35)}
+.grid{display:grid;gap:14px;grid-template-columns:repeat(auto-fill,minmax(270px,1fr))}
+.zone{position:relative;overflow:hidden;cursor:pointer;transition:transform .12s,border-color .15s}
+.zone:hover{transform:translateY(-3px);border-color:var(--info)}
+.zone .ico{font-size:40px;line-height:1;margin-bottom:8px}
+.zone .ttl{font-weight:900;font-size:19px}
+.zone .meta{color:var(--muted);font-size:14px;font-weight:700;margin:2px 0 8px}
+.zone .stars{font-size:18px;letter-spacing:2px;color:var(--accent)}
+.zone.boss{border-color:#ff7a90;background:linear-gradient(160deg,#3a1630,#182246)}
+.zone .best{position:absolute;top:12px;right:12px;font-size:12px;font-weight:900;color:var(--muted)}
+.bar{height:12px;background:#0d1430;border-radius:999px;overflow:hidden;border:1px solid var(--line)}
+.bar>i{display:block;height:100%;background:linear-gradient(90deg,var(--accent2),var(--info));width:0;transition:width .5s}
+.skills{display:grid;gap:8px;grid-template-columns:repeat(auto-fill,minmax(230px,1fr))}
+.skill{font-size:14px;font-weight:700}
+.skill .lbl{display:flex;justify-content:space-between;margin-bottom:3px}
+.skill .bar>i.low{background:linear-gradient(90deg,var(--bad),#ff9f1c)}
+/* game stage */
+.stage{min-height:300px}
+.hud{display:flex;gap:8px;align-items:center;justify-content:space-between;flex-wrap:wrap;margin-bottom:12px}
+.hud .prog{flex:1;min-width:120px}
+.combo{font-family:var(--pix);font-size:11px;color:var(--accent2)}
+.combo.hot{color:#ff9f1c;animation:shake .3s}
+@keyframes shake{25%{transform:translateX(-2px)}75%{transform:translateX(2px)}}
+.prompt{font-size:clamp(20px,3.4vw,28px);font-weight:900;margin:8px 0 16px;text-align:center}
+.prompt small{display:block;color:var(--muted);font-size:14px;font-weight:700;margin-top:4px}
+.opts{display:grid;gap:10px;grid-template-columns:1fr}
+@media(min-width:620px){.opts.two{grid-template-columns:1fr 1fr}}
+.opt{background:var(--panel2);border:2px solid var(--line);border-radius:14px;padding:14px 16px;text-align:left;font-weight:800;font-size:18px;transition:border-color .12s,transform .08s}
+.opt:hover{border-color:var(--info)}
+.opt:active{transform:scale(.98)}
+.opt.ok{border-color:var(--accent2);background:#0f3b32}
+.opt.bad{border-color:var(--bad);background:#3b1020}
+.opt.sel{border-color:var(--accent);background:#3b3010}
+.opt .k{display:inline-block;min-width:26px;color:var(--muted);font-family:var(--pix);font-size:10px;margin-right:8px}
+/* tiles */
+.line{min-height:64px;background:#0d1430;border:2px dashed var(--line);border-radius:14px;padding:10px;display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-bottom:12px;font-size:19px}
+.line.ok{border-color:var(--accent2);border-style:solid}
+.line.bad{border-color:var(--bad);border-style:solid}
+.line .ph{color:var(--muted);font-weight:700;font-size:15px}
+.line .q{color:var(--muted);font-weight:900;font-size:22px}
+.bank{display:flex;flex-wrap:wrap;gap:10px;margin-bottom:14px}
+.tile{background:linear-gradient(180deg,#2b3b7a,#1f2b57);border:2px solid #4457a3;border-radius:12px;padding:10px 14px;font-weight:900;font-size:18px;box-shadow:0 4px 0 #0e1538;transition:transform .08s}
+.tile:active{transform:translateY(2px);box-shadow:0 2px 0 #0e1538}
+.tile.used{opacity:.25;pointer-events:none}
+.line .tile{background:linear-gradient(180deg,#3d4f99,#2b3b7a)}
+.row{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+.row.end{justify-content:flex-end}
+.story{font-size:19px;line-height:1.9;background:#0d1430;border:1px solid var(--line);border-radius:14px;padding:16px}
+.blank{display:inline-block;min-width:110px;border-bottom:3px solid var(--muted);padding:0 6px;text-align:center;font-weight:900;color:var(--accent)}
+.blank.cur{border-color:var(--accent);background:#3b3010;border-radius:6px 6px 0 0;animation:blink 1s infinite}
+.blank.done.ok{color:var(--accent2);border-color:var(--accent2)}
+.blank.done.bad{color:var(--bad);border-color:var(--bad)}
+@keyframes blink{50%{background:#5a4a16}}
+.inp{width:100%;background:#0d1430;border:2px solid var(--line);border-radius:14px;padding:12px 14px;color:var(--text);font-weight:800;font-size:20px;outline:none}
+.inp:focus{border-color:var(--info)}
+.inp.ok{border-color:var(--accent2)} .inp.bad{border-color:var(--bad)} .inp.acc{border-color:var(--accent)}
+.accents{display:flex;gap:6px;flex-wrap:wrap;margin:8px 0}
+.accents button{background:var(--panel2);border:1px solid var(--line);border-radius:8px;padding:6px 10px;font-weight:900;font-size:17px}
+/* feedback sheet */
+#fb{position:fixed;inset:0;background:rgba(5,8,20,.72);display:none;align-items:flex-end;justify-content:center;z-index:50;padding:12px}
+#fb.on{display:flex}
+#fb .sheet{width:100%;max-width:720px;background:var(--panel);border:2px solid var(--line);border-radius:20px;padding:20px;animation:up .22s ease;max-height:85vh;overflow:auto}
+@keyframes up{from{transform:translateY(30px);opacity:0}to{transform:none;opacity:1}}
+#fb .sheet.ok{border-color:var(--accent2)} #fb .sheet.bad{border-color:var(--bad)} #fb .sheet.acc{border-color:var(--accent)}
+#fb h3{margin:0 0 8px;font-size:22px}
+#fb .why{background:#0d1430;border-radius:12px;padding:12px 14px;margin:10px 0;font-size:16px}
+#fb .ans{font-size:20px;font-weight:900;color:var(--accent2);margin:6px 0}
+.flash{position:fixed;left:50%;top:18%;transform:translateX(-50%);font-family:var(--pix);font-size:16px;padding:12px 18px;border-radius:12px;z-index:60;pointer-events:none;animation:fl .7s forwards}
+.flash.ok{background:#0f3b32;color:var(--accent2);border:2px solid var(--accent2)}
+.flash.bad{background:#3b1020;color:#ff9fb3;border:2px solid var(--bad)}
+@keyframes fl{0%{opacity:0;transform:translate(-50%,10px)}15%{opacity:1;transform:translate(-50%,0)}80%{opacity:1}100%{opacity:0;transform:translate(-50%,-14px)}}
+/* match */
+.match{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+@media(max-width:560px){.match{grid-template-columns:1fr}}
+.match .col h4{margin:0 0 8px;font-family:var(--pix);font-size:10px;color:var(--muted)}
+.mitem{display:flex;gap:8px;align-items:center;background:var(--panel2);border:2px solid var(--line);border-radius:12px;padding:10px 12px;margin-bottom:8px;font-weight:800;text-align:left;width:100%}
+.mitem .tag{font-family:var(--pix);font-size:10px;min-width:30px;color:var(--accent)}
+.mitem.sel{border-color:var(--accent);background:#3b3010}
+.mitem.linked{border-color:var(--info)}
+.mitem.ok{border-color:var(--accent2)} .mitem.bad{border-color:var(--bad)}
+/* 3D */
+#scene3d{width:100%;height:320px;border-radius:14px;overflow:hidden;background:#0d1430;border:1px solid var(--line);position:relative;touch-action:none}
+#scene3d canvas{display:block}
+#scene3d .hint{position:absolute;right:10px;bottom:8px;font-size:12px;color:var(--muted);font-weight:700;pointer-events:none}
+.fallback2d{height:320px;border-radius:14px;background:linear-gradient(#1b2a5e,#0d1430);border:1px solid var(--line);position:relative}
+.fallback2d .it{position:absolute;text-align:center;font-weight:900;font-size:14px}
+.fallback2d .it span{display:block;font-size:40px}
+/* results */
+.big{font-family:var(--pix);font-size:clamp(16px,4vw,28px);color:var(--accent);text-align:center;margin:10px 0}
+.stars-big{font-size:46px;text-align:center;letter-spacing:6px;color:var(--accent);text-shadow:0 0 18px #ffd166aa}
+.mist{background:#0d1430;border-radius:12px;padding:12px 14px;margin:8px 0;font-size:15px}
+.mist .y{color:#ff9fb3;text-decoration:line-through}
+.mist .c{color:var(--accent2);font-weight:900}
+/* exam */
+.ex-sec{margin-bottom:22px}
+.ex-sec h3{margin:0 0 4px;font-size:20px}
+.ex-sec .inst{color:var(--muted);font-weight:700;font-size:15px;margin-bottom:10px}
+.ex-item{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin:8px 0;font-size:18px}
+.ex-item .inp{max-width:360px}
+.ex-item select{background:#0d1430;color:var(--text);border:2px solid var(--line);border-radius:10px;padding:8px;font-weight:900;font-size:18px}
+.ex-item.ok .inp,.ex-item.ok select{border-color:var(--accent2)} .ex-item.bad .inp,.ex-item.bad select{border-color:var(--bad)} .ex-item.acc .inp{border-color:var(--accent)}
+.key{color:var(--accent2);font-weight:900;font-size:15px}
+/* reference */
+#ref{position:fixed;inset:0;background:rgba(5,8,20,.85);display:none;z-index:70;overflow:auto;padding:16px}
+#ref.on{display:block}
+#ref .inner{max-width:860px;margin:0 auto}
+table{width:100%;border-collapse:collapse;font-size:16px;margin:8px 0 14px}
+td,th{border:1px solid var(--line);padding:8px 10px;text-align:left}
+th{background:#0d1430;color:var(--info);font-size:13px}
+.tbl2{display:grid;gap:14px;grid-template-columns:repeat(auto-fit,minmax(260px,1fr))}
+.tip{background:#0d1430;border-left:4px solid var(--accent);padding:10px 12px;border-radius:8px;margin:8px 0;font-size:15px}
+.timer{font-family:var(--pix);font-size:18px;color:var(--bad)}
+.lives{font-size:20px;letter-spacing:2px}
+.center{text-align:center}
+.mt{margin-top:14px}
+.hidden{display:none!important}
+.help{font-size:14px;color:var(--muted);font-weight:700}
+.en{color:var(--muted);font-weight:700;font-size:15px}
 </style>
 </head>
 <body>
 
-<div class="topbar">
-  <div class="topbar-inner">
-    <div class="brand"><span class="dot"></span>Luca's Spanish Lab</div>
-    <nav class="nav">
-      <a href="#concepts">Concepts</a>
-      <a href="#vocab">Vocab</a>
-      <a href="#visuals">Visuals</a>
-      <a href="#practice">Practice</a>
-      <a href="#test">Test</a>
-      <a href="#plan">Plan</a>
-    </nav>
-    <div class="progress-wrap" title="Overall progress">
-      <div class="progress"><span id="overall-bar"></span></div>
-      <div class="progress-label" id="overall-label">0%</div>
+<!-- ============ TITLE ============ -->
+<section class="screen" id="s-title">
+  <div class="card center" style="margin-top:28px">
+    <div style="font-size:64px;line-height:1">🎮🇪🇸</div>
+    <h1 class="pix">LUCA'S SPANISH QUEST</h1>
+    <div class="sub">Lección 2 · -ar verbs · gustar · estar · where things are</div>
+    <p style="max-width:560px;margin:14px auto 18px">Five zones. Each zone is one section of your test, in the <b>exact</b> format. Earn XP, collect stars, then beat the <b>Boss Test</b>.</p>
+    <div class="row" style="justify-content:center">
+      <button class="btn primary" onclick="actx();preloadSfx();go('s-hub');say(['¡Hola, Luca!','¿Listo para jugar?'])">▶ START</button>
+      <button class="btn" onclick="openRef()">📘 Cheat sheet</button>
+    </div>
+    <p class="help mt">Progress saves on this device automatically.</p>
+  </div>
+</section>
+
+<!-- ============ HUB ============ -->
+<section class="screen" id="s-hub">
+  <div class="topbar">
+    <h1 class="pix" style="margin:0">WORLD MAP</h1>
+    <div class="row">
+      <span class="pill" id="pill-level">Lv 1</span>
+      <span class="pill xp" id="pill-xp">0 XP</span>
+      <span class="pill" id="pill-streak">🔥 0</span>
+      <button class="btn sm" onclick="openRef()">📘</button>
+      <button class="btn sm" id="voice" onclick="toggleVoice()" title="Spanish voice on/off">🗣️</button>
+      <button class="btn sm" id="mute" onclick="toggleMute()" title="All sound on/off">🔊</button>
     </div>
   </div>
-</div>
+  <div class="bar" style="margin-bottom:14px"><i id="xpbar"></i></div>
+  <div class="grid" id="zones"></div>
+  <div class="card mt">
+    <h2 class="pix">SKILL METER</h2>
+    <div class="skills" id="skills"></div>
+    <div class="tip mt" id="coach"></div>
+  </div>
+</section>
 
-<main class="container">
+<!-- ============ GAME ============ -->
+<section class="screen" id="s-game">
+  <div class="topbar">
+    <button class="btn sm ghost" onclick="quitGame()">← Map</button>
+    <div class="row"><span class="pill" id="g-title">Zone</span><button class="btn sm" onclick="openRef()">📘</button></div>
+  </div>
+  <div class="hud">
+    <div class="prog"><div class="bar"><i id="g-prog"></i></div></div>
+    <span class="pill" id="g-score">0 ✔</span>
+    <span class="combo" id="g-combo"></span>
+    <span class="timer hidden" id="g-timer"></span>
+  </div>
+  <div class="card stage" id="stage"></div>
+</section>
 
-  <!-- HERO -->
-  <section class="hero">
-    <span class="eyebrow">Lección 2 · Study Platform</span>
-    <h1>¡Hola, Luca! Let's own this quiz. 💪</h1>
-    <p class="lead">This is your personal lab for <b>Spanish 1, Lección 2</b> — the present tense of <b>-ar verbs</b>, the special verb <b>gustar</b>, and the verb <b>estar</b> with prepositions of location. Work through the concept cards, flip the flashcards, warm up on practice, then take the test when you're ready.</p>
-    <div class="meta">
-      <div class="chip"><span class="d"></span><b>Subject:</b>&nbsp;Spanish 1</div>
-      <div class="chip"><span class="d"></span><b>Lesson:</b>&nbsp;2.1 &amp; 2.3</div>
-      <div class="chip"><span class="d"></span><b>Topics:</b>&nbsp;-ar verbs · gustar · estar · location</div>
-      <div class="chip"><span class="d"></span><b>Est. time:</b>&nbsp;45–60 min</div>
+<!-- ============ RESULTS ============ -->
+<section class="screen" id="s-results">
+  <div class="card center">
+    <h2 class="pix" id="r-zone">ZONE CLEAR</h2>
+    <div class="stars-big" id="r-stars">★★★</div>
+    <div class="big" id="r-acc">100%</div>
+    <div class="sub" id="r-xp">+0 XP</div>
+    <div id="r-mist" style="text-align:left;margin-top:14px"></div>
+    <div class="row mt" style="justify-content:center">
+      <button class="btn primary" id="r-again">↻ Play again</button>
+      <button class="btn" onclick="go('s-hub')">🗺 Map</button>
     </div>
+  </div>
+</section>
 
-    <div class="mastery" aria-label="Concept mastery">
-      <h3>Live concept mastery</h3>
-      <div class="mastery-grid" id="mastery-grid"></div>
+<!-- ============ BOSS ============ -->
+<section class="screen" id="s-boss">
+  <div class="topbar">
+    <button class="btn sm ghost" onclick="go('s-hub')">← Map</button>
+    <span class="pill">👑 BOSS TEST · 23 pts</span>
+  </div>
+  <div class="card" id="boss-body"></div>
+</section>
+
+<!-- feedback sheet -->
+<div id="fb"><div class="sheet" id="fb-sheet"></div></div>
+
+<!-- reference -->
+<div id="ref"><div class="inner">
+  <div class="topbar"><h1 class="pix" style="margin:0">CHEAT SHEET</h1><button class="btn sm" onclick="closeRef()">✕ Close</button></div>
+  <div class="tbl2">
+    <div class="card">
+      <h2 class="pix">-AR VERBS</h2>
+      <table><tr><th>subject</th><th>ending</th><th>estudiar</th></tr>
+      <tr><td>yo</td><td><b>-o</b></td><td>estudi<b>o</b></td></tr>
+      <tr><td>tú</td><td><b>-as</b></td><td>estudi<b>as</b></td></tr>
+      <tr><td>él / ella / <b>usted</b></td><td><b>-a</b></td><td>estudi<b>a</b></td></tr>
+      <tr><td>nosotros (<b>… y yo</b>)</td><td><b>-amos</b></td><td>estudi<b>amos</b></td></tr>
+      <tr><td>vosotros</td><td>-áis</td><td>estudiáis</td></tr>
+      <tr><td>ellos / ellas / ustedes (<b>X y Y</b>)</td><td><b>-an</b></td><td>estudi<b>an</b></td></tr></table>
+      <div class="tip">“Héctor <b>y yo</b>” = nosotros → <b>-amos</b>. “Tomás <b>y</b> Patricia” = ellos → <b>-an</b>. <b>Usted</b> uses the él/ella form → <b>-a</b>.</div>
     </div>
-  </section>
-
-  <!-- CONCEPTS -->
-  <section class="block" id="concepts">
-    <header>
-      <span class="num">01</span>
-      <h2>Concept cards</h2>
-      <span class="sub">Click the ▸ to expand the worked example.</span>
-    </header>
-    <div class="cards" id="concept-cards"></div>
-  </section>
-
-  <!-- VOCAB -->
-  <section class="block" id="vocab">
-    <header>
-      <span class="num">02</span>
-      <h2>Vocabulary flashcards</h2>
-      <span class="sub">Click to flip. ← → to navigate. Progress saves automatically.</span>
-    </header>
-    <div class="flash-wrap">
-      <div class="flash-head">
-        <div class="counter"><span id="flash-i">1</span> / <span id="flash-n">0</span></div>
-        <div style="display:flex;gap:6px;">
-          <button class="btn sm" id="flash-shuffle">Shuffle</button>
-          <button class="btn sm" id="flash-reset">Reset progress</button>
-        </div>
-      </div>
-      <div class="flash" id="flashcard" tabindex="0" role="button" aria-label="Flashcard, press to flip">
-        <div class="inner">
-          <div class="face front">
-            <div>
-              <div class="term" id="flash-term">—</div>
-              <div class="pos" id="flash-pos"></div>
-            </div>
-          </div>
-          <div class="face back">
-            <div>
-              <div class="def" id="flash-def">—</div>
-              <div class="ex" id="flash-ex"></div>
-            </div>
-          </div>
-        </div>
-      </div>
-      <div class="flash-controls">
-        <button class="btn" id="flash-prev">← Prev</button>
-        <button class="btn warm" id="flash-review">Review again</button>
-        <button class="btn primary" id="flash-got">Got it ✓</button>
-        <button class="btn" id="flash-next">Next →</button>
-      </div>
-      <div class="flash-tags">
-        <span>Got it: <b id="got-count">0</b></span>
-        <span>·</span>
-        <span>To review: <b id="rev-count">0</b></span>
-      </div>
+    <div class="card">
+      <h2 class="pix">ESTAR</h2>
+      <table><tr><th>subject</th><th>estar</th></tr>
+      <tr><td>yo</td><td><b>estoy</b></td></tr><tr><td>tú</td><td><b>estás</b></td></tr>
+      <tr><td>él / ella / usted</td><td><b>está</b></td></tr><tr><td>nosotros</td><td><b>estamos</b></td></tr>
+      <tr><td>vosotros</td><td>estáis</td></tr><tr><td>ellos / ellas / ustedes</td><td><b>están</b></td></tr></table>
+      <div class="tip">Accents on estás, está, están. Location sentences <b>always need estar</b>: “Las mochilas <b>están</b> detrás de las sillas.”</div>
     </div>
-  </section>
-
-  <!-- VISUALS -->
-  <section class="block" id="visuals">
-    <header>
-      <span class="num">03</span>
-      <h2>Visual explainers</h2>
-      <span class="sub">The patterns, drawn out.</span>
-    </header>
-    <div class="visuals">
-
-      <div class="vcard">
-        <h3>-ar verb endings</h3>
-        <svg viewBox="0 0 420 260" xmlns="http://www.w3.org/2000/svg" aria-label="-ar verb endings diagram">
-          <defs>
-            <style>.stem-l{font:600 15px ui-serif,Georgia,serif;fill:#1a1f2e}.end-l{font:700 15px ui-sans-serif,system-ui,sans-serif;fill:#d97642}.sub-l{font:600 11px ui-sans-serif,system-ui,sans-serif;fill:#3b4255;letter-spacing:.1em}</style>
-          </defs>
-          <rect x="10" y="20" width="400" height="220" rx="14" fill="#faf8f3" stroke="#e4ddcf"/>
-          <text x="30" y="48" class="sub-l">PRONOUN</text>
-          <text x="200" y="48" class="sub-l">STEM</text>
-          <text x="320" y="48" class="sub-l">ENDING</text>
-          <g font-family="ui-sans-serif,system-ui,sans-serif" font-size="15">
-            <text x="30" y="78">yo</text>              <text x="200" y="78" class="stem-l">habl</text><text x="320" y="78" class="end-l">-o</text>
-            <text x="30" y="102">tú</text>             <text x="200" y="102" class="stem-l">habl</text><text x="320" y="102" class="end-l">-as</text>
-            <text x="30" y="126">él/ella/Ud.</text>    <text x="200" y="126" class="stem-l">habl</text><text x="320" y="126" class="end-l">-a</text>
-            <text x="30" y="150">nosotros</text>       <text x="200" y="150" class="stem-l">habl</text><text x="320" y="150" class="end-l">-amos</text>
-            <text x="30" y="174">vosotros</text>       <text x="200" y="174" class="stem-l">habl</text><text x="320" y="174" class="end-l">-áis</text>
-            <text x="30" y="198">ellos/ellas/Uds.</text><text x="200" y="198" class="stem-l">habl</text><text x="320" y="198" class="end-l">-an</text>
-          </g>
-          <text x="30" y="228" font-family="ui-sans-serif" font-size="11" fill="#3b4255">Drop <tspan font-weight="700">-ar</tspan> from the infinitive (hablar → habl-), then add the ending that matches the subject.</text>
-        </svg>
-        <div class="cap">The stem stays the same. Only the ending changes.</div>
-      </div>
-
-      <div class="vcard">
-        <h3>estar — present tense</h3>
-        <svg viewBox="0 0 420 240" xmlns="http://www.w3.org/2000/svg" aria-label="estar conjugation">
-          <rect x="10" y="20" width="400" height="200" rx="14" fill="#faf8f3" stroke="#e4ddcf"/>
-          <g font-family="ui-sans-serif,system-ui,sans-serif" font-size="15" fill="#1a1f2e">
-            <text x="30" y="56">yo</text><text x="230" y="56" font-family="ui-serif,Georgia,serif" font-weight="700" fill="#2f6b55">estoy</text>
-            <text x="30" y="84">tú</text><text x="230" y="84" font-family="ui-serif,Georgia,serif" font-weight="700" fill="#2f6b55">estás</text>
-            <text x="30" y="112">él/ella/Ud.</text><text x="230" y="112" font-family="ui-serif,Georgia,serif" font-weight="700" fill="#2f6b55">está</text>
-            <text x="30" y="140">nosotros</text><text x="230" y="140" font-family="ui-serif,Georgia,serif" font-weight="700" fill="#2f6b55">estamos</text>
-            <text x="30" y="168">vosotros</text><text x="230" y="168" font-family="ui-serif,Georgia,serif" font-weight="700" fill="#2f6b55">estáis</text>
-            <text x="30" y="196">ellos/ellas/Uds.</text><text x="230" y="196" font-family="ui-serif,Georgia,serif" font-weight="700" fill="#2f6b55">están</text>
-          </g>
-          <text x="30" y="40" font-size="11" fill="#d97642" font-weight="700" font-family="ui-sans-serif">Watch the accents on -ás, -á, -áis, -án!</text>
-        </svg>
-        <div class="cap">estar is irregular in the "yo" form and takes accent marks on 4 forms.</div>
-      </div>
-
-      <div class="vcard">
-        <h3>Prepositions of location</h3>
-        <svg viewBox="0 0 420 260" xmlns="http://www.w3.org/2000/svg" aria-label="prepositions of location">
-          <rect x="10" y="20" width="400" height="220" rx="14" fill="#faf8f3" stroke="#e4ddcf"/>
-          <!-- reference box -->
-          <rect x="180" y="110" width="60" height="40" rx="6" fill="#2f6b55"/>
-          <text x="210" y="135" text-anchor="middle" fill="#fff" font-family="ui-sans-serif" font-size="11" font-weight="700">libro</text>
-          <!-- arrows and labels -->
-          <g font-family="ui-sans-serif,system-ui,sans-serif" font-size="12" fill="#1a1f2e">
-            <!-- encima -->
-            <text x="210" y="70" text-anchor="middle" fill="#d97642" font-weight="700">encima de</text>
-            <line x1="210" y1="78" x2="210" y2="105" stroke="#d97642" stroke-width="2" marker-end="url(#ar)"/>
-            <!-- debajo -->
-            <text x="210" y="195" text-anchor="middle" fill="#d97642" font-weight="700">debajo de</text>
-            <line x1="210" y1="155" x2="210" y2="182" stroke="#d97642" stroke-width="2" marker-end="url(#ar)"/>
-            <!-- izquierda -->
-            <text x="90" y="135" text-anchor="middle" fill="#d97642" font-weight="700">a la izquierda</text>
-            <line x1="135" y1="130" x2="175" y2="130" stroke="#d97642" stroke-width="2" marker-end="url(#ar)"/>
-            <!-- derecha -->
-            <text x="330" y="135" text-anchor="middle" fill="#d97642" font-weight="700">a la derecha</text>
-            <line x1="285" y1="130" x2="245" y2="130" stroke="#d97642" stroke-width="2" marker-end="url(#ar)"/>
-            <!-- entre -->
-            <text x="210" y="225" text-anchor="middle" fill="#3b4255">detrás · delante · entre · cerca de · lejos de · al lado de · con · sin</text>
-          </g>
-          <defs>
-            <marker id="ar" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#d97642"/></marker>
-          </defs>
-        </svg>
-        <div class="cap">Most location phrases end in <b>de</b>. "entre" and "con" don't need it.</div>
-      </div>
-
-      <div class="vcard">
-        <h3>How gustar works (backwards!)</h3>
-        <svg viewBox="0 0 420 240" xmlns="http://www.w3.org/2000/svg" aria-label="gustar structure">
-          <rect x="10" y="20" width="400" height="200" rx="14" fill="#faf8f3" stroke="#e4ddcf"/>
-          <g font-family="ui-sans-serif,system-ui,sans-serif" font-size="13" fill="#1a1f2e">
-            <text x="30" y="55" font-weight="700" fill="#d97642">PRONOUN</text>
-            <text x="150" y="55" font-weight="700" fill="#2f6b55">gusta / gustan</text>
-            <text x="300" y="55" font-weight="700" fill="#1a1f2e">THING</text>
-
-            <text x="30" y="90">Me</text><text x="150" y="90">gusta</text><text x="300" y="90">la música.</text>
-            <text x="30" y="112">Te</text><text x="150" y="112">gusta</text><text x="300" y="112">dibujar.</text>
-            <text x="30" y="134">Le</text><text x="150" y="134">gustan</text><text x="300" y="134">los libros.</text>
-            <text x="30" y="156">Nos</text><text x="150" y="156">gusta</text><text x="300" y="156">bailar.</text>
-            <text x="30" y="178">Les</text><text x="150" y="178">gustan</text><text x="300" y="178">las clases.</text>
-          </g>
-          <text x="30" y="210" font-size="11" fill="#3b4255" font-family="ui-sans-serif">Literal meaning: "to me, the music is pleasing." Use <tspan font-weight="700" fill="#d97642">gustan</tspan> only when the thing liked is plural.</text>
-        </svg>
-        <div class="cap">The thing liked is the subject. The person is a pronoun before gusta.</div>
-      </div>
-
+    <div class="card">
+      <h2 class="pix">GUSTAR</h2>
+      <p style="margin:0 0 6px"><b>me</b> gusta = I like · <b>te</b> gusta = you like</p>
+      <p style="margin:0 0 6px"><b>gusta</b> + one thing or a verb (dibujar, la literatura)</p>
+      <p style="margin:0 0 6px"><b>gustan</b> + plural things (las matemáticas, los libros)</p>
+      <div class="tip">Matching trick: statement ends in <b>-o</b> (Tomo…) → answer uses <b>me</b>. Ends in <b>-as</b> (Trabajas…) → answer uses <b>te</b>.</div>
     </div>
-  </section>
-
-  <!-- PRACTICE -->
-  <section class="block" id="practice">
-    <header>
-      <span class="num">04</span>
-      <h2>Practice (ungraded)</h2>
-      <span class="sub">Warm up. Instant feedback. No pressure.</span>
-    </header>
-    <div class="panel" id="practice-panel"></div>
-  </section>
-
-  <!-- TEST -->
-  <section class="block" id="test">
-    <header>
-      <span class="num">05</span>
-      <h2>The test</h2>
-      <span class="sub">Scored. One question at a time. You've got this.</span>
-    </header>
-    <div class="panel" id="test-panel">
-      <div class="test-head">
-        <div>
-          <div style="font-family:var(--serif);font-size:1.1rem;font-weight:600">Lección 2 — Scored test</div>
-          <div style="font-size:.85rem;color:var(--ink-soft)">Best score: <b id="best-score">—</b></div>
-        </div>
-        <div style="display:flex;gap:10px;align-items:center">
-          <label style="font-size:.85rem;color:var(--ink-soft);display:flex;align-items:center;gap:6px"><input type="checkbox" id="timer-toggle" checked> Timer</label>
-          <div class="timer" id="timer">20:00</div>
-        </div>
-      </div>
-      <div class="testrail" id="testrail"></div>
-      <div id="test-stage"></div>
-      <div class="test-nav">
-        <button class="btn" id="test-prev">← Previous</button>
-        <div style="display:flex;gap:8px">
-          <button class="btn ghost" id="test-reset">Restart</button>
-          <button class="btn primary" id="test-next">Next →</button>
-        </div>
-      </div>
+    <div class="card">
+      <h2 class="pix">WHERE?</h2>
+      <table><tr><th>Spanish</th><th>English</th></tr>
+      <tr><td>detrás de</td><td>behind</td></tr><tr><td>a la derecha de</td><td>to the right of</td></tr>
+      <tr><td>entre … y …</td><td>between … and …</td></tr><tr><td>con</td><td>with</td></tr><tr><td>en</td><td>in / at</td></tr></table>
+      <div class="tip"><b>de + el = del</b>: a la derecha <b>del</b> profesor. Keep the articles: detrás de <b>las</b> sillas.</div>
     </div>
-  </section>
-
-  <!-- STUDY PLAN -->
-  <section class="block" id="plan">
-    <header>
-      <span class="num">06</span>
-      <h2>Before the quiz — study plan</h2>
-      <span class="sub">Pick the time you've got.</span>
-    </header>
-    <div class="plans">
-      <div class="plan">
-        <h3>10 <small>minutes</small></h3>
-        <ol>
-          <li>Scan the two conjugation diagrams.</li>
-          <li>Flip through 10 flashcards.</li>
-          <li>Do practice Q1–Q5 only.</li>
-        </ol>
-      </div>
-      <div class="plan">
-        <h3>30 <small>minutes</small></h3>
-        <ol>
-          <li>Read every concept card + open the worked examples.</li>
-          <li>Hit "Got it" on at least 15 flashcards.</li>
-          <li>Do all 15 practice questions.</li>
-        </ol>
-      </div>
-      <div class="plan">
-        <h3>60 <small>minutes</small></h3>
-        <ol>
-          <li>Full concept card walk-through.</li>
-          <li>Flashcards until all are "Got it".</li>
-          <li>All practice, then take the test.</li>
-          <li>Review the weak-concept breakdown.</li>
-        </ol>
-      </div>
-    </div>
-  </section>
-
-  <footer>
-    Built for Luca · Lección 2 study lab · Keep going — un paso a la vez. 🌱
-  </footer>
-
-</main>
-
-<div class="toast" id="toast">Saved ✓</div>
+  </div>
+  <div class="card mt">
+    <h2 class="pix">WORDS ON THE TEST</h2>
+    <div id="ref-vocab" style="columns:2;column-gap:20px;font-size:15px"></div>
+  </div>
+</div></div>
 
 <script>
-/* ====================== Safe storage ====================== */
-const LS = {
-  get(k, d){ try{ const v = localStorage.getItem(k); return v===null?d:JSON.parse(v); }catch(e){ return d; } },
-  set(k, v){ try{ localStorage.setItem(k, JSON.stringify(v)); }catch(e){} },
-  del(k){ try{ localStorage.removeItem(k); }catch(e){} }
+/* ===================== UTILITIES ===================== */
+const $=s=>document.querySelector(s);
+const el=(t,c,h)=>{const e=document.createElement(t);if(c)e.className=c;if(h!=null)e.innerHTML=h;return e;};
+const rnd=a=>a[Math.floor(Math.random()*a.length)];
+const shuffle=a=>{a=a.slice();for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a;};
+const strip=s=>s.normalize('NFD').replace(/[̀-ͯ]/g,'');
+const normA=s=>s.toLowerCase().replace(/[¿?¡!.,]/g,'').replace(/\s+/g,' ').trim();
+const norm=s=>strip(normA(s));
+const cap=s=>s.charAt(0).toUpperCase()+s.slice(1);
+const uniq=a=>[...new Set(a)];
+function grade(input,accepted){const a=normA(input),b=norm(input);if(!a)return 'no';if(accepted.some(x=>normA(x)===a))return 'ok';if(accepted.some(x=>norm(x)===b))return 'acc';return 'no';}
+
+/* ===================== SOUND ===================== */
+let AC=null;
+function beep(freqs,dur=0.09,type='square',vol=0.05){
+  if(P.muted)return;
+  try{AC=AC||new (window.AudioContext||window.webkitAudioContext)();
+  freqs.forEach((f,i)=>{const o=AC.createOscillator(),g=AC.createGain();o.type=type;o.frequency.value=f;g.gain.value=vol;o.connect(g);g.connect(AC.destination);const t=AC.currentTime+i*dur;o.start(t);g.gain.setValueAtTime(vol,t);g.gain.exponentialRampToValueAtTime(0.001,t+dur);o.stop(t+dur);});}catch(e){}
+}
+/* ---- ElevenLabs clips (pre-generated into /audio, see tools/gen_audio.py) ---- */
+const AMAP={'á':'a_','é':'e_','í':'i_','ó':'o_','ú':'u_','ñ':'n_','ü':'u__'};
+function aslug(t){const raw=t.toLowerCase().trim();t=raw.replace(/[áéíóúñü]/g,c=>AMAP[c]).replace(/[^a-z0-9_]+/g,'-').replace(/^-+|-+$/g,'');
+  if(t.length>60){let h=5381;for(let i=0;i<raw.length;i++)h=((h*33)^raw.charCodeAt(i))>>>0;t=t.slice(0,48)+'-'+h.toString(16);}return t||'x';}
+const AUD={buf:{},miss:{},srcs:[],tok:null};
+function actx(){if(!AC){try{AC=new (window.AudioContext||window.webkitAudioContext)();}catch(e){}}if(AC&&AC.state==='suspended')AC.resume();return AC;}
+async function aload(key){if(AUD.buf[key])return AUD.buf[key];if(AUD.miss[key])return null;
+  try{const r=await fetch('audio/'+key+'.mp3');if(!r.ok)throw 0;const ab=await r.arrayBuffer();const b=await actx().decodeAudioData(ab);AUD.buf[key]=b;return b;}catch(e){AUD.miss[key]=1;return null;}}
+function stopVoice(){AUD.srcs.forEach(s=>{try{s.stop();}catch(e){}});AUD.srcs=[];AUD.tok=null;}
+/* say(['¡Hola!','la mochila']) plays clips back to back; alt = fallback parts if a clip is missing */
+async function say(parts,alt){if(P.muted||P.voice===false)return;stopVoice();const tok={};AUD.tok=tok;
+  let bufs=await Promise.all(parts.map(p=>aload(aslug(p))));if(alt&&bufs.some(b=>!b))bufs=await Promise.all(alt.map(p=>aload(aslug(p))));
+  if(AUD.tok!==tok)return;const ac=actx();if(!ac)return;let t=ac.currentTime+0.03;
+  bufs.forEach(b=>{if(!b)return;const s=ac.createBufferSource();s.buffer=b;const g=ac.createGain();g.gain.value=1;s.connect(g);g.connect(ac.destination);s.start(t);t+=b.duration+0.1;AUD.srcs.push(s);});}
+function playSfx(name,fallback,vol=0.55){if(P.muted)return;const b=AUD.buf['sfx-'+name];if(b){const ac=actx();const s=ac.createBufferSource();s.buffer=b;const g=ac.createGain();g.gain.value=vol;s.connect(g);g.connect(ac.destination);s.start();}else{fallback&&fallback();aload('sfx-'+name);}}
+const SFX_NAMES=['ok','bad','tap','click','win','fanfare','tick','star','combo','lose'];
+function preloadSfx(){SFX_NAMES.forEach(n=>aload('sfx-'+n));}
+const sfx={ok:()=>playSfx('ok',()=>beep([660,880])),bad:()=>playSfx('bad',()=>beep([180,140],0.14,'sawtooth')),win:()=>playSfx('win',()=>beep([523,659,784,1047],0.11)),tick:()=>playSfx('tap',()=>beep([1200],0.03,'sine',0.02),0.35),click:()=>playSfx('click',null,0.3),fanfare:()=>playSfx('fanfare',()=>beep([523,659,784,1047,1319],0.12)),timer:()=>playSfx('tick',()=>beep([900],0.05,'sine',0.03),0.4),star:()=>playSfx('star',null),combo:()=>playSfx('combo',null,0.45),lose:()=>playSfx('lose',()=>beep([300,200,150],0.2,'sawtooth'))};
+const PRAISE_OK=['¡Correcto!','¡Muy bien!','¡Excelente!','¡Perfecto!','¡Increíble!'];
+const PRAISE_ALL=[...PRAISE_OK,'Casi.','No, otra vez.','¡Zona completada!','¡Tres estrellas!','¡Has derrotado al jefe!','Sigue practicando.','¡Hola, Luca!','¿Listo para jugar?','Nosotros deseamos bailar.','La librería está allá.'];
+function toggleVoice(){P.voice=P.voice===false;save();$('#voice').textContent=P.voice===false?'🗣️✕':'🗣️';}
+/* every Spanish string the game can show — exported once to generate the clips */
+function AUDIO_TEXTS(){const S=new Set();const add=t=>{if(t&&t.trim())S.add(t.trim());};
+  GP.forEach(p=>{add(p.s);add(p.r);});SUBJ.forEach(s=>add(s.t));
+  Object.keys(VERBS).forEach(v=>{add(v);if(v!=='gustar'&&v!=='estar')[0,1,2,3,5].forEach(p=>add(conj(v,p)));});
+  VC.forEach(([v,...rest])=>rest.forEach(add));GI.forEach(g=>add(g[2]));['me','te','no','gusta','gustan','gustas','tú','yo'].forEach(add);
+  STORIES.forEach(s=>{add(storyFilled(s));s.blanks.forEach(b=>add(b.form||conj(b.v,b.p)));});ESTAR.forEach(add);EP.forEach(e=>add(epFull(e)));
+  Object.values(ENT).forEach(e=>{add(e.t);add(bare(e.t));add(e.t+'?');});['detrás de','detrás del','a la derecha de','a la derecha del','entre','con','y','de','en','allá'].forEach(add);
+  LP.forEach(sp=>{const L=locParts(sp);L.tokens.forEach(add);add(L.sentence);});ESTAR.forEach(e=>add('¿Dónde '+e));
+  PRAISE_ALL.forEach(add);Object.keys(NOUNS).forEach(add);PERSON.forEach(add);return [...S];}
+function storyFilled(s){let i=0;return s.text.replace(/\[(\d)\] \([^)]+\)/g,()=>{const b=s.blanks[i++];return b.form||conj(b.v,b.p);});}
+function epFull(e){return e.s+' '+e.c.replace('___',ESTAR[e.p]);}
+
+/* ===================== PROFILE ===================== */
+const DEF={xp:0,zones:{},skills:{},streak:0,last:null,muted:false,bossBest:null};
+let P=load();
+function load(){try{const p=JSON.parse(localStorage.getItem('lucaQuest'));if(p)return Object.assign({},DEF,p);}catch(e){}return JSON.parse(JSON.stringify(DEF));}
+function save(){try{localStorage.setItem('lucaQuest',JSON.stringify(P));}catch(e){}}
+function touchStreak(){const d=new Date().toDateString();if(P.last!==d){const y=new Date(Date.now()-864e5).toDateString();P.streak=(P.last===y)?P.streak+1:1;P.last=d;save();}}
+function addXP(n){P.xp+=n;save();}
+const level=()=>Math.floor(P.xp/250)+1;
+function logSkill(k,ok){if(!k)return;const s=P.skills[k]=P.skills[k]||{ok:0,n:0};s.n++;if(ok)s.ok++;save();}
+function toggleMute(){P.muted=!P.muted;save();$('#mute').textContent=P.muted?'🔇':'🔊';}
+
+/* ===================== LANGUAGE DATA (test vocabulary only) ===================== */
+const PERSON=['yo','tú','él / ella / usted','nosotros','vosotros','ellos / ellas / ustedes'];
+const END=['o','as','a','amos','áis','an'];
+const ESTAR=['estoy','estás','está','estamos','estáis','están'];
+const PSKILL=['p_yo','p_tu','p_el','p_nos',null,'p_ellos'];
+const VERBS={trabajar:'to work',tomar:'to take',buscar:'to look for',estudiar:'to study',comprar:'to buy',desear:'to wish / want',escuchar:'to listen (to)',descansar:'to rest',dibujar:'to draw',viajar:'to travel',regresar:'to return / go back',necesitar:'to need',enseñar:'to teach',llegar:'to arrive',desayunar:'to have breakfast',bailar:'to dance',mirar:'to watch / look at',conversar:'to chat / talk',gustar:'to like (be pleasing to)',estar:'to be (location / feeling)'};
+const NOUNS={'la literatura':'literature','las matemáticas':'math','el arte':'art','el libro / los libros':'book(s)','la contabilidad':'accounting','la librería':'bookstore','la música':'music','la psicología':'psychology','la escuela':'school','la clase':'class','la televisión':'TV','los programas de ciencias y de animales':'science & animal shows','los programas educativos':'educational shows','el estadio':'stadium','la casa':'house / home','la mochila / las mochilas':'backpack(s)','la silla / las sillas':'chair(s)','la papelera':'wastebasket','el profesor':'teacher (m.)','la ventana / las ventanas':'window(s)','la puerta':'door','la biblioteca':'library','la cafetería':'cafeteria','enfermos':'sick (plural)','mucho':'a lot','a las siete y media':'at 7:30','allá':'over there'};
+const conj=(v,p)=>v.slice(0,-2)+END[p];
+const SUBJ=[
+ {t:'yo',p:0},{t:'tú',p:1},{t:'usted',p:2},{t:'Enrique',p:2},{t:'Mónica',p:2},{t:'Patricia',p:2},{t:'Ramiro',p:2},{t:'el profesor',p:2},{t:'ella',p:2},
+ {t:'nosotros',p:3},{t:'Héctor y yo',p:3},{t:'Tomás, Patricia y yo',p:3},{t:'Mónica y yo',p:3},{t:'tú y yo',p:3},
+ {t:'ustedes',p:5},{t:'ellos',p:5},{t:'Tomás y Patricia',p:5},{t:'Paulina y Esteban',p:5},{t:'Héctor y Enrique',p:5},{t:'los estudiantes',p:5}
+];
+function whyPerson(s){
+  const t=s.t.toLowerCase();
+  if(s.p===0)return `<b>yo</b> → ending <b>-o</b>`;
+  if(s.p===1)return `<b>tú</b> → ending <b>-as</b>`;
+  if(s.p===3)return t.includes(' y yo')?`<b>${s.t}</b>: anything “… <b>y yo</b>” means <b>nosotros</b> (we) → ending <b>-amos</b>`:`<b>${s.t}</b> = nosotros → ending <b>-amos</b>`;
+  if(s.p===5)return (t==='ustedes'||t==='ellos')?`<b>${s.t}</b> → ending <b>-an</b>`:`<b>${s.t}</b> = two or more people (not you) = <b>ellos</b> → ending <b>-an</b>`;
+  if(t==='usted')return `<b>usted</b> (formal “you”) uses the <b>él/ella</b> form → ending <b>-a</b>`;
+  return `<b>${s.t}</b> = one person = <b>él/ella</b> → ending <b>-a</b>`;
+}
+function whyEstar(s){const t=s.t.toLowerCase();
+  if(s.p===0)return `<b>yo</b> → <b>estoy</b>`;if(s.p===1)return `<b>tú</b> → <b>estás</b>`;
+  if(s.p===3)return t==='nosotros'?`<b>nosotros</b> (we) → <b>estamos</b>`:`<b>${s.t}</b> = nosotros (we) → <b>estamos</b>`;
+  if(s.p===5)return `<b>${s.t}</b> = ellos / ustedes (more than one) → <b>están</b>`;
+  if(t==='usted')return `<b>usted</b> takes the él/ella form → <b>está</b>`;
+  return `<b>${s.t}</b> = one person/thing → <b>está</b>`;}
+const isPlural=t=>/^(los|las) /.test(t);
+const isInf=t=>/^[a-záéíóúñ]+ar$/.test(t);
+function gForm(thing){return isPlural(thing)?'gustan':'gusta';}
+function whyGustar(pron,thing,stmt){
+  const a=pron==='me'?`“${stmt}” ends in <b>-o</b> → it's the <b>yo</b> form → the reply is about <b>me</b>`:`“${stmt}” ends in <b>-as</b> → it's the <b>tú</b> form → the reply is about <b>you</b> → <b>te</b>`;
+  const b=isPlural(thing)?`“${thing}” is <b>plural</b> → <b>gustan</b>`:isInf(thing)?`“${thing}” is a verb (an action) → <b>gusta</b>`:`“${thing}” is <b>singular</b> → <b>gusta</b>`;
+  return a+'.<br>'+b+'.';
+}
+
+/* Section 1 pairs: statement → reaction */
+const GP=[
+ {s:'Trabajas mucho.',r:'No te gusta descansar.'},
+ {s:'Tomo una clase de arte.',r:'Me gusta dibujar.'},
+ {s:'Busco un libro.',r:'Me gusta la literatura.'},
+ {s:'Estudias contabilidad.',r:'Te gustan las matemáticas.'},
+ {s:'Trabajo mucho.',r:'No me gusta descansar.'},
+ {s:'Tomas una clase de arte.',r:'Te gusta dibujar.'},
+ {s:'Buscas un libro.',r:'Te gusta la literatura.'},
+ {s:'Estudio contabilidad.',r:'Me gustan las matemáticas.'},
+ {s:'Escucho música.',r:'Me gusta la música.'},
+ {s:'Bailas mucho.',r:'Te gusta la música.'},
+ {s:'Miro televisión.',r:'Me gustan los programas de ciencias.'},
+ {s:'Estudias psicología.',r:'Te gusta la psicología.'},
+ {s:'Dibujo mucho.',r:'Me gusta el arte.'},
+ {s:'Viajas mucho.',r:'Te gusta viajar.'},
+ {s:'No viajo.',r:'No me gusta viajar.'},
+ {s:'Compras libros en la librería.',r:'Te gustan los libros.'},
+ {s:'Descanso en casa.',r:'No me gusta trabajar.'},
+ {s:'Miras programas educativos.',r:'Te gustan los programas educativos.'},
+ {s:'Estudio matemáticas.',r:'Me gusta la contabilidad.'},
+ {s:'Conversas mucho en clase.',r:'No te gusta estudiar.'},
+];
+function parseR(r){const m=r.match(/^(no )?(me|te) (gusta|gustan) (.+)\.$/i);return {neg:!!m[1],pron:m[2].toLowerCase(),num:m[3].toLowerCase()==='gustan',thing:m[4]};}
+function fmtR(o){return cap([o.neg?'no':null,o.pron,o.num?'gustan':'gusta',o.thing].filter(Boolean).join(' '))+'.';}
+
+/* Section 2 verb + complement combos */
+const VC=[['comprar','libros','en la librería'],['desear','escuchar música'],['desear','bailar'],['estudiar','contabilidad'],['tomar','una clase de arte'],['buscar','un libro'],['trabajar','mucho'],['escuchar','música','en casa'],['mirar','televisión'],['desayunar','a las siete'],['regresar','a casa'],['llegar','a la escuela','a las siete y media'],['necesitar','llegar a la escuela'],['enseñar','psicología'],['conversar','con Ramiro'],['dibujar','en la clase de arte'],['descansar','en casa'],['viajar','mucho'],['estudiar','matemáticas','en la biblioteca'],['desear','descansar']];
+const GI=[['(tú)','gustar','la psicología',true],['(yo)','gustar','la literatura',false],['(tú)','gustar','las matemáticas',true],['(yo)','gustar','dibujar',false],['(tú)','gustar','los programas educativos',true],['(yo)','no gustar','viajar',false],['(tú)','gustar','la música',true],['(yo)','gustar','los libros',false],['(tú)','gustar','descansar',true],['(yo)','no gustar','trabajar',false]];
+
+/* Section 3 stories */
+const STORIES=[
+ {text:'Tomás, Patricia y yo somos estudiantes; nosotros [1] (regresar / estudiar) en la escuela. Tomás y Patricia [2] (necesitar / enseñar) llegar a la escuela a las siete y media. Mi primera clase es a las ocho de la mañana. A las siete de la mañana, yo [3] (desayunar / bailar) y [4] (buscar / mirar) televisión. Me [5] (conversar / gustar) los programas de ciencias y de animales. Y a ti, ¿te gusta [6] (dibujar / mirar) programas educativos?',
+  blanks:[{o:['regresar','estudiar'],v:'estudiar',p:3,why:'“study at school” makes sense; “return at school” doesn\'t.'},{o:['necesitar','enseñar'],v:'necesitar',p:5,why:'“need to arrive at 7:30” — enseñar (teach) doesn\'t fit before “llegar”.'},{o:['desayunar','bailar'],v:'desayunar',p:0,why:'At 7 a.m. you eat breakfast, not dance.'},{o:['buscar','mirar'],v:'mirar',p:0,why:'You <b>watch</b> TV (mirar), you don\'t look for it (buscar).'},{o:['conversar','gustar'],v:'gustar',form:'gustan',why:'“Me ___ los programas” → gustar. Plural programas → <b>gustan</b>.'},{o:['dibujar','mirar'],v:'mirar',form:'mirar',why:'“te gusta ___ programas” → watch shows (mirar). After “gusta” the verb stays an infinitive.'}]},
+ {text:'Héctor y yo [1] (trabajar / bailar) en la librería. Yo [2] (comprar / desayunar) libros allá. Enrique [3] (desear / llegar) escuchar música en casa. Mónica y Paulina [4] (regresar / enseñar) a casa a las ocho. Me [5] (gustar / necesitar) la literatura. Y a ti, ¿te gusta [6] (descansar / buscar) en casa?',
+  blanks:[{o:['trabajar','bailar'],v:'trabajar',p:3,why:'You work in a bookstore; you don\'t dance there.'},{o:['comprar','desayunar'],v:'comprar',p:0,why:'You <b>buy</b> books (comprar).'},{o:['desear','llegar'],v:'desear',p:2,why:'“wants to listen” → desear + infinitive.'},{o:['regresar','enseñar'],v:'regresar',p:5,why:'“return home at 8” → regresar a casa.'},{o:['gustar','necesitar'],v:'gustar',form:'gusta',why:'“Me ___ la literatura” → gustar. Singular → <b>gusta</b>.'},{o:['descansar','buscar'],v:'descansar',form:'descansar',why:'“rest at home” → descansar, kept as an infinitive after “te gusta”.'}]},
+ {text:'Usted [1] (enseñar / desayunar) contabilidad en la escuela, ¿no? Los estudiantes [2] (estudiar / viajar) mucho. Tú [3] (tomar / buscar) una clase de arte a las siete y media. Patricia y yo [4] (mirar / llegar) televisión en casa. Me [5] (gustar / dibujar) los programas educativos. ¿Te gusta [6] (dibujar / escuchar) música?',
+  blanks:[{o:['enseñar','desayunar'],v:'enseñar',p:2,why:'A teacher <b>teaches</b> accounting. Usted → -a.'},{o:['estudiar','viajar'],v:'estudiar',p:5,why:'Students <b>study</b> a lot.'},{o:['tomar','buscar'],v:'tomar',p:1,why:'You <b>take</b> a class (tomar una clase).'},{o:['mirar','llegar'],v:'mirar',p:3,why:'You <b>watch</b> TV. “Patricia y yo” = nosotros.'},{o:['gustar','dibujar'],v:'gustar',form:'gustan',why:'“Me ___ los programas” → plural → <b>gustan</b>.'},{o:['dibujar','escuchar'],v:'escuchar',form:'escuchar',why:'You <b>listen to</b> music (escuchar), infinitive after “te gusta”.'}]}
+];
+
+/* Section 4 estar prompts */
+const EP=[
+ {s:'Paulina y Esteban',p:5,c:'___ en el estadio, ¿no?'},{s:'Yo',p:0,c:'___ en casa.'},{s:'Hola, Mónica. ¿Cómo',p:1,c:'___?'},{s:'Usted',p:2,c:'___ en la librería.'},{s:'Nosotros',p:3,c:'___ enfermos.'},
+ {s:'Tomás y Patricia',p:5,c:'___ en la biblioteca.'},{s:'Héctor y yo',p:3,c:'___ en la cafetería.'},{s:'Ustedes',p:5,c:'___ en la escuela.'},{s:'Tú',p:1,c:'___ en la clase de arte.'},{s:'Enrique',p:2,c:'___ enfermo.'},
+ {s:'El profesor',p:2,c:'___ en la librería.'},{s:'Las mochilas',p:5,c:'___ en casa.'},{s:'Ramiro y yo',p:3,c:'___ en el estadio.'},{s:'Ella',p:2,c:'___ en la biblioteca.'},{s:'Los libros',p:5,c:'___ en la mochila.'},
+ {s:'Tú y yo',p:3,c:'___ en la cafetería.'},{s:'Mónica',p:2,c:'___ en casa, ¿no?'},{s:'Ellos',p:5,c:'___ enfermos.'},{s:'Hola, Ramiro. ¿Cómo',p:1,c:'___?'},{s:'La papelera',p:2,c:'___ en la clase.'}
+];
+
+/* Section 5 entities + prompts */
+const ENT={
+ mochilas:{t:'las mochilas',p:5,kind:'backpack',n:2,set:'room'},mochila:{t:'la mochila',p:2,kind:'backpack',n:1,set:'room'},
+ sillas:{t:'las sillas',p:5,kind:'chair',n:2,set:'room'},silla:{t:'la silla',p:2,kind:'chair',n:1,set:'room'},
+ papelera:{t:'la papelera',p:2,kind:'bin',n:1,set:'room'},profesor:{t:'el profesor',p:2,kind:'person',color:0x3b82f6,n:1,set:'any'},
+ ventanas:{t:'las ventanas',p:5,kind:'window',n:2,set:'room'},puerta:{t:'la puerta',p:2,kind:'door',n:1,set:'room'},
+ libros:{t:'los libros',p:5,kind:'book',n:2,set:'room'},libro:{t:'el libro',p:2,kind:'book',n:1,set:'room'},
+ ramiro:{t:'Ramiro',p:2,kind:'person',color:0x22c55e,n:1,proper:true,set:'any'},
+ estadio:{t:'el estadio',p:2,kind:'stadium',n:1,set:'campus'},biblioteca:{t:'la biblioteca',p:2,kind:'library',n:1,set:'campus'},cafeteria:{t:'la cafetería',p:2,kind:'cafe',n:1,set:'campus'},
+ tu:{t:'tú',p:1,kind:'person',color:0xfacc15,n:1,pron:true,set:'any'},yo:{t:'yo',p:0,kind:'person',color:0xfacc15,n:1,pron:true,set:'any'},
+ nosotros:{t:'nosotros',p:3,kind:'person',color:0xfacc15,n:2,pron:true,set:'any'},ustedes:{t:'ustedes',p:5,kind:'person',color:0xf97316,n:2,pron:true,set:'any'}
 };
-const STORE_KEY = 'luca_spanish_lesson2_v1';
-const state = Object.assign({
-  conceptSeen: {},     // conceptId -> true
-  quickAnswered: {},   // conceptId -> true
-  flashStatus: {},     // term -> 'got' | 'review'
-  flashIndex: 0,
-  bestScore: null,
-}, LS.get(STORE_KEY, {}));
-function save(){ LS.set(STORE_KEY, state); }
-
-function toast(msg){
-  const t = document.getElementById('toast');
-  t.textContent = msg;
-  t.classList.add('show');
-  clearTimeout(toast._t);
-  toast._t = setTimeout(()=>t.classList.remove('show'), 1600);
-}
-
-/* ====================== Data ====================== */
-
-const CONCEPTS = [
-  {
-    id: 'ar-conj',
-    name: 'Present tense of -ar verbs',
-    explain: 'Spanish -ar verbs follow one pattern: drop the <b>-ar</b> from the infinitive, then add an ending that matches the subject. The stem stays the same every time.',
-    example: [
-      {b:'Infinitive:', t:'hablar (to speak)'},
-      {b:'Drop -ar:', t:'habl-'},
-      {b:'yo', t:'habl + <b>o</b> → <b>hablo</b> (I speak)'},
-      {b:'nosotros', t:'habl + <b>amos</b> → <b>hablamos</b> (we speak)'},
-      {b:'ellos', t:'habl + <b>an</b> → <b>hablan</b> (they speak)'},
-    ],
-    why: 'Almost half of all Spanish verbs are -ar verbs. Nail this pattern and you can conjugate hundreds of them.',
-    quick: { q: 'Conjugate <b>estudiar</b> for <b>yo</b>:', a: ['estudio'], hint: 'Drop -ar from estudiar → estudi-, then add -o for yo.' }
-  },
-  {
-    id: 'ar-vocab',
-    name: 'Common -ar verbs',
-    explain: 'These are the -ar verbs from Lección 2 you need to recognize instantly. They all follow the same conjugation rule.',
-    example: [
-      {b:'trabajar', t:'to work — <i>Trabajas mucho.</i> (You work a lot.)'},
-      {b:'tomar', t:'to take / drink — <i>Tomo una clase de arte.</i>'},
-      {b:'buscar', t:'to look for — <i>Busco un libro.</i>'},
-      {b:'estudiar', t:'to study — <i>Estudias contabilidad.</i>'},
-      {b:'desayunar', t:'to have breakfast — <i>Yo desayuno a las siete.</i>'},
-      {b:'mirar', t:'to watch / look at — <i>Miro televisión.</i>'},
-    ],
-    why: 'The quiz uses these verbs directly in fill-in-the-blank and sentence-writing sections.',
-    quick: { q: 'What does <b>buscar</b> mean?', a: ['to look for','look for','search','to search','to search for'], hint: 'Think "I\'m looking for my book." → <i>Busco mi libro.</i>' }
-  },
-  {
-    id: 'gustar',
-    name: 'The verb gustar (backwards verb)',
-    explain: '<b>Gustar</b> is weird: it literally means "to be pleasing to." The thing you like is the subject. The person who likes it is a pronoun (<b>me, te, le, nos, les</b>) placed <i>before</i> gusta.',
-    example: [
-      {b:'Rule:', t:'Use <b>gusta</b> if the thing liked is singular or an action. Use <b>gustan</b> if the thing liked is plural.'},
-      {b:'Me gusta la literatura.', t:'I like literature. (literatura = singular → gusta)'},
-      {b:'Te gustan las matemáticas.', t:'You like math. (matemáticas = plural → gustan)'},
-      {b:'Me gusta dibujar.', t:'I like to draw. (verb → always gusta)'},
-      {b:'No me gusta viajar.', t:'I don\'t like to travel. (no goes before me)'},
-    ],
-    why: 'The study guide matching section and fill-ins directly test gusta vs. gustan.',
-    quick: { q: 'Fill in: "Me ____ los libros."', a: ['gustan'], hint: 'los libros is plural → gustan.' }
-  },
-  {
-    id: 'estar',
-    name: 'The verb estar',
-    explain: '<b>Estar</b> means "to be" — but only for <b>location</b>, <b>condition</b>, and <b>emotion</b>. It is irregular: the yo form is <b>estoy</b>, and four forms carry accent marks.',
-    example: [
-      {b:'yo', t:'<b>estoy</b> — Yo estoy en casa.'},
-      {b:'tú', t:'<b>estás</b> — ¿Cómo estás?'},
-      {b:'él/ella/Ud.', t:'<b>está</b> — Usted está en la librería.'},
-      {b:'nosotros', t:'<b>estamos</b> — Nosotros estamos enfermos.'},
-      {b:'ellos/ellas/Uds.', t:'<b>están</b> — Paulina y Esteban están en el estadio.'},
-    ],
-    why: 'Section 4 of the test is 5 fill-in-the-blank items that are pure estar conjugation.',
-    quick: { q: 'Fill in: "Nosotros ____ enfermos."', a: ['estamos'], hint: 'nosotros + estar → estamos.' }
-  },
-  {
-    id: 'estar-uses',
-    name: 'When to use estar',
-    explain: 'Estar is used for three big things: <b>Location</b> (where something is), <b>Condition</b> (how someone feels physically), and <b>Emotion</b> (how someone feels). A quick trick: <b>PLACE</b> + <b>FEELING</b> = estar.',
-    example: [
-      {b:'Location:', t:'La librería <b>está</b> allá. (The bookstore is over there.)'},
-      {b:'Condition:', t:'Nosotros <b>estamos</b> enfermos. (We are sick.)'},
-      {b:'Emotion:', t:'Yo <b>estoy</b> contento. (I am happy.)'},
-      {b:'NOT for:', t:'Permanent traits like "I am tall" — that uses ser (next lesson).'},
-    ],
-    why: 'Any sentence about where something is located uses estar — never ser.',
-    quick: { q: 'True or false: Use estar to say "The stadium is between the library and cafeteria."', a: ['true','t','yes','sí','si'], hint: 'Yes — it\'s a location, so estar: <i>El estadio está entre…</i>' }
-  },
-  {
-    id: 'prepositions',
-    name: 'Prepositions of location',
-    explain: 'These words tell you <i>where</i> something is. Most are followed by <b>de</b> + the thing. Two important ones — <b>entre</b> and <b>con</b> — do NOT need de.',
-    example: [
-      {b:'detrás de', t:'behind — <i>Las mochilas están detrás de las sillas.</i>'},
-      {b:'a la derecha de', t:'to the right of — <i>La papelera está a la derecha del profesor.</i>'},
-      {b:'a la izquierda de', t:'to the left of'},
-      {b:'entre', t:'between (NO "de") — <i>El estadio está entre la biblioteca y la cafetería.</i>'},
-      {b:'con', t:'with (NO "de") — <i>Nosotros estamos con Ramiro.</i>'},
-      {b:'cerca de / lejos de', t:'near / far from'},
-      {b:'encima de / debajo de', t:'on top of / under'},
-      {b:'delante de / al lado de', t:'in front of / next to'},
-    ],
-    why: 'Section 5 asks you to build sentences with estar + a preposition. Every answer in Luca\'s study guide used one of these.',
-    quick: { q: 'Fill in the missing word: "El libro está ____ la mesa." (on top of)', a: ['encima de','encima'], hint: '"encima de" = on top of.' }
-  }
+const LP=[
+ {a:'mochilas',prep:'detras',b:'sillas'},{a:'papelera',prep:'derecha',b:'profesor'},{a:'tu',prep:'entre',b:'ventanas',c:'puerta',q:true},{a:'nosotros',prep:'con',b:'ramiro'},{a:'estadio',prep:'entre',b:'biblioteca',c:'cafeteria',q:true},
+ {a:'mochila',prep:'detras',b:'puerta'},{a:'sillas',prep:'derecha',b:'ventanas'},{a:'profesor',prep:'entre',b:'puerta',c:'papelera'},{a:'yo',prep:'con',b:'ramiro'},{a:'cafeteria',prep:'derecha',b:'estadio'},
+ {a:'biblioteca',prep:'detras',b:'cafeteria',q:true},{a:'libros',prep:'detras',b:'mochila'},{a:'papelera',prep:'entre',b:'sillas',c:'puerta'},{a:'tu',prep:'con',b:'profesor',q:true},{a:'nosotros',prep:'entre',b:'biblioteca',c:'cafeteria'},
+ {a:'libro',prep:'derecha',b:'papelera'},{a:'ramiro',prep:'detras',b:'profesor'},{a:'ustedes',prep:'con',b:'profesor',q:true},{a:'silla',prep:'derecha',b:'libro'},{a:'mochilas',prep:'entre',b:'silla',c:'papelera'}
 ];
+const PREPTXT={detras:'detrás de',derecha:'a la derecha de',entre:'entre',con:'con'};
+const PREPEN={detras:'behind',derecha:'to the right of',entre:'between',con:'with'};
+function bare(t){return t.replace(/^(el|la|los|las) /,'');}
+function locParts(sp){ // returns {subj,est,prepTile,objTiles[],tokens[],accepted[],fragment,sentence,del}
+  const A=ENT[sp.a],B=ENT[sp.b],C=sp.c&&ENT[sp.c];
+  const est=ESTAR[A.p];const subj=cap(A.t);
+  let tokens,del=false,fragment;
+  if(sp.prep==='entre'){tokens=[subj,est,'entre',B.t,'y',C.t];fragment=`${A.pron?'('+A.t+')':A.t} / entre / ${B.t} / y / ${bare(C.t)}`;}
+  else if(sp.prep==='con'){tokens=[subj,est,'con',B.t];fragment=`${A.pron?'('+A.t+')':A.t} / con / ${B.proper?B.t:bare(B.t)}`;}
+  else{const base=sp.prep==='detras'?'detrás':'a la derecha';del=B.t.startsWith('el ');tokens=[subj,est,base+(del?' del':' de'),del?bare(B.t):B.t];fragment=`${A.pron?'('+A.t+')':A.t} / ${PREPTXT[sp.prep]} / ${B.proper?B.t:bare(B.t)}`;}
+  const rest=tokens.slice(2);
+  const acc=[tokens.join(' ')];
+  if(A.pron)acc.push([est,...rest].join(' '));
+  if(sp.q){acc.push([est,subj.toLowerCase()==='tú'?'tú':subj,...rest].join(' '));if(A.pron)acc.push([est,...rest].join(' '));}
+  let sentence=tokens.join(' ');sentence=sp.q?'¿'+sentence+'?':sentence+'.';
+  if(sp.q)fragment='¿'+fragment+'?';
+  return {A,B,C,subj,est,tokens,accepted:acc,fragment,sentence,del};
+}
 
-const VOCAB = [
-  {t:'trabajar', p:'verb', d:'to work', ex:'Trabajas mucho.'},
-  {t:'tomar', p:'verb', d:'to take; to drink', ex:'Tomo una clase de arte.'},
-  {t:'buscar', p:'verb', d:'to look for', ex:'Busco un libro.'},
-  {t:'estudiar', p:'verb', d:'to study', ex:'Estudias contabilidad.'},
-  {t:'desear', p:'verb', d:'to want; to wish', ex:'Deseo bailar.'},
-  {t:'bailar', p:'verb', d:'to dance', ex:'Nosotros deseamos bailar.'},
-  {t:'comprar', p:'verb', d:'to buy', ex:'Héctor y yo compramos libros.'},
-  {t:'escuchar', p:'verb', d:'to listen (to)', ex:'Enrique desea escuchar música.'},
-  {t:'desayunar', p:'verb', d:'to have breakfast', ex:'Yo desayuno a las siete.'},
-  {t:'mirar', p:'verb', d:'to watch; to look at', ex:'Miro televisión.'},
-  {t:'conversar', p:'verb', d:'to talk; to chat', ex:'Conversamos con el profesor.'},
-  {t:'regresar', p:'verb', d:'to return; to go back', ex:'Regresamos a la escuela.'},
-  {t:'necesitar', p:'verb', d:'to need', ex:'Tomás y Patricia necesitan llegar temprano.'},
-  {t:'enseñar', p:'verb', d:'to teach', ex:'El profesor enseña español.'},
-  {t:'dibujar', p:'verb', d:'to draw', ex:'Me gusta dibujar.'},
-  {t:'viajar', p:'verb', d:'to travel', ex:'No me gusta viajar.'},
-  {t:'descansar', p:'verb', d:'to rest', ex:'No te gusta descansar.'},
-  {t:'gustar', p:'verb (special)', d:'to be pleasing to (= to like)', ex:'Me gusta la literatura.'},
-  {t:'estar', p:'verb (irregular)', d:'to be (location / feeling)', ex:'Yo estoy en casa.'},
-  {t:'detrás de', p:'preposition', d:'behind', ex:'Las mochilas están detrás de las sillas.'},
-  {t:'delante de', p:'preposition', d:'in front of', ex:'El libro está delante de la silla.'},
-  {t:'a la derecha de', p:'preposition', d:'to the right of', ex:'La papelera está a la derecha del profesor.'},
-  {t:'a la izquierda de', p:'preposition', d:'to the left of', ex:'La ventana está a la izquierda de la puerta.'},
-  {t:'entre', p:'preposition', d:'between (no "de")', ex:'El estadio está entre la biblioteca y la cafetería.'},
-  {t:'con', p:'preposition', d:'with (no "de")', ex:'Nosotros estamos con Ramiro.'},
-  {t:'encima de', p:'preposition', d:'on top of', ex:'El libro está encima de la mesa.'},
-  {t:'debajo de', p:'preposition', d:'under; below', ex:'La mochila está debajo de la silla.'},
-  {t:'cerca de', p:'preposition', d:'near; close to', ex:'La escuela está cerca de mi casa.'},
-  {t:'lejos de', p:'preposition', d:'far from', ex:'El estadio está lejos de aquí.'},
-  {t:'al lado de', p:'preposition', d:'next to', ex:'Estoy al lado de Ramiro.'},
-  {t:'la librería', p:'noun', d:'bookstore', ex:'Usted está en la librería.'},
-  {t:'la biblioteca', p:'noun', d:'library', ex:'La biblioteca está cerca.'},
-  {t:'el estadio', p:'noun', d:'stadium', ex:'Están en el estadio.'},
-  {t:'la mochila', p:'noun', d:'backpack', ex:'Las mochilas están detrás de las sillas.'},
-  {t:'enfermo/a', p:'adjective', d:'sick', ex:'Nosotros estamos enfermos.'},
+/* ===================== ROUTER / HUB ===================== */
+function go(id){document.querySelectorAll('.screen').forEach(s=>s.classList.remove('on'));$('#'+id).classList.add('on');window.scrollTo(0,0);if(id==='s-hub')renderHub();if(id!=='s-game')Z5.pause();}
+const ZONES=[
+ {id:'z1',ico:'🧩',ttl:'Gustar Match',meta:'Test §1 · Emparejar · 4 pts',desc:'Match the statement to the reaction. me/te · gusta/gustan.',start:()=>Z1.start()},
+ {id:'z2',ico:'🏗️',ttl:'Sentence Forge',meta:'Test §2 · Oraciones · 6 pts',desc:'Build sentences from fragments. Pick the right verb ending.',start:()=>Z2.start()},
+ {id:'z3',ico:'📖',ttl:'Story Fill',meta:'Test §3 · Completar · 3 pts',desc:'Choose the verb that makes sense, then type its form.',start:()=>Z3.start()},
+ {id:'z4',ico:'⚡',ttl:'Estar Blitz',meta:'Test §4 · Completar · 5 pts',desc:'60 seconds. estoy / estás / está / estamos / están.',start:()=>Z4.start()},
+ {id:'z5',ico:'🏫',ttl:'3D Classroom',meta:'Test §5 · Oraciones · 5 pts',desc:'Where is it? Describe the scene with estar + location.',start:()=>Z5.start()},
+ {id:'boss',ico:'👑',ttl:'BOSS TEST',meta:'Full mock test · 23 pts',desc:'Same format as the real thing. New words every time.',start:()=>Boss.start(),boss:true}
 ];
-
-/* ====================== Mastery bars ====================== */
-
-const MASTERY = [
-  {id:'ar-conj', name:'-ar verbs'},
-  {id:'gustar', name:'gustar'},
-  {id:'estar', name:'estar'},
-  {id:'estar-uses', name:'uses of estar'},
-  {id:'prepositions', name:'prepositions'},
-];
-let masteryScores = {}; // conceptId -> {right, total}
-MASTERY.forEach(m => masteryScores[m.id] = {right:0,total:0});
-
-function renderMastery(){
-  const grid = document.getElementById('mastery-grid');
-  grid.innerHTML = MASTERY.map(m => {
-    const sc = masteryScores[m.id];
-    const pct = sc.total ? Math.round(100*sc.right/sc.total) : 0;
-    return `
-      <div class="mbar" data-id="${m.id}">
-        <div class="label"><b>${m.name}</b><span>${sc.right}/${sc.total}</span></div>
-        <div class="track"><div class="fill" style="width:${pct}%"></div></div>
-      </div>`;
-  }).join('');
-}
-function bumpMastery(id, right){
-  if(!masteryScores[id]) return;
-  masteryScores[id].total++;
-  if(right) masteryScores[id].right++;
-  renderMastery();
+const SK={p_yo:'yo → -o',p_tu:'tú → -as',p_el:'él / ella / usted → -a',p_nos:'nosotros (…y yo) → -amos',p_ellos:'ellos / ustedes → -an',me_te:'me vs te',gusta_gustan:'gusta vs gustan',meaning:'picking the verb that makes sense',estar:'estar forms',estar_in:'remembering to use estar',art:'articles & del',prep:'prepositions (detrás, entre…)'};
+function stars(acc){return acc>=0.9?3:acc>=0.7?2:acc>=0.45?1:0;}
+function renderHub(){
+  touchStreak();
+  $('#pill-level').textContent='Lv '+level();$('#pill-xp').textContent=P.xp+' XP';$('#pill-streak').textContent='🔥 '+P.streak+' day'+(P.streak===1?'':'s');
+  $('#xpbar').style.width=((P.xp%250)/250*100)+'%';$('#mute').textContent=P.muted?'🔇':'🔊';
+  const z=$('#zones');z.innerHTML='';
+  ZONES.forEach(zn=>{const st=P.zones[zn.id]||{};const c=el('div','card zone'+(zn.boss?' boss':''));
+    c.innerHTML=`<div class="best">${zn.boss?(P.bossBest!=null?'best '+P.bossBest+'/23':''):(st.best!=null?'best '+Math.round(st.best*100)+'%':'')}</div><div class="ico">${zn.ico}</div><div class="ttl">${zn.ttl}</div><div class="meta">${zn.meta}</div><div class="sub" style="font-size:15px;margin-bottom:10px">${zn.desc}</div><div class="stars">${zn.boss?(P.bossBest!=null?'👑':''):'★'.repeat(st.stars||0)+'<span style="opacity:.25">'+'★'.repeat(3-(st.stars||0))+'</span>'}</div>`;
+    c.onclick=()=>{AC||(AC=null);zn.start();};z.appendChild(c);});
+  const s=$('#skills');s.innerHTML='';let weakest=null;
+  Object.entries(SK).forEach(([k,l])=>{const d=P.skills[k];const pct=d?Math.round(d.ok/d.n*100):null;if(d&&d.n>=3&&(weakest==null||pct<weakest.pct))weakest={k,l,pct};
+    s.appendChild(el('div','skill',`<div class="lbl"><span>${l}</span><span>${pct==null?'—':pct+'%'}</span></div><div class="bar"><i class="${pct!=null&&pct<60?'low':''}" style="width:${pct||0}%"></i></div>`));});
+  const rec={p_yo:'z2',p_tu:'z2',p_el:'z2',p_nos:'z2',p_ellos:'z2',me_te:'z1',gusta_gustan:'z1',meaning:'z3',estar:'z4',estar_in:'z5',art:'z5',prep:'z5'};
+  $('#coach').innerHTML=weakest?`🎯 <b>Coach:</b> your weakest skill is <b>${weakest.l}</b> (${weakest.pct}%). Train it in <b>${ZONES.find(z=>z.id===rec[weakest.k]).ttl}</b>.`:'🎯 <b>Coach:</b> play each zone once to light up your skill meter. Then go for 3 stars everywhere before the Boss.';
 }
 
-/* ====================== Overall progress ====================== */
-function updateOverall(){
-  // Weighted: concepts seen, quick checks, vocab got-it, test taken.
-  const totalConcepts = CONCEPTS.length;
-  const seen = Object.keys(state.conceptSeen).length;
-  const quick = Object.keys(state.quickAnswered).length;
-  const got = Object.values(state.flashStatus).filter(v=>v==='got').length;
-  const vocabTotal = VOCAB.length;
-  const testDone = state.bestScore != null ? 1 : 0;
+/* ===================== RUN (shared game state) ===================== */
+const run={id:null,title:'',total:0,done:0,correct:0,combo:0,xp:0,mist:[],again:null};
+function startRun(id,title,total,again){Object.assign(run,{id,title,total,done:0,correct:0,combo:0,xp:0,mist:[],again});$('#g-title').textContent=title;$('#g-timer').classList.add('hidden');hud();go('s-game');$('#stage').innerHTML='';}
+function hud(){$('#g-prog').style.width=(run.total?run.done/run.total*100:0)+'%';$('#g-score').textContent=run.correct+' ✔';const c=$('#g-combo');c.textContent=run.combo>=2?'COMBO x'+Math.min(run.combo,5):'';c.className='combo'+(run.combo>=4?' hot':'');}
+function mark(ok,mist){run.done++;if(ok){run.correct++;run.combo++;const g=10*Math.min(run.combo,3);run.xp+=g;sfx.ok();if(run.combo===3||run.combo===5)setTimeout(()=>sfx.combo(),250);}else{run.combo=0;sfx.bad();if(mist)run.mist.push(mist);}hud();}
+function quitGame(){Z4.stop();Z5.pause();go('s-hub');}
+function finishRun(){
+  Z4.stop();Z5.pause();
+  const acc=run.total?run.correct/run.total:0;const st=stars(acc);const bonus=st*25;run.xp+=bonus;addXP(run.xp);
+  const z=P.zones[run.id]=P.zones[run.id]||{};z.stars=Math.max(z.stars||0,st);z.best=Math.max(z.best||0,acc);save();
+  if(st===0)sfx.lose();else sfx.win();for(let i=0;i<st;i++)setTimeout(()=>sfx.star(),900+i*350);setTimeout(()=>say([st===3?'¡Tres estrellas!':st>0?'¡Zona completada!':'Sigue practicando.']),st?2000:1200);
+  $('#r-zone').textContent=run.title.toUpperCase()+(acc===1?' · PERFECT!':st>0?' · CLEAR':' · KEEP GOING');
+  $('#r-stars').innerHTML='★'.repeat(st)+'<span style="opacity:.2">'+'★'.repeat(3-st)+'</span>';
+  $('#r-acc').textContent=Math.round(acc*100)+'%';$('#r-xp').textContent=`+${run.xp} XP (includes ${bonus} star bonus) · ${run.correct}/${run.total} correct`;
+  const m=$('#r-mist');m.innerHTML=run.mist.length?'<h3 style="margin:0 0 6px">Fix these:</h3>':'<div class="center sub">No mistakes. 🔥</div>';
+  run.mist.forEach(x=>m.appendChild(el('div','mist',`<div>${x.prompt}</div>${x.yours?`<div>You: <span class="y">${x.yours}</span></div>`:''}<div>Answer: <span class="c">${x.correct}</span></div>${x.why?`<div class="sub" style="font-size:14px;margin-top:4px">${x.why}</div>`:''}`)));
+  $('#r-again').onclick=run.again;go('s-results');
+}
+/* feedback sheet */
+function feedback(kind,o,next){
+  const sh=$('#fb-sheet');sh.className='sheet '+kind;const praise=kind==='ok'?rnd(PRAISE_OK):null;
+  const parts=o.speak||(o.ans&&!/</.test(o.ans)&&/[a-záéíóúñ]/i.test(o.ans)?[o.ans]:null);
+  sh.innerHTML=`<h3>${kind==='ok'?'✅ '+praise:kind==='acc'?'🟡 ¡Casi! Check the accent':rnd(['❌ Not quite','❌ Almost — look:','❌ Try to remember this one'])}</h3>${o.ans?`<div class="ans">${o.ans}${parts?' <button class="btn sm" id="fb-say">🔊</button>':''}</div>`:''}${o.why?`<div class="why">${o.why}</div>`:''}<button class="btn primary wide" id="fb-next">Continue →</button>`;
+  $('#fb').classList.add('on');const b=$('#fb-next');b.onclick=()=>{$('#fb').classList.remove('on');stopVoice();next&&next();};b.focus();
+  if(parts){const speakIt=()=>say(kind==='ok'?[praise,...parts]:kind==='acc'?['Casi.',...parts]:parts,o.speakAlt&&(kind==='ok'?[praise,...o.speakAlt]:o.speakAlt));setTimeout(speakIt,300);const sb=$('#fb-say');if(sb)sb.onclick=()=>say(parts,o.speakAlt);}
+}
+function flash(kind,txt){const f=el('div','flash '+kind,txt);document.body.appendChild(f);setTimeout(()=>f.remove(),750);}
+function accentBar(input){const bar=el('div','accents');['á','é','í','ó','ú','ñ','¿','¡'].forEach(ch=>{const b=el('button',null,ch);b.type='button';b.onclick=()=>{const s=input.selectionStart||input.value.length;input.value=input.value.slice(0,s)+ch+input.value.slice(input.selectionEnd||s);input.focus();input.setSelectionRange(s+1,s+1);};bar.appendChild(b);});return bar;}
 
-  const parts = [
-    seen/totalConcepts,          // 25
-    quick/totalConcepts,          // 25
-    got/vocabTotal,               // 25
-    testDone                      // 25
-  ];
-  const w = [25,25,25,25];
-  const pct = Math.round(parts.reduce((s,p,i)=>s + Math.min(1,p)*w[i], 0));
-  document.getElementById('overall-bar').style.width = pct + '%';
-  document.getElementById('overall-label').textContent = pct + '%';
+/* ===================== TILE BUILDER ===================== */
+function tileBuilder(host,o){ // o:{tokens,distractors,accepted,question,hint,onCheck(ok,joined)}
+  const line=el('div','line');const ph=el('span','ph','Tap the tiles in order…');
+  if(o.question)line.appendChild(el('span','q','¿'));line.appendChild(ph);const qe=o.question?el('span','q','?'):null;if(qe)line.appendChild(qe);
+  const bank=el('div','bank');const placed=[];
+  const all=shuffle(uniq(o.tokens.concat(o.distractors)));
+  all.forEach(t=>{const b=el('button','tile',t);b.onclick=()=>{if(b.classList.contains('used'))return;b.classList.add('used');const lt=el('button','tile',t);lt.onclick=()=>{lt.remove();b.classList.remove('used');placed.splice(placed.indexOf(lt),1);ph.style.display=placed.length?'none':'';};placed.push(lt);qe?line.insertBefore(lt,qe):line.appendChild(lt);ph.style.display='none';sfx.tick();say([t]);};bank.appendChild(b);});
+  const row=el('div','row end');const chk=el('button','btn good','✔ Check');const clr=el('button','btn sm ghost','Clear');const hint=el('button','btn sm','💡 Hint');
+  clr.onclick=()=>{placed.splice(0).forEach(t=>t.remove());bank.querySelectorAll('.tile').forEach(b=>b.classList.remove('used'));ph.style.display='';};
+  hint.onclick=()=>{hint.replaceWith(el('div','tip',o.hint));};
+  chk.onclick=()=>{const joined=placed.map(t=>t.textContent).join(' ');if(!joined)return;const ok=o.accepted.some(a=>normA(a)===normA(joined));line.classList.add(ok?'ok':'bad');chk.disabled=true;o.onCheck(ok,joined);};
+  row.append(hint,clr,chk);host.append(line,bank,row);
 }
 
-/* ====================== Concept cards ====================== */
-function normalize(s){
-  return (s||'').toString().trim().toLowerCase()
-    .replace(/[¿¡?!.,;:]/g,'')
-    .replace(/á/g,'a').replace(/é/g,'e').replace(/í/g,'i').replace(/ó/g,'o').replace(/ú/g,'u').replace(/ñ/g,'n')
-    .replace(/\s+/g,' ');
-}
-function renderConcepts(){
-  const el = document.getElementById('concept-cards');
-  el.innerHTML = CONCEPTS.map(c => `
-    <article class="card" id="card-${c.id}">
-      <h3>${c.name}</h3>
-      <p>${c.explain}</p>
-      <div class="why"><b>Why it matters:</b> ${c.why}</div>
-      <details>
-        <summary>▸ Worked example</summary>
-        <div class="inner">
-          ${c.example.map(s=>`<div class="step"><b>${s.b}</b> ${s.t}</div>`).join('')}
-        </div>
-      </details>
-      <div class="quick" data-id="${c.id}">
-        <div class="q">Quick check: ${c.quick.q}</div>
-        <input type="text" placeholder="Type your answer…" aria-label="Quick check answer">
-        <div class="feedback" aria-live="polite"></div>
-      </div>
-    </article>
-  `).join('');
-  // Mark seen on card open
-  el.querySelectorAll('details').forEach(d => {
-    d.addEventListener('toggle', ()=>{
-      if(d.open){
-        const id = d.closest('.card').id.replace('card-','');
-        state.conceptSeen[id] = true; save(); updateOverall();
-      }
-    });
-  });
-  // Quick-check inputs
-  el.querySelectorAll('.quick').forEach(q => {
-    const id = q.dataset.id;
-    const c = CONCEPTS.find(x=>x.id===id);
-    const input = q.querySelector('input');
-    const fb = q.querySelector('.feedback');
-    input.addEventListener('keydown', e=>{
-      if(e.key==='Enter'){
-        const got = c.quick.a.some(a => normalize(a) === normalize(input.value));
-        if(got){
-          fb.textContent = '✓ Correct! ' + c.quick.hint;
-          fb.className = 'feedback ok';
-        } else {
-          fb.textContent = '✗ Not quite. ' + c.quick.hint;
-          fb.className = 'feedback no';
-        }
-        if(!state.quickAnswered[id]){
-          state.quickAnswered[id] = true;
-          state.conceptSeen[id] = true;
-          if(MASTERY.find(m=>m.id===id)) bumpMastery(id, got);
-          save(); updateOverall();
-        }
-      }
-    });
-  });
-}
-
-/* ====================== Flashcards ====================== */
-let flashOrder = VOCAB.map((_,i)=>i);
-let flashI = state.flashIndex || 0;
-function renderFlashCounts(){
-  const got = Object.values(state.flashStatus).filter(v=>v==='got').length;
-  const rev = Object.values(state.flashStatus).filter(v=>v==='review').length;
-  document.getElementById('got-count').textContent = got;
-  document.getElementById('rev-count').textContent = rev;
-}
-function showFlash(){
-  const idx = flashOrder[flashI % flashOrder.length];
-  const v = VOCAB[idx];
-  document.getElementById('flash-term').textContent = v.t;
-  document.getElementById('flash-pos').textContent = v.p;
-  document.getElementById('flash-def').textContent = v.d;
-  document.getElementById('flash-ex').textContent = v.ex;
-  document.getElementById('flash-i').textContent = (flashI%flashOrder.length)+1;
-  document.getElementById('flash-n').textContent = flashOrder.length;
-  const card = document.getElementById('flashcard');
-  card.classList.remove('flipped');
-  // tag indicator
-  const stat = state.flashStatus[v.t];
-  card.style.borderColor = stat==='got' ? 'var(--accent)' : (stat==='review' ? 'var(--warm)' : '');
-}
-function nextFlash(){ flashI = (flashI+1) % flashOrder.length; state.flashIndex=flashI; save(); showFlash(); }
-function prevFlash(){ flashI = (flashI-1+flashOrder.length) % flashOrder.length; state.flashIndex=flashI; save(); showFlash(); }
-function markFlash(status){
-  const idx = flashOrder[flashI % flashOrder.length];
-  const v = VOCAB[idx];
-  state.flashStatus[v.t] = status;
-  save(); renderFlashCounts(); updateOverall();
-  toast(status==='got' ? '¡Bien hecho! Got it ✓' : 'Added to review');
-  nextFlash();
-}
-function setupFlash(){
-  document.getElementById('flash-n').textContent = VOCAB.length;
-  const card = document.getElementById('flashcard');
-  card.addEventListener('click', ()=> card.classList.toggle('flipped'));
-  card.addEventListener('keydown', e=>{
-    if(e.key===' '||e.key==='Enter'){ e.preventDefault(); card.classList.toggle('flipped'); }
-    if(e.key==='ArrowRight'){ nextFlash(); }
-    if(e.key==='ArrowLeft'){ prevFlash(); }
-  });
-  document.getElementById('flash-next').onclick = nextFlash;
-  document.getElementById('flash-prev').onclick = prevFlash;
-  document.getElementById('flash-got').onclick = ()=>markFlash('got');
-  document.getElementById('flash-review').onclick = ()=>markFlash('review');
-  document.getElementById('flash-shuffle').onclick = ()=>{
-    for(let i=flashOrder.length-1;i>0;i--){
-      const j = Math.floor(Math.random()*(i+1));
-      [flashOrder[i],flashOrder[j]]=[flashOrder[j],flashOrder[i]];
-    }
-    flashI = 0; state.flashIndex=0; save(); showFlash();
-    toast('Shuffled!');
-  };
-  document.getElementById('flash-reset').onclick = ()=>{
-    state.flashStatus = {}; save(); renderFlashCounts(); showFlash(); updateOverall();
-    toast('Flashcard progress reset');
-  };
-  showFlash();
-  renderFlashCounts();
-}
-
-/* ====================== Practice ====================== */
-
-const PRACTICE = [
-  // -ar conjugation
-  {type:'text', concept:'ar-conj', prompt:'Conjugate <b>hablar</b> for <b>tú</b>.', a:['hablas'], hint:'tú → -as. hablar → hablas.'},
-  {type:'text', concept:'ar-conj', prompt:'Conjugate <b>trabajar</b> for <b>nosotros</b>.', a:['trabajamos'], hint:'nosotros → -amos.'},
-  {type:'mc', concept:'ar-conj', prompt:'Which is "they study"?', choices:['estudio','estudias','estudian','estudiamos'], correct:2, hint:'ellos → -an. estudiar → estudian.'},
-
-  // vocab recall
-  {type:'mc', concept:'ar-conj', prompt:'What does <b>regresar</b> mean?', choices:['to rest','to return','to need','to look for'], correct:1, hint:'regresar = to return / go back.'},
-  {type:'text', concept:'ar-conj', prompt:'How do you say "I draw" in Spanish?', a:['dibujo','yo dibujo'], hint:'dibujar → yo dibujo.'},
-
-  // gustar
-  {type:'mc', concept:'gustar', prompt:'Fill in: "Me ___ las matemáticas."', choices:['gusta','gustan','gustas','gusto'], correct:1, hint:'las matemáticas is plural → gustan.'},
-  {type:'text', concept:'gustar', prompt:'Fill in: "¿Te ___ dibujar?" (one word)', a:['gusta'], hint:'dibujar is a verb → always gusta.'},
-  {type:'text', concept:'gustar', prompt:'Translate: "I don\'t like to travel." (3 words after "No")', a:['no me gusta viajar'], hint:'Start with "No me gusta…"'},
-
-  // estar
-  {type:'text', concept:'estar', prompt:'Fill in: "Yo ___ en casa."', a:['estoy'], hint:'yo + estar → estoy.'},
-  {type:'text', concept:'estar', prompt:'Fill in: "Paulina y Esteban ___ en el estadio."', a:['estan','están'], hint:'ellos → están.'},
-  {type:'mc', concept:'estar', prompt:'Which form matches "tú"?', choices:['estoy','está','estás','estamos'], correct:2, hint:'tú → estás (with accent).'},
-
-  // uses of estar
-  {type:'mc', concept:'estar-uses', prompt:'Which sentence correctly uses estar?', choices:['Yo estoy alto.','La biblioteca está cerca.','Mi hermano está profesor.','Nosotros estamos de Chile.'], correct:1, hint:'Location → estar. "La biblioteca está cerca" (location).'},
-
-  // prepositions
-  {type:'mc', concept:'prepositions', prompt:'"between" in Spanish is:', choices:['detrás de','entre','encima de','cerca de'], correct:1, hint:'entre = between (no "de" after).'},
-  {type:'text', concept:'prepositions', prompt:'Fill in: "La papelera está ___ ___ ___ del profesor." (to the right of = 3 words)', a:['a la derecha'], hint:'"a la derecha de" = to the right of.'},
-  {type:'text', concept:'prepositions', prompt:'Write the full sentence: "las mochilas / detrás de / sillas"', a:['las mochilas estan detras de las sillas','las mochilas están detrás de las sillas'], hint:'ellos form → están. "Las mochilas están detrás de las sillas."'},
-];
-
-function renderPractice(){
-  const el = document.getElementById('practice-panel');
-  el.innerHTML = PRACTICE.map((q, i) => {
-    let body = '';
-    if(q.type==='text'){
-      body = `<input type="text" id="p-${i}" placeholder="Type your answer and press Enter…" aria-label="Answer">`;
-    } else {
-      body = `<div class="choices">${q.choices.map((c,ci)=>`<label><input type="radio" name="p-${i}" value="${ci}"> ${c}</label>`).join('')}</div>`;
-    }
-    return `
-      <div class="q-row" data-i="${i}">
-        <div class="qp"><span class="tag">${conceptShort(q.concept)}</span>${i+1}. ${q.prompt}</div>
-        ${body}
-        <div class="row-actions"><button class="btn sm" data-act="check">Check</button><button class="btn sm ghost" data-act="hint">Show hint</button></div>
-        <div class="fb" aria-live="polite"></div>
-      </div>
-    `;
-  }).join('');
-
-  el.querySelectorAll('.q-row').forEach(row=>{
-    const i = +row.dataset.i;
-    const q = PRACTICE[i];
-    const fb = row.querySelector('.fb');
-    function check(){
-      let got = false;
-      if(q.type==='text'){
-        const v = row.querySelector('input').value;
-        got = q.a.some(a => normalize(a) === normalize(v));
-      } else {
-        const sel = row.querySelector('input[type=radio]:checked');
-        got = sel && +sel.value === q.correct;
-      }
-      if(got){
-        fb.className = 'fb ok';
-        fb.innerHTML = '✓ Correct — ' + q.hint + ' <span class="ref">Concept: '+conceptName(q.concept)+'</span>';
-      } else {
-        fb.className = 'fb no';
-        fb.innerHTML = '✗ Not yet. ' + q.hint + ' <span class="ref">Review: <a href="#card-'+q.concept+'">'+conceptName(q.concept)+'</a></span>';
-      }
-      if(!row.dataset.answered){
-        row.dataset.answered='1';
-        if(MASTERY.find(m=>m.id===q.concept)) bumpMastery(q.concept, got);
-      }
-    }
-    row.querySelector('[data-act=check]').onclick = check;
-    row.querySelector('[data-act=hint]').onclick = ()=>{
-      fb.className = 'fb';
-      fb.innerHTML = '<span class="ref">Hint: '+q.hint+'</span>';
-    };
-    if(q.type==='text'){
-      row.querySelector('input').addEventListener('keydown', e=>{ if(e.key==='Enter') check(); });
-    }
-  });
-}
-function conceptName(id){ const c = CONCEPTS.find(c=>c.id===id); return c?c.name:id; }
-function conceptShort(id){
-  return ({
-    'ar-conj':'-ar verbs','ar-vocab':'-ar vocab','gustar':'gustar',
-    'estar':'estar','estar-uses':'uses of estar','prepositions':'prepositions'
-  })[id] || id;
-}
-
-/* ====================== Test ====================== */
-
-const TEST = [
-  {type:'text', concept:'ar-conj', prompt:'Conjugate <b>estudiar</b> for <b>nosotros</b>.', a:['estudiamos'], hint:'nosotros → -amos.'},
-  {type:'mc', concept:'ar-conj', prompt:'Which means "You (tú) buy"?', choices:['compro','compras','compra','compramos'], correct:1, hint:'tú → -as. comprar → compras.'},
-  {type:'text', concept:'ar-conj', prompt:'Fill in: "Héctor y yo ___ libros en la librería." (comprar)', a:['compramos'], hint:'"Héctor y yo" = nosotros → compramos.'},
-  {type:'mc', concept:'ar-conj', prompt:'"Enrique desea escuchar música" — what does <b>desea</b> mean?', choices:['I want','you want','he wants','we want'], correct:2, hint:'Enrique = él → desea = he wants.'},
-  {type:'text', concept:'gustar', prompt:'Fill in: "Me ___ los programas de ciencias." (gustar)', a:['gustan'], hint:'los programas is plural → gustan.'},
-  {type:'mc', concept:'gustar', prompt:'Which is correct?', choices:['Me gusta las matemáticas.','Me gustan las matemáticas.','Me gusto las matemáticas.','Me gustas las matemáticas.'], correct:1, hint:'Plural noun → gustan.'},
-  {type:'text', concept:'gustar', prompt:'Translate "Do you (tú) like psychology?" (start with ¿Te)', a:['te gusta la psicologia','¿te gusta la psicologia?','te gusta la psicología','¿te gusta la psicología?'], hint:'¿Te gusta la psicología?'},
-  {type:'text', concept:'estar', prompt:'Fill in: "Yo ___ en casa."', a:['estoy'], hint:'yo → estoy.'},
-  {type:'text', concept:'estar', prompt:'Fill in: "Hola, Mónica. ¿Cómo ___?"', a:['estas','estás'], hint:'tú → estás.'},
-  {type:'text', concept:'estar', prompt:'Fill in: "Usted ___ en la librería."', a:['esta','está'], hint:'Usted → está.'},
-  {type:'text', concept:'estar', prompt:'Fill in: "Nosotros ___ enfermos."', a:['estamos'], hint:'nosotros → estamos.'},
-  {type:'text', concept:'estar', prompt:'Fill in: "Paulina y Esteban ___ en el estadio."', a:['estan','están'], hint:'ellos → están.'},
-  {type:'mc', concept:'estar-uses', prompt:'Which sentence uses estar correctly?', choices:['Yo estoy estudiante.','La cafetería está al lado de la biblioteca.','Mi mamá está doctora.','El libro está rojo.'], correct:1, hint:'Location → estar. "La cafetería está al lado de la biblioteca."'},
-  {type:'mc', concept:'estar-uses', prompt:'Which is NOT a use of estar?', choices:['Location','Feelings/condition','Permanent traits like profession','How someone is doing today'], correct:2, hint:'Permanent traits (I am a student, she is tall) use ser, not estar.'},
-  {type:'text', concept:'prepositions', prompt:'Write the sentence: "las mochilas / detrás de / sillas"', a:['las mochilas estan detras de las sillas','las mochilas están detrás de las sillas'], hint:'"Las mochilas están detrás de las sillas."'},
-  {type:'text', concept:'prepositions', prompt:'Write the sentence: "nosotros / con / Ramiro"', a:['nosotros estamos con ramiro'], hint:'"Nosotros estamos con Ramiro." (con doesn\'t take "de")'},
-  {type:'text', concept:'prepositions', prompt:'Write: "¿(tú) / entre / las ventanas / y / puerta?"', a:['estas entre las ventanas y la puerta','¿estas entre las ventanas y la puerta?','estás entre las ventanas y la puerta','¿estás entre las ventanas y la puerta?'], hint:'"¿Estás entre las ventanas y la puerta?" (entre = no "de")'},
-  {type:'mc', concept:'prepositions', prompt:'Which word means "to the right of"?', choices:['a la izquierda de','a la derecha de','al lado de','detrás de'], correct:1, hint:'derecha = right.'},
-  {type:'text', concept:'prepositions', prompt:'Fill in: "La papelera está ___ del profesor." (to the right of — 3 words)', a:['a la derecha'], hint:'"a la derecha de" → with "del" (de + el) = "a la derecha del profesor."'},
-  {type:'mc', concept:'prepositions', prompt:'"El estadio está ___ la biblioteca y la cafetería."', choices:['detrás de','entre','encima de','lejos de'], correct:1, hint:'Between two things → entre.'},
-];
-
-let testI = 0;
-let testAnswers = Array(TEST.length).fill(null); // user input
-let testGraded = false;
-let timerSec = 20*60;
-let timerInt = null;
-let timerOn = true;
-
-function renderRail(){
-  const r = document.getElementById('testrail');
-  r.innerHTML = TEST.map((_,i)=>{
-    let cls = '';
-    if(i===testI) cls='cur';
-    else if(testAnswers[i]!=null && testAnswers[i]!=='') cls='done';
-    return `<span class="${cls}" title="Q${i+1}"></span>`;
-  }).join('');
-}
-
-function renderTestQ(){
-  const q = TEST[testI];
-  const stage = document.getElementById('test-stage');
-  const prev = testAnswers[testI] ?? '';
-  let body='';
-  if(q.type==='text'){
-    body = `<input type="text" id="t-input" placeholder="Type your answer…" value="${(''+prev).replace(/"/g,'&quot;')}" autofocus>`;
-  } else {
-    body = `<div class="choices">${q.choices.map((c,ci)=>`<label><input type="radio" name="t-mc" value="${ci}" ${prev===ci?'checked':''}> ${c}</label>`).join('')}</div>`;
-  }
-  stage.innerHTML = `
-    <div class="test-q">
-      <div class="qp"><span class="tag">${conceptShort(q.concept)}</span>Question ${testI+1} of ${TEST.length}</div>
-      <div style="margin-bottom:10px">${q.prompt}</div>
-      ${body}
-    </div>`;
-  renderRail();
-  document.getElementById('test-prev').disabled = testI===0;
-  document.getElementById('test-next').textContent = testI===TEST.length-1 ? 'Submit test' : 'Next →';
-
-  // Save on change
-  if(q.type==='text'){
-    const inp = stage.querySelector('#t-input');
-    inp.addEventListener('input', ()=> testAnswers[testI] = inp.value);
-    inp.addEventListener('keydown', e=>{
-      if(e.key==='Enter'){ e.preventDefault(); nextTest(); }
-    });
-    inp.focus();
-  } else {
-    stage.querySelectorAll('input[type=radio]').forEach(r=>{
-      r.addEventListener('change', ()=> testAnswers[testI] = +r.value);
-    });
-  }
-}
-
-function nextTest(){
-  if(testI < TEST.length-1){ testI++; renderTestQ(); }
-  else { submitTest(); }
-}
-function prevTest(){ if(testI>0){ testI--; renderTestQ(); } }
-
-function submitTest(){
-  // grade
-  let right=0;
-  const perConcept = {};
-  CONCEPTS.forEach(c=>perConcept[c.id]={right:0,total:0});
-  TEST.forEach((q,i)=>{
-    let got=false;
-    if(q.type==='text'){
-      got = q.a.some(a => normalize(a) === normalize(testAnswers[i]||''));
-    } else {
-      got = testAnswers[i] === q.correct;
-    }
-    if(got) right++;
-    if(perConcept[q.concept]){ perConcept[q.concept].total++; if(got) perConcept[q.concept].right++; }
-    // Also push to mastery bars
-    if(MASTERY.find(m=>m.id===q.concept) && !testGraded){ bumpMastery(q.concept, got); }
-  });
-  testGraded = true;
-  stopTimer();
-
-  // persist best score
-  const pct = Math.round(100*right/TEST.length);
-  if(state.bestScore==null || pct > state.bestScore){ state.bestScore = pct; }
-  save();
-  document.getElementById('best-score').textContent = state.bestScore + '%';
-  updateOverall();
-
-  // results view
-  const stage = document.getElementById('test-stage');
-  stage.innerHTML = `
-    <div class="score">
-      <div class="big">${right}<span class="den">/${TEST.length}</span></div>
-      <div class="pct">${pct}%  ·  ${pct>=85?'¡Excelente, Luca! 🌟':pct>=70?'Nice work — just a few spots to polish.':pct>=50?'Solid start. Review the weak spots below.':'All good — this is practice. Review and try again.'}</div>
-    </div>
-    <h3 style="font-family:var(--serif);margin-top:10px">By concept</h3>
-    <div class="breakdown">
-      ${Object.entries(perConcept).filter(([,v])=>v.total>0).map(([id,v])=>{
-        const p = Math.round(100*v.right/v.total);
-        const color = p>=80?'var(--accent)':p>=50?'var(--warm)':'#b94a2b';
-        return `<div class="row">
-          <div class="nm"><b>${conceptName(id)}</b><div style="font-size:.8rem;color:var(--ink-soft)">${v.right} of ${v.total} correct</div></div>
-          <div class="bar"><span style="width:${p}%;background:${color}"></span></div>
-          <div class="pct">${p}%</div>
-          <a href="#card-${id}">Review ↗</a>
-        </div>`;
-      }).join('')}
-    </div>
-    <h3 style="font-family:var(--serif);margin-top:18px">Answer key</h3>
-    <div class="breakdown">
-      ${TEST.map((q,i)=>{
-        let got=false, your='';
-        if(q.type==='text'){
-          your = testAnswers[i]||'(blank)';
-          got = q.a.some(a => normalize(a) === normalize(your));
-        } else {
-          your = testAnswers[i]!=null ? q.choices[testAnswers[i]] : '(blank)';
-          got = testAnswers[i] === q.correct;
-        }
-        const correct = q.type==='text' ? q.a[q.a.length-1] : q.choices[q.correct];
-        return `<div class="row" style="display:block">
-          <div><b>Q${i+1}.</b> <span style="color:var(--ink-soft)">${q.prompt}</span></div>
-          <div style="font-size:.9rem;margin-top:4px">
-            Your answer: <span style="color:${got?'var(--ok)':'var(--no)'}">${your}</span> ${got?'✓':'✗'}
-            ${got?'':`&nbsp; · &nbsp; Correct: <b>${correct}</b>`}
-          </div>
-          <div style="font-size:.82rem;color:var(--ink-soft);margin-top:3px">${q.hint} <a style="margin-left:6px" href="#card-${q.concept}">Review ${conceptShort(q.concept)}</a></div>
-        </div>`;
-      }).join('')}
-    </div>
-  `;
-  renderRail();
-  document.getElementById('test-next').textContent = 'Done';
-  document.getElementById('test-next').disabled = true;
-  document.getElementById('test-prev').disabled = true;
-}
-
-function resetTest(){
-  if(!confirm('Restart the test? Your answers so far will clear.')) return;
-  testI=0; testAnswers=Array(TEST.length).fill(null); testGraded=false;
-  timerSec = 20*60; renderTimer();
-  if(timerOn) startTimer();
-  document.getElementById('test-next').disabled=false;
-  renderTestQ();
-}
-
-function renderTimer(){
-  const m = Math.floor(timerSec/60), s = timerSec%60;
-  document.getElementById('timer').textContent = (m<10?'0':'')+m+':'+(s<10?'0':'')+s;
-}
-function startTimer(){
-  stopTimer();
-  if(!timerOn) return;
-  timerInt = setInterval(()=>{
-    timerSec--; renderTimer();
-    if(timerSec<=0){ stopTimer(); if(!testGraded) submitTest(); }
-  }, 1000);
-}
-function stopTimer(){ if(timerInt){ clearInterval(timerInt); timerInt=null; } }
-
-/* ====================== Boot ====================== */
-
-renderMastery();
-renderConcepts();
-setupFlash();
-renderPractice();
-renderTestQ();
-renderTimer();
-startTimer();
-document.getElementById('best-score').textContent = state.bestScore!=null ? state.bestScore+'%' : '—';
-document.getElementById('test-next').onclick = nextTest;
-document.getElementById('test-prev').onclick = prevTest;
-document.getElementById('test-reset').onclick = resetTest;
-document.getElementById('timer-toggle').onchange = e=>{
-  timerOn = e.target.checked;
-  document.getElementById('timer').classList.toggle('off', !timerOn);
-  if(timerOn) startTimer(); else stopTimer();
+/* ===================== ZONE 1: GUSTAR MATCH ===================== */
+const Z1={
+ start(){startRun('z1','Gustar Match',8+4,()=>Z1.start());this.items=shuffle(GP).slice(0,8);this.i=0;this.next();},
+ next(){if(this.i>=8)return this.matchPhase();const it=this.items[this.i];const r=parseR(it.r);
+  const other=parseR(rnd(GP.filter(x=>x!==it&&x.r!==it.r)).r);other.pron=r.pron==='me'?'te':'me';
+  const opts=shuffle(uniq([fmtR(r),fmtR({...r,pron:r.pron==='me'?'te':'me'}),fmtR({...r,num:!r.num}),fmtR(other)]));
+  const st=$('#stage');st.innerHTML=`<div class="prompt">“${it.s}”<small>Which reaction matches? (${this.i+1}/8)</small></div>`;const g=el('div','opts');
+  opts.forEach((t,k)=>{const b=el('button','opt',`<span class="k">${'abcd'[k]}</span>${t}`);b.onclick=()=>{g.querySelectorAll('.opt').forEach(x=>x.disabled=true);const ok=t===it.r;b.classList.add(ok?'ok':'bad');if(!ok)[...g.children].find(x=>x.textContent.slice(1)===it.r).classList.add('ok');
+    const yr=t.startsWith('No ')||t.startsWith('Me ')||t.startsWith('Te ')?parseR(t):null;const pOK=yr&&yr.pron===r.pron,nOK=yr&&yr.num===r.num;logSkill('me_te',pOK);logSkill('gusta_gustan',nOK);
+    mark(ok,{prompt:it.s,yours:t,correct:it.r,why:whyGustar(r.pron,r.thing,it.s)});
+    feedback(ok?'ok':'bad',{ans:it.r,why:whyGustar(r.pron,r.thing,it.s),speak:[it.s,it.r]},()=>{this.i++;this.next();});};g.appendChild(b);});st.appendChild(g);say([it.s]);},
+ matchPhase(){const pairs=shuffle(GP).slice(0,4);const used=new Set(pairs.map(p=>p.r));
+  const flip=x=>{const o=parseR(x.r);o.pron=o.pron==='me'?'te':'me';return fmtR(o);};const d1=flip(pairs[0]),d2=flip(pairs[1]);
+  let resp=uniq([...pairs.map(p=>p.r),d1,d2]);while(resp.length<6){const x=rnd(GP).r;if(!resp.includes(x))resp.push(x);}resp=shuffle(resp);const letters='abcdef';
+  const st=$('#stage');st.innerHTML=`<div class="prompt">Test format: match A → B<small>Two items in column B will not be used. Tap a sentence, then tap its match.</small></div>`;
+  const m=el('div','match');const ca=el('div','col','<h4>A</h4>'),cb=el('div','col','<h4>B</h4>');let sel=null;const link={};
+  const aBtns=pairs.map((p,i)=>{const b=el('button','mitem',`<span class="tag">${i+1}.</span><span class="ans-tag tag" style="color:var(--info)">__</span>${p.s}`);b.onclick=()=>{ca.querySelectorAll('.mitem').forEach(x=>x.classList.remove('sel'));b.classList.add('sel');sel=i;};ca.appendChild(b);return b;});
+  resp.forEach((r,j)=>{const b=el('button','mitem',`<span class="tag">${letters[j]}.</span>${r}`);b.onclick=()=>{if(sel==null){flash('bad','Pick a sentence in A first');return;}link[sel]=j;aBtns[sel].querySelector('.ans-tag').textContent=letters[j];aBtns[sel].classList.add('linked');aBtns[sel].classList.remove('sel');sel=null;sfx.tick();chk.disabled=Object.keys(link).length<4;};cb.appendChild(b);});
+  m.append(ca,cb);st.appendChild(m);const chk=el('button','btn good wide mt','✔ Check all');chk.disabled=true;
+  chk.onclick=()=>{chk.disabled=true;let fails=[];pairs.forEach((p,i)=>{const ok=resp[link[i]]===p.r;aBtns[i].classList.add(ok?'ok':'bad');const r=parseR(p.r);logSkill('me_te',ok||parseR(resp[link[i]]).pron===r.pron);logSkill('gusta_gustan',ok||parseR(resp[link[i]]).num===r.num);mark(ok,{prompt:p.s,yours:resp[link[i]],correct:p.r,why:whyGustar(r.pron,r.thing,p.s)});if(!ok)fails.push(`${i+1}. ${p.s} → <b>${p.r}</b>`);});
+    feedback(fails.length?'bad':'ok',{ans:fails.length?fails.length+' wrong':'4/4!',why:fails.length?fails.join('<br>'):'Statement in -o → me. Statement in -as → te. Plural thing → gustan.'},finishRun);};
+  st.appendChild(chk);}
 };
-updateOverall();
 
-// Smooth scroll for nav
-document.querySelectorAll('.nav a').forEach(a=>a.addEventListener('click', e=>{
-  const id = a.getAttribute('href');
-  if(id && id.startsWith('#')){
-    e.preventDefault();
-    document.querySelector(id)?.scrollIntoView({behavior:'smooth', block:'start'});
-  }
-}));
+/* ===================== ZONE 2: SENTENCE FORGE ===================== */
+const Z2={
+ start(){startRun('z2','Sentence Forge',8,()=>Z2.start());
+  const ar=shuffle(VC).slice(0,6).map(vc=>({vc,s:rnd(SUBJ)}));const gi=shuffle(GI).slice(0,2).map(g=>({gi:g}));this.items=shuffle(ar.concat(gi));this.i=0;this.next();},
+ next(){if(this.i>=this.items.length)return finishRun();const it=this.items[this.i];const st=$('#stage');
+  if(it.vc)this.arItem(st,it);else this.gItem(st,it);},
+ arItem(st,it){const [v,...rest]=it.vc;const s=it.s;const form=conj(v,s.p);const subj=cap(s.t);
+  const frag=[(s.p<=1?'('+s.t+')':s.t),v,...rest].join(' / ');
+  st.innerHTML=`<div class="prompt">${frag}<small>Build the sentence. (${this.i+1}/8) · ${v} = ${VERBS[v]}</small></div>`;
+  const wrong=shuffle([0,1,2,3,5].filter(p=>p!==s.p)).slice(0,2).map(p=>conj(v,p));
+  const tokens=[subj,form,...rest];const acc=[tokens.join(' ')];if(s.p<=1)acc.push([form,...rest].join(' '));
+  tileBuilder(st,{tokens,distractors:[...wrong,v],accepted:acc,hint:whyPerson(s),onCheck:(ok,j)=>{
+    const used=[form,...wrong,v].find(f=>j.split(' ').includes(f));logSkill(PSKILL[s.p],used===form);
+    mark(ok,{prompt:frag,yours:j,correct:tokens.join(' ')+'.',why:whyPerson(s)});
+    feedback(ok?'ok':'bad',{ans:tokens.join(' ')+'.',speak:tokens,why:whyPerson(s)+(used&&used!==form?`<br>You used <b>${used}</b>${used===v?' (that\'s the infinitive — it needs an ending)':''}.`:'')},()=>{this.i++;this.next();});}});},
+ gItem(st,it){const [sub,vv,thing,q]=it.gi;const neg=vv.startsWith('no ');const pron=sub==='(tú)'?'te':'me';const vf=gForm(thing);
+  const frag=[sub,vv,thing].join(' / ');const tokens=[...(neg?['no']:[]),pron,vf,thing].map((t,i)=>i===0?cap(t):t);const ans=(q?'¿':'')+tokens.join(' ')+(q?'?':'.');
+  st.innerHTML=`<div class="prompt">${q?'¿':''}${frag}${q?'?':''}<small>Build it with gustar. (${this.i+1}/8)</small></div>`;
+  const other=pron==='me'?'te':'me';const dis=[cap(other),vf==='gusta'?'gustan':'gusta',sub==='(tú)'?'Tú':'Yo','gustas'];
+  const why=`gustar is backwards: <b>${pron}</b> (${pron==='me'?'to me':'to you'}) + <b>${vf}</b> because “${thing}” is ${isPlural(thing)?'plural':isInf(thing)?'a verb (infinitive)':'singular'}. Never “tú gustas”.`;
+  tileBuilder(st,{tokens,distractors:dis,accepted:[tokens.join(' ')],question:q,hint:why,onCheck:(ok,j)=>{const w=j.toLowerCase().split(' ');logSkill('me_te',w.includes(pron)&&!w.includes(other));logSkill('gusta_gustan',w.includes(vf)&&!w.includes(vf==='gusta'?'gustan':'gusta'));
+    mark(ok,{prompt:frag,yours:j,correct:ans,why});feedback(ok?'ok':'bad',{ans,why,speak:tokens},()=>{this.i++;this.next();});}});}
+};
+
+/* ===================== ZONE 3: STORY FILL ===================== */
+const Z3={
+ start(){startRun('z3','Story Fill',6,()=>Z3.start());this.story=rnd(STORIES);this.b=0;this.render();},
+ render(){const st=$('#stage');const S=this.story;const html=S.text.replace(/\[(\d)\] \(([^)]+)\)/g,(m,n,o)=>`<span class="blank" id="bl${n}" data-n="${n}">(${n}) ${o}</span>`);
+  st.innerHTML=`<div class="story">${html}</div><div id="z3panel" class="mt"></div>`;this.step();},
+ step(){const S=this.story;if(this.b>=S.blanks.length)return finishRun();const bl=S.blanks[this.b];const sp=$('#bl'+(this.b+1));document.querySelectorAll('.blank').forEach(x=>x.classList.remove('cur'));sp.classList.add('cur');sp.scrollIntoView({block:'center',behavior:'smooth'});
+  const pn=$('#z3panel');pn.innerHTML=`<div class="prompt" style="font-size:20px">Blank (${this.b+1}): which verb makes sense?</div>`;const g=el('div','opts two');
+  bl.o.forEach(v=>{const b=el('button','opt',`${v} <span class="en">— ${VERBS[v]}</span>`);b.onclick=()=>{g.querySelectorAll('.opt').forEach(x=>x.disabled=true);const ok=v===bl.v;b.classList.add(ok?'ok':'bad');logSkill('meaning',ok);this.vOK=ok;this.vPick=v;say([v]);if(!ok){[...g.children].find(x=>x.textContent.startsWith(bl.v)).classList.add('ok');sfx.bad();feedback('bad',{ans:bl.v+' — '+VERBS[bl.v],why:bl.why},()=>this.typeStep(bl,sp));}else{sfx.ok();this.typeStep(bl,sp);}};g.appendChild(b);});pn.appendChild(g);},
+ typeStep(bl,sp){const pn=$('#z3panel');const ans=bl.form||conj(bl.v,bl.p);
+  pn.innerHTML=`<div class="prompt" style="font-size:20px">Now type the correct form of <b>${bl.v}</b></div>`;const inp=el('input','inp');inp.placeholder='type here…';inp.autocapitalize='off';inp.autocomplete='off';pn.appendChild(inp);pn.appendChild(accentBar(inp));
+  const row=el('div','row end');const hint=el('button','btn sm','💡 Hint');const why=bl.form?(bl.form==='gusta'||bl.form==='gustan'?`“Me ___ ${bl.form==='gustan'?'los programas (plural)':'la literatura (singular)'}” → <b>${bl.form}</b>`:`After “te gusta”, the second verb stays an <b>infinitive</b> → <b>${bl.form}</b>`):whyPerson({t:['yo','tú','usted / él','nosotros','','ellos'][bl.p]+(bl.p===3?' (…y yo)':''),p:bl.p});
+  hint.onclick=()=>hint.replaceWith(el('div','tip',why));const chk=el('button','btn good','✔ Check');row.append(hint,chk);pn.appendChild(row);inp.focus();
+  const doCheck=()=>{const g=grade(inp.value,[ans]);if(g==='no'&&!inp.value.trim())return;chk.disabled=true;inp.classList.add(g==='ok'?'ok':g==='acc'?'acc':'bad');const ok=g==='ok';if(bl.p!=null)logSkill(PSKILL[bl.p],g!=='no');else logSkill('gusta_gustan',g!=='no');
+    const full=ok&&this.vOK;sp.textContent=ans;sp.classList.add('done',full?'ok':'bad');
+    mark(full,{prompt:`Blank ${this.b+1}: ${bl.o.join(' / ')}`,yours:(this.vOK?'':this.vPick+' → ')+inp.value,correct:ans,why:bl.why+' '+why});
+    const last=this.b===this.story.blanks.length-1;
+    feedback(g,{ans,why:why+(last?`<div class="mt"><button class="btn sm" onclick="say([storyFilled(Z3.story)])">🔊 Hear the whole story</button></div>`:''),speak:[ans]},()=>{this.b++;this.step();});};
+  chk.onclick=doCheck;inp.onkeydown=e=>{if(e.key==='Enter')doCheck();};}
+};
+
+/* ===================== ZONE 4: ESTAR BLITZ ===================== */
+const Z4={
+ t:null,
+ start(){startRun('z4','Estar Blitz',0,()=>Z4.start());this.left=60;this.pool=shuffle(EP);this.k=0;$('#g-timer').classList.remove('hidden');this.tick();this.t=setInterval(()=>this.tick(),1000);this.next();},
+ tick(){$('#g-timer').textContent='⏱ '+this.left+'s';if(this.left<=0){this.stop();run.total=run.done;if(run.total<5)run.total=5;finishRun();return;}if(this.left<=5)sfx.timer();this.left--;},
+ stop(){if(this.t){clearInterval(this.t);this.t=null;}},
+ next(){const it=this.pool[this.k%this.pool.length];this.k++;const ans=ESTAR[it.p];const st=$('#stage');
+  st.innerHTML=`<div class="prompt">${it.s} ${it.c.replace('___','<span class="blank">____</span>')}<small>Pick the form of <b>estar</b></small></div>`;const g=el('div','opts two');
+  [0,1,2,3,5].forEach(p=>{const b=el('button','opt',ESTAR[p]);b.onclick=()=>{if(!this.t)return;g.querySelectorAll('.opt').forEach(x=>x.disabled=true);const ok=p===it.p;b.classList.add(ok?'ok':'bad');logSkill('estar',ok);const s={t:it.s.replace('Hola, ','').replace('. ¿Cómo','').replace(/^¿Cómo$/,'tú'),p:it.p};
+    run.total++;mark(ok,{prompt:it.s+' '+it.c,yours:ESTAR[p],correct:ans,why:whyEstar(s)});
+    if(ok){flash('ok','+'+(10*Math.min(run.combo,3)));setTimeout(()=>this.next(),350);}else{[...g.children].find(x=>x.textContent===ans).classList.add('ok');flash('bad',ans);say([epFull(it)]);setTimeout(()=>this.next(),1600);}};g.appendChild(b);});st.appendChild(g);}
+};
+
+/* ===================== ZONE 5: 3D CLASSROOM ===================== */
+const Z5={
+ ok:false,R:null,S:null,C:null,group:null,theta:0,anim:null,focus:null,running:false,
+ start(){startRun('z5','3D Classroom',8,()=>Z5.start());this.i=0;this.pool=shuffle(LP);this.next();},
+ pause(){this.running=false;},
+ next(){if(this.i>=8)return finishRun();const mode=this.i%2===0?'spot':'describe';const st=$('#stage');st.innerHTML='';
+  if(mode==='spot')this.spot(st);else this.describe(st);},
+ /* --- scene setup --- */
+ ensure(host){const box=el('div');box.id='scene3d';host.appendChild(box);
+  if(!window.THREE){box.className='fallback2d';this.ok=false;return box;}
+  try{if(!this.R){this.R=new THREE.WebGLRenderer({antialias:true});this.R.setPixelRatio(Math.min(devicePixelRatio,2));this.S=new THREE.Scene();this.C=new THREE.PerspectiveCamera(50,1,0.1,100);
+    this.S.add(new THREE.HemisphereLight(0xffffff,0x334466,0.9));const d=new THREE.DirectionalLight(0xffffff,0.8);d.position.set(4,8,5);this.S.add(d);}
+    box.appendChild(this.R.domElement);box.appendChild(el('div','hint','drag to rotate'));
+    const rs=()=>{const w=box.clientWidth,h=box.clientHeight;this.R.setSize(w,h);this.C.aspect=w/h;this.C.updateProjectionMatrix();};rs();window.addEventListener('resize',rs);
+    let dragging=false,lx=0;const dn=e=>{dragging=true;lx=(e.touches?e.touches[0].clientX:e.clientX);};const mv=e=>{if(!dragging)return;const x=(e.touches?e.touches[0].clientX:e.clientX);this.theta+=(x-lx)*0.01;lx=x;};const up=()=>dragging=false;
+    box.onmousedown=dn;box.onmousemove=mv;box.onmouseup=up;box.onmouseleave=up;box.ontouchstart=dn;box.ontouchmove=mv;box.ontouchend=up;
+    this.ok=true;this.running=true;if(!this.anim){const loop=()=>{this.anim=requestAnimationFrame(loop);if(!this.running||!this.ok)return;const r=this.C.aspect<1.1?9.5:6.8;this.C.position.set(Math.sin(this.theta)*r,r*0.57,Math.cos(this.theta)*r);this.C.lookAt(0,0.5,0);if(this.focus){this.focus.position.y=0.08+Math.sin(Date.now()/300)*0.06;}this.R.render(this.S,this.C);};loop();}
+    return box;}catch(e){box.className='fallback2d';this.ok=false;return box;}},
+ label(text){const c=document.createElement('canvas');c.width=512;c.height=128;const x=c.getContext('2d');x.fillStyle='rgba(13,20,48,.85)';x.beginPath();x.roundRect?x.roundRect(8,8,496,112,30):x.rect(8,8,496,112);x.fill();x.fillStyle='#ffd166';x.font='900 56px Nunito, sans-serif';x.textAlign='center';x.textBaseline='middle';x.fillText(text,256,66);
+  const sp=new THREE.Sprite(new THREE.SpriteMaterial({map:new THREE.CanvasTexture(c),transparent:true}));sp.scale.set(2.6,0.65,1);return sp;},
+ mesh(kind,color){const T=THREE,g=new T.Group();const M=(c)=>new T.MeshStandardMaterial({color:c,roughness:.7});const add=(geo,mat,x,y,z)=>{const m=new T.Mesh(geo,mat);m.position.set(x,y,z);g.add(m);return m;};
+  if(kind==='chair'){const w=M(0x8b5a2b);add(new T.BoxGeometry(.8,.1,.8),w,0,.5,0);add(new T.BoxGeometry(.8,.8,.1),w,0,.95,-.35);[[-.35,-.35],[.35,-.35],[-.35,.35],[.35,.35]].forEach(([x,z])=>add(new T.CylinderGeometry(.04,.04,.5),w,x,.25,z));}
+  else if(kind==='backpack'){add(new T.BoxGeometry(.5,.6,.3),M(0xef476f),0,.3,0);add(new T.TorusGeometry(.12,.03,8,16),M(0x333),0,.66,0);add(new T.BoxGeometry(.32,.3,.08),M(0xc8324f),0,.25,.19);}
+  else if(kind==='bin'){add(new T.CylinderGeometry(.3,.24,.6,16),M(0x94a3b8),0,.3,0);add(new T.CylinderGeometry(.26,.26,.05,16),M(0x1e293b),0,.58,0);}
+  else if(kind==='book'){add(new T.BoxGeometry(.6,.1,.45),M(0x4cc9f0),0,.05,0);add(new T.BoxGeometry(.56,.04,.41),M(0xf8fafc),0,.12,0);}
+  else if(kind==='person'){add(new T.CylinderGeometry(.3,.32,.9,16),M(color),0,.45,0);add(new T.SphereGeometry(.26,16,16),M(0xffd1a8),0,1.16,0);add(new T.SphereGeometry(.27,16,16),M(0x3b2a1a),0,1.22,-.03).scale.set(1,.6,1);}
+  else if(kind==='window'){add(new T.BoxGeometry(1.3,1,.1),M(0xf8fafc),0,1.1,0);add(new T.BoxGeometry(1.1,.8,.12),M(0x7dd3fc),0,1.1,0);add(new T.BoxGeometry(.06,.8,.14),M(0xf8fafc),0,1.1,0);add(new T.BoxGeometry(1.1,.06,.14),M(0xf8fafc),0,1.1,0);add(new T.CylinderGeometry(.05,.05,.6),M(0x475569),0,.3,0);}
+  else if(kind==='door'){add(new T.BoxGeometry(.9,1.9,.1),M(0x92400e),0,.95,0);add(new T.SphereGeometry(.06,8,8),M(0xfacc15),.32,.95,.08);}
+  else if(kind==='stadium'){add(new T.CylinderGeometry(1.1,1.2,.5,24,1,true),new T.MeshStandardMaterial({color:0xcbd5e1,side:T.DoubleSide,roughness:.6}),0,.25,0);add(new T.CylinderGeometry(.9,.9,.02,24),M(0x22c55e),0,.02,0);add(new T.TorusGeometry(1.15,.06,8,24),M(0x64748b),0,.5,0).rotation.x=Math.PI/2;}
+  else if(kind==='library'){add(new T.BoxGeometry(1.6,1.2,1.2),M(0xd6c7a1),0,.6,0);[-.5,0,.5].forEach(x=>add(new T.CylinderGeometry(.08,.08,1.2),M(0xf1e9d2),x,.6,.62));add(new T.BoxGeometry(1.9,.15,1.5),M(0x8b5a2b),0,1.27,0);add(new T.ConeGeometry(1,.5,4),M(0x8b5a2b),0,1.6,0).rotation.y=Math.PI/4;}
+  else if(kind==='cafe'){add(new T.BoxGeometry(1.5,1,1.2),M(0xfb923c),0,.5,0);add(new T.BoxGeometry(1.7,.08,.5),M(0xef4444),0,.8,.75);add(new T.BoxGeometry(.5,.6,.05),M(0x7dd3fc),-.35,.45,.61);add(new T.BoxGeometry(.4,.6,.05),M(0x5b2a07),.35,.3,.61);}
+  return g;},
+ build(sp){ // sp:{a,prep,b,c}
+  const A=ENT[sp.a],B=ENT[sp.b],C=sp.c?ENT[sp.c]:null;const campus=[A,B,C].some(e=>e&&e.set==='campus');
+  const pos={};if(sp.prep==='entre'){pos.b=[-2.6,0];pos.c=[2.6,0];pos.a=[0,0];}else if(sp.prep==='detras'){pos.b=[0,1.2];pos.a=[0,-1.6];pos.c=[-3.6,-.5];}else if(sp.prep==='derecha'){pos.b=[-1.3,0];pos.a=[1.5,0];pos.c=[-3.9,0];}else{pos.b=[-.75,0];pos.a=[.75,0];pos.c=[-3.9,0];}
+  if(!this.ok){this.build2d(sp,pos,campus);return;}
+  const T=THREE;if(this.group)this.S.remove(this.group);this.group=new T.Group();this.S.add(this.group);this.S.background=new T.Color(campus?0x8ecae6:0x1b2a5e);
+  const floor=new T.Mesh(new T.PlaneGeometry(14,14),new T.MeshStandardMaterial({color:campus?0x4ade80:0xb08968,roughness:1}));floor.rotation.x=-Math.PI/2;this.group.add(floor);
+  if(!campus){const wall=new T.Mesh(new T.PlaneGeometry(14,4),new T.MeshStandardMaterial({color:0xe2e8f0}));wall.position.set(0,2,-5);this.group.add(wall);const bb=new T.Mesh(new T.BoxGeometry(4,1.6,.08),new T.MeshStandardMaterial({color:0x14532d}));bb.position.set(0,2,-4.95);this.group.add(bb);}
+  const place=(e,p,isA)=>{if(!e)return;const grp=new T.Group();const n=e.n;for(let i=0;i<n;i++){const m=this.mesh(e.kind,e.color);m.position.x=n===2?(i?.55:-.55):0;if(e.kind==='chair'||e.kind==='window'||e.kind==='door')m.position.x=n===2?(i?.8:-.8):0;grp.add(m);}
+    const lb=this.label(e.t);lb.position.y=e.kind==='door'?2.3:e.kind==='person'?1.8:e.kind==='library'?2.3:1.5;grp.add(lb);grp.position.set(p[0],0,p[1]);this.group.add(grp);
+    if(isA){const ring=new T.Mesh(new T.RingGeometry(.9,1.05,32),new T.MeshBasicMaterial({color:0xffd166,side:T.DoubleSide}));ring.rotation.x=-Math.PI/2;ring.position.y=.02;grp.add(ring);this.focus=grp;}};
+  place(B,pos.b);place(C,pos.c);place(A,pos.a,true);this.theta=0;this.running=true;},
+ build2d(sp,pos,campus){const box=$('#scene3d');box.innerHTML='';const ic={backpack:'🎒',chair:'🪑',bin:'🗑️',person:'🧍',window:'🪟',door:'🚪',book:'📘',stadium:'🏟️',library:'🏛️',cafe:'🍽️'};
+  const put=(k,p,a)=>{if(!k)return;const e=ENT[k];const d=el('div','it',`<span>${ic[e.kind].repeat(e.n)}</span>${e.t}`);d.style.left=(50+p[0]*11)+'%';d.style.top=(45+p[1]*14)+'%';d.style.transform='translate(-50%,-50%)';if(a)d.style.outline='3px solid var(--accent)';d.style.borderRadius='12px';d.style.padding='6px';box.appendChild(d);};
+  put(sp.b,pos.b);put(sp.c,pos.c);put(sp.a,pos.a,true);},
+ /* --- modes --- */
+ spot(st){const sp=rnd(LP.filter(x=>x.prep!=='con'&&!ENT[x.a].pron));const L=locParts(sp);const A=L.A,B=L.B,C=L.C||rnd(Object.keys(ENT).filter(k=>k!==sp.a&&k!==sp.b&&!ENT[k].pron&&ENT[k].set===(B.set==='campus'?'campus':'room')).map(k=>ENT[k]));
+  const spec={a:sp.a,prep:sp.prep,b:sp.b,c:Object.keys(ENT).find(k=>ENT[k]===C)};const q=`¿Dónde ${L.est} ${A.t}?`;
+  st.innerHTML=`<div class="prompt">¿Dónde ${L.est} <b>${A.t}</b>? <button class="btn sm" onclick="say(['¿Dónde ${L.est}','${A.t}?'])">🔊</button><small>Look at the scene (${this.i+1}/8). The glowing ring marks ${A.t}.</small></div>`;
+  this.ensure(st);this.build(spec);say(['¿Dónde '+L.est,A.t+'?']);
+  const deB=B.t.startsWith('el ')?'del '+bare(B.t):'de '+B.t;const deC=C.t.startsWith('el ')?'del '+bare(C.t):'de '+C.t;
+  const correct=sp.prep==='entre'?`entre ${B.t} y ${C.t}`:sp.prep==='detras'?`detrás ${deB}`:`a la derecha ${deB}`;
+  const opts=shuffle(uniq([correct,`detrás ${deB}`,`a la derecha ${deB}`,`entre ${B.t} y ${C.t}`,`detrás ${deC}`,`a la derecha ${deC}`].filter(o=>o!==correct).slice(0,3).concat([correct])));
+  const g=el('div','opts two mt');opts.forEach(o=>{const b=el('button','opt',`${L.est} ${o}`);b.onclick=()=>{g.querySelectorAll('.opt').forEach(x=>x.disabled=true);const ok=o===correct;b.classList.add(ok?'ok':'bad');if(!ok)[...g.children].find(x=>x.textContent===L.est+' '+correct).classList.add('ok');logSkill('prep',ok);
+    const why=`<b>${PREPTXT[sp.prep]}</b> = ${PREPEN[sp.prep]}.${L.del?' Remember <b>de + el = del</b>.':''}`;mark(ok,{prompt:q,yours:L.est+' '+o,correct:L.sentence,why});
+    feedback(ok?'ok':'bad',{ans:L.sentence,why,speak:[L.sentence],speakAlt:L.tokens},()=>{this.i++;this.next();});};g.appendChild(b);});st.appendChild(g);},
+ describe(st){const sp=this.pool[this.i%this.pool.length];const L=locParts(sp);
+  st.innerHTML=`<div class="prompt">${L.fragment}<small>Write it with <b>estar</b> (${this.i+1}/8). The scene shows you where ${L.A.t} ${L.A.n===2||L.A.p===5?'are':'is'}.</small></div>`;
+  this.ensure(st);this.build(sp);const host=el('div','mt');st.appendChild(host);
+  const wrongE=shuffle([0,1,2,3,5].filter(p=>p!==L.A.p)).slice(0,2).map(p=>ESTAR[p]);const dis=[...wrongE];
+  if(sp.prep==='entre'){dis.push(bare(L.B.t));if(!L.C.proper)dis.push(bare(L.C.t));}
+  else if(sp.prep==='con'){if(!L.B.proper)dis.push(bare(L.B.t));dis.push('de');}
+  else{const base=sp.prep==='detras'?'detrás':'a la derecha';if(L.del){dis.push(base+' de');dis.push(L.B.t);}else{dis.push(base+' del');dis.push(bare(L.B.t));}}
+  const why=`${whyEstar({t:L.A.t,p:L.A.p})}. Location sentences always need <b>estar</b>.${L.del?' <b>de + el = del</b> → “'+L.tokens[2]+' '+L.tokens[3]+'”.':' Keep the article: “'+L.tokens.slice(2).join(' ')+'”.'}`;
+  tileBuilder(host,{tokens:L.tokens,distractors:dis,accepted:L.accepted,question:!!sp.q,hint:why,onCheck:(ok,j)=>{const w=j.toLowerCase().split(' ');logSkill('estar_in',ESTAR.some(e=>w.includes(e)));logSkill('estar',w.includes(L.est));logSkill('art',ok||!(w.includes(bare(L.B.t))&&!L.del)&&!(L.del&&w.includes('de')));
+    mark(ok,{prompt:L.fragment,yours:j,correct:L.sentence,why});feedback(ok?'ok':'bad',{ans:L.sentence,why,speak:[L.sentence],speakAlt:L.tokens},()=>{this.i++;this.next();});}});}
+};
+
+/* ===================== BOSS: FULL MOCK TEST ===================== */
+const Boss={
+ start(){const pairs=shuffle(GP).slice(0,4);const flip=x=>{const o=parseR(x.r);o.pron=o.pron==='me'?'te':'me';return fmtR(o);};
+  let resp=uniq([...pairs.map(p=>p.r),flip(pairs[0]),flip(pairs[1])]);while(resp.length<6){const x=rnd(GP).r;if(!resp.includes(x))resp.push(x);}resp=shuffle(resp);
+  const s2=shuffle(VC).slice(0,2).map(vc=>({vc,s:rnd(SUBJ)}));const g2=rnd(GI);
+  const story=rnd(STORIES);const s4=shuffle(EP).slice(0,5);const s5=shuffle(LP).slice(0,5);
+  this.T={pairs,resp,s2,g2,story,s4,s5};this.render();go('s-boss');},
+ render(){const T=this.T,b=$('#boss-body');const L='abcdef';
+  let h=`<h2 class="pix">2.1 & 2.3 PRESENT TENSE OF -AR VERBS AND ESTAR</h2><p class="sub">Same five sections as the real test. Type your answers (use the accent buttons). Then hit <b>Grade it</b>.</p>`;
+  h+=`<div class="ex-sec"><h3>1 Emparejar <span class="sub">(4 × 1 pt = 4 pts)</span></h3><div class="inst">Match the sentences. Two items in Column B will not be used.</div><div class="match"><div class="col">`;
+  T.pairs.forEach((p,i)=>{h+=`<div class="ex-item" id="e1-${i}"><select data-i="${i}"><option value="">—</option>${L.slice(0,6).split('').map(l=>`<option>${l}</option>`).join('')}</select> ${i+1}. ${p.s}</div>`;});
+  h+=`</div><div class="col">${T.resp.map((r,j)=>`<div class="ex-item">${L[j]}. ${r}</div>`).join('')}</div></div></div>`;
+  h+=`<div class="ex-sec"><h3>2 Oraciones <span class="sub">(3 × 2 pts = 6 pts)</span></h3><div class="inst">Write sentences using the information provided. Make any necessary changes.</div>`;
+  T.s2.forEach((it,i)=>{const [v,...rest]=it.vc;h+=`<div class="ex-item" id="e2-${i}">${i+1}. ${[(it.s.p<=1?'('+it.s.t+')':it.s.t),v,...rest].join(' / ')}<input class="inp" data-k="e2-${i}" autocapitalize="off" autocomplete="off"></div>`;});
+  h+=`<div class="ex-item" id="e2-2">3. ¿${T.g2.slice(0,3).join(' / ')}?<input class="inp" data-k="e2-2" autocapitalize="off" autocomplete="off"></div></div>`;
+  h+=`<div class="ex-sec"><h3>3 Completar <span class="sub">(6 × 0.5 pt = 3 pts)</span></h3><div class="inst">Fill in the blanks with the present tense form of the appropriate verbs.</div><div class="story">${T.story.text.replace(/\[(\d)\] \(([^)]+)\)/g,(m,n,o)=>`<span class="ex-item" id="e3-${n-1}" style="display:inline-flex"><input class="inp" style="width:140px;display:inline-block;padding:4px 8px;font-size:17px" data-k="e3-${n-1}" autocapitalize="off" autocomplete="off"> <span class="sub">(${o})</span></span>`)}</div></div>`;
+  h+=`<div class="ex-sec"><h3>4 Completar <span class="sub">(5 × 1 pt)</span></h3><div class="inst">Fill in the blanks with the appropriate forms of <b>estar</b>.</div>`;
+  T.s4.forEach((it,i)=>{h+=`<div class="ex-item" id="e4-${i}">${i+1}. ${it.s} <input class="inp" style="width:150px" data-k="e4-${i}" autocapitalize="off" autocomplete="off"> ${it.c.replace('___','')}</div>`;});h+=`</div>`;
+  h+=`<div class="ex-sec"><h3>5 Oraciones <span class="sub">(5 × 1 pt)</span></h3><div class="inst">Write sentences using the verb <b>estar</b> and the information provided.</div>`;
+  T.s5.forEach((sp,i)=>{h+=`<div class="ex-item" id="e5-${i}" style="display:block">${i+1}. ${locParts(sp).fragment}<input class="inp" style="margin-top:6px" data-k="e5-${i}" autocapitalize="off" autocomplete="off"></div>`;});h+=`</div>`;
+  h+=`<div id="boss-acc"></div><button class="btn primary wide" id="boss-grade">📝 Grade it</button><div id="boss-res" class="mt"></div>`;
+  b.innerHTML=h;let last=null;b.querySelectorAll('input.inp').forEach(i=>i.addEventListener('focus',()=>last=i));
+  const bar=accentBar({get value(){return last?last.value:''},set value(v){if(last)last.value=v},get selectionStart(){return last?last.selectionStart:0},get selectionEnd(){return last?last.selectionEnd:0},focus(){last&&last.focus()},setSelectionRange(a,b){last&&last.setSelectionRange(a,b)}});
+  bar.style.position='sticky';bar.style.bottom='8px';bar.style.background='var(--panel)';bar.style.padding='8px';bar.style.borderRadius='12px';bar.style.border='1px solid var(--line)';$('#boss-acc').appendChild(bar);
+  $('#boss-grade').onclick=()=>this.gradeAll();},
+ gradeAll(){const T=this.T;let pts=0;const L='abcdef';const res=[];const setK=(id,k,key)=>{const e=$('#'+id);e.classList.add(k==='ok'?'ok':k==='acc'?'acc':'bad');if(k!=='ok')e.appendChild(el('span','key',' ✔ '+key));};
+  T.pairs.forEach((p,i)=>{const v=$(`#e1-${i} select`).value;const ok=v&&T.resp[L.indexOf(v)]===p.r;if(ok)pts+=1;setK('e1-'+i,ok?'ok':'no',L[T.resp.indexOf(p.r)]);const r=parseR(p.r);logSkill('me_te',ok);logSkill('gusta_gustan',ok);if(!ok)res.push({sec:1,why:whyGustar(r.pron,r.thing,p.s)});});
+  T.s2.forEach((it,i)=>{const [v,...rest]=it.vc;const form=conj(v,it.s.p);const acc=[[cap(it.s.t),form,...rest].join(' ')];if(it.s.p<=1)acc.push([form,...rest].join(' '));const g=grade($(`[data-k=e2-${i}]`).value,acc);pts+=g==='ok'?2:g==='acc'?1:0;setK('e2-'+i,g,acc[0]+'.');logSkill(PSKILL[it.s.p],g!=='no');if(g!=='ok')res.push({sec:2,why:whyPerson(it.s)});});
+  {const [sub,vv,thing,q]=T.g2;const neg=vv.startsWith('no ');const pron=sub==='(tú)'?'te':'me';const ans=cap([...(neg?['no']:[]),pron,gForm(thing),thing].join(' '));const g=grade($('[data-k=e2-2]').value,[ans]);pts+=g==='ok'?2:g==='acc'?1:0;setK('e2-2',g,'¿'+ans+'?');logSkill('me_te',g!=='no');if(g!=='ok')res.push({sec:2,why:`gustar: <b>${pron}</b> + <b>${gForm(thing)}</b> (${isPlural(thing)?'plural':'singular / verb'}).`});}
+  T.story.blanks.forEach((bl,i)=>{const ans=bl.form||conj(bl.v,bl.p);const g=grade($(`[data-k=e3-${i}]`).value,[ans]);pts+=g==='ok'?.5:g==='acc'?.25:0;setK('e3-'+i,g,ans);logSkill('meaning',norm($(`[data-k=e3-${i}]`).value).startsWith(norm(bl.v.slice(0,-2))));if(bl.p!=null)logSkill(PSKILL[bl.p],g!=='no');if(g!=='ok')res.push({sec:3,why:bl.why});});
+  T.s4.forEach((it,i)=>{const ans=ESTAR[it.p];const g=grade($(`[data-k=e4-${i}]`).value,[ans]);pts+=g==='ok'?1:g==='acc'?.5:0;setK('e4-'+i,g,ans);logSkill('estar',g!=='no');if(g!=='ok')res.push({sec:4,why:whyEstar({t:it.s.replace('Hola, ','').replace('. ¿Cómo','').replace(/^¿Cómo$/,'tú'),p:it.p})});});
+  T.s5.forEach((sp,i)=>{const Lp=locParts(sp);const v=$(`[data-k=e5-${i}]`).value;const g=grade(v,Lp.accepted);pts+=g==='ok'?1:g==='acc'?.5:0;setK('e5-'+i,g,Lp.sentence);const w=norm(v).split(' ');logSkill('estar_in',ESTAR.some(e=>w.includes(strip(e))));logSkill('art',g!=='no');if(g!=='ok')res.push({sec:5,why:`${whyEstar({t:Lp.A.t,p:Lp.A.p})}. Don't drop <b>estar</b> or the articles.${Lp.del?' <b>de + el = del</b>.':''}`});});
+  pts=Math.round(pts*2)/2;$('#boss-grade').disabled=true;document.querySelectorAll('#boss-body input,#boss-body select').forEach(x=>x.disabled=true);
+  const pct=Math.round(pts/23*100);addXP(Math.round(pts*8)+(pct>=90?100:0));if(P.bossBest==null||pts>P.bossBest)P.bossBest=pts;save();
+  if(pct>=90){sfx.fanfare();setTimeout(()=>say(['¡Has derrotado al jefe!']),2200);}else if(pct>=50){sfx.win();setTimeout(()=>say(['¡Muy bien!','Sigue practicando.']),1800);}else{sfx.lose();setTimeout(()=>say(['Sigue practicando.']),1400);}
+  const r=$('#boss-res');r.innerHTML=`<div class="card center"><div class="stars-big">${pct>=90?'👑👑👑':pct>=75?'👑👑':pct>=50?'👑':'💀'}</div><div class="big">${pts} / 23 · ${pct}%</div><div class="sub">${pct>=90?'Boss defeated! That\'s an A.':pct>=75?'Solid. A few more reps and it\'s yours.':'Keep training the zones, then come back.'} Yellow = right word, missing accent (half credit).</div>
+   ${res.length?`<div style="text-align:left;margin-top:12px"><b>What to fix:</b>${res.map(x=>`<div class="mist"><span class="sub">§${x.sec}</span> ${x.why}</div>`).join('')}</div>`:''}
+   <div class="row mt" style="justify-content:center"><button class="btn primary" onclick="Boss.start()">↻ New Boss Test</button><button class="btn" onclick="go('s-hub')">🗺 Map</button></div></div>`;r.scrollIntoView({behavior:'smooth'});}
+};
+
+/* ===================== REFERENCE ===================== */
+function openRef(){$('#ref').classList.add('on');}
+function closeRef(){$('#ref').classList.remove('on');}
+(function(){const v=$('#ref-vocab');let h='<b style="color:var(--info)">Verbs</b><br>';Object.entries(VERBS).forEach(([k,e])=>h+=`<b>${k}</b> — ${e}<br>`);h+='<br><b style="color:var(--info)">Nouns & phrases</b><br>';Object.entries(NOUNS).forEach(([k,e])=>h+=`<b>${k}</b> — ${e}<br>`);v.innerHTML=h;})();
+document.addEventListener('keydown',e=>{if(e.key==='Escape'){closeRef();}});
+/* sounds on everything: button clicks, and tap any Spanish word in the cheat sheet to hear it */
+document.addEventListener('click',e=>{const b=e.target.closest('.btn');if(b&&!b.classList.contains('opt'))sfx.click();
+  const td=e.target.closest('#ref td, #ref-vocab b');if(td){say([td.textContent.trim()]);}});
+document.querySelectorAll('#ref td').forEach(td=>td.style.cursor='pointer');
+(function(){$('#voice')&&($('#voice').textContent=P.voice===false?'🗣️✕':'🗣️');})();
+go('s-title');
 </script>
 </body>
 </html>
