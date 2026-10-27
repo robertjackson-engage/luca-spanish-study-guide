@@ -21,6 +21,9 @@ OUT = os.path.join(ROOT, "audio")
 os.makedirs(OUT, exist_ok=True)
 
 VOICE = os.environ.get("VOICE_ID", "FGY2WhTYpPnrIDTdsKH5")  # Laura (premade), multilingual model
+VOICES = {"": VOICE,
+          "v": "cgSgspJ2msm6clMCkdW9",   # Valentina — Jessica (playful, bright)
+          "l": "bIHbv24MWmeRgasZH58o"}   # Luca — Will (young, relaxed)
 MODEL = "eleven_multilingual_v2"
 AMAP = {"á": "a_", "é": "e_", "í": "i_", "ó": "o_", "ú": "u_", "ñ": "n_", "ü": "u__"}
 
@@ -48,11 +51,11 @@ def post(url, body):
                 time.sleep(2 * (attempt + 1)); continue
             raise RuntimeError(f"{e.code} {msg}")
 
-def tts(text):
-    path = os.path.join(OUT, aslug(text) + ".mp3")
+def tts(text, who=""):
+    path = os.path.join(OUT, (who + "-" if who else "") + aslug(text) + ".mp3")
     if os.path.exists(path):
         return "skip"
-    data = post(f"https://api.elevenlabs.io/v1/text-to-speech/{VOICE}?output_format=mp3_22050_32", {
+    data = post(f"https://api.elevenlabs.io/v1/text-to-speech/{VOICES[who]}?output_format=mp3_22050_32", {
         "text": text, "model_id": MODEL,
         "voice_settings": {"stability": 0.55, "similarity_boost": 0.8, "style": 0.25, "use_speaker_boost": True}})
     open(path, "wb").write(data)
@@ -82,11 +85,15 @@ def sfx(name, prompt, secs):
 
 if __name__ == "__main__":
     raw = json.load(open(sys.argv[1])) if len(sys.argv) > 1 else []
-    seen, texts = set(), []
-    for t in raw:  # one clip per slug (case / trailing "?" variants share a file)
-        if aslug(t) not in seen:
-            seen.add(aslug(t)); texts.append(t)
-    jobs = [(t, lambda t=t: tts(t)) for t in texts] + [(f"sfx-{n}", lambda n=n, p=p: sfx(n, *p)) for n, p in SFX.items()]
+    # texts.json is either a list (narrator voice) or {"": [...], "v": [...], "l": [...]} per character voice
+    groups = raw if isinstance(raw, dict) else {"": raw}
+    seen, jobs, texts = set(), [], []
+    for who, lst in groups.items():
+        for t in lst:  # one clip per slug (case / trailing "?" variants share a file)
+            k = who + "-" + aslug(t)
+            if k not in seen:
+                seen.add(k); texts.append(t); jobs.append((k, lambda t=t, who=who: tts(t, who)))
+    jobs += [(f"sfx-{n}", lambda n=n, p=p: sfx(n, *p)) for n, p in SFX.items()]
     done = {"ok": 0, "skip": 0, "err": 0}
     def run(job):
         label, fn = job

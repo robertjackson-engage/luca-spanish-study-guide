@@ -157,19 +157,43 @@ th{background:#0d1430;color:var(--info);font-size:13px}
 .hidden{display:none!important}
 .help{font-size:14px;color:var(--muted);font-weight:700}
 .en{color:var(--muted);font-weight:700;font-size:15px}
+/* crush quest: characters, dialogue, hearts */
+.chars{display:flex;justify-content:center;gap:10px;align-items:flex-end;margin:6px 0 4px}
+.chars svg{width:150px;height:150px}
+.vcard{display:flex;gap:16px;align-items:center;flex-wrap:wrap}
+.vcard svg{width:120px;height:120px;flex:none}
+.vcard .bub{flex:1;min-width:220px}
+.heart{height:16px;background:#2a1030;border-radius:999px;overflow:hidden;border:1px solid #6b2a4a;position:relative}
+.heart>i{display:block;height:100%;background:linear-gradient(90deg,#ff4d6d,#ff8fa3);width:0;transition:width .6s}
+.heart span{position:absolute;inset:0;text-align:center;font-size:11px;font-weight:900;line-height:16px;color:#fff;text-shadow:0 1px 2px #000}
+.bubble{position:relative;background:#fff;color:#1a1a2e;border-radius:16px;padding:12px 14px;font-weight:800;font-size:18px;line-height:1.35}
+.bubble:after{content:'';position:absolute;left:-10px;top:22px;border:10px solid transparent;border-right-color:#fff;border-left:0}
+.bubble.right:after{left:auto;right:-10px;border-left-color:#fff;border-right:0;border-left:10px solid #fff}
+.bubble .tr{display:block;color:#5b6189;font-size:14px;font-weight:700;margin-top:4px}
+.bubble.n{background:#0d1430;color:var(--text);border:1px solid var(--line)}
+.bubble.n:after{display:none}
+#scene{position:fixed;inset:0;background:rgba(5,8,20,.9);display:none;z-index:60;align-items:center;justify-content:center;padding:14px}
+#scene.on{display:flex}
+#scene .box{width:100%;max-width:640px;background:var(--panel);border:2px solid var(--line);border-radius:22px;padding:18px;animation:up .25s ease}
+#scene .who{display:flex;gap:12px;align-items:flex-start}
+#scene .who svg{width:110px;height:110px;flex:none}
+#scene .who.l{flex-direction:row-reverse}
+#scene .name{font-family:var(--pix);font-size:10px;color:var(--accent);margin-bottom:6px}
+.pop-heart{position:fixed;font-size:26px;pointer-events:none;z-index:70;animation:ph 1s forwards}
+@keyframes ph{0%{opacity:0;transform:translateY(0) scale(.6)}20%{opacity:1;transform:translateY(-10px) scale(1.1)}100%{opacity:0;transform:translateY(-70px) scale(1)}}
 </style>
 </head>
 <body>
 
 <!-- ============ TITLE ============ -->
 <section class="screen" id="s-title">
-  <div class="card center" style="margin-top:28px">
-    <div style="font-size:64px;line-height:1">🎮🇪🇸</div>
-    <h1 class="pix">LUCA'S SPANISH QUEST</h1>
-    <div class="sub">Lección 2 · -ar verbs · gustar · estar · where things are</div>
-    <p style="max-width:560px;margin:14px auto 18px">Five zones. Each zone is one section of your test, in the <b>exact</b> format. Earn XP, collect stars, then beat the <b>Boss Test</b>.</p>
+  <div class="card center" style="margin-top:20px">
+    <div class="chars" id="title-chars"></div>
+    <h1 class="pix">CRUSH QUEST</h1>
+    <div class="sub">Luca's Spanish Quest · Lección 2 · -ar verbs · gustar · estar</div>
+    <p style="max-width:560px;margin:14px auto 18px">New girl in Spanish class: <b>Valentina</b>, from Madrid. She only speaks Spanish, and the dance is Friday. Every zone is one section of your test, in the <b>exact</b> format. Get the Spanish right, fill her heart meter, then beat the <b>Boss Test</b> to ask her.</p>
     <div class="row" style="justify-content:center">
-      <button class="btn primary" onclick="actx();preloadSfx();go('s-hub');say(['¡Hola, Luca!','¿Listo para jugar?'])">▶ START</button>
+      <button class="btn primary" onclick="actx();preloadSfx();startStory()">▶ MEET VALENTINA</button>
       <button class="btn" onclick="openRef()">📘 Cheat sheet</button>
     </div>
     <p class="help mt">Progress saves on this device automatically.</p>
@@ -190,6 +214,13 @@ th{background:#0d1430;color:var(--info);font-size:13px}
     </div>
   </div>
   <div class="bar" style="margin-bottom:14px"><i id="xpbar"></i></div>
+  <div class="card vcard" style="margin-bottom:14px">
+    <div id="hub-v"></div>
+    <div class="bub">
+      <div class="bubble" id="hub-line"></div>
+      <div class="row" style="margin-top:10px;align-items:center"><span class="pix" style="font-size:9px;color:#ff8fa3">HEART METER</span><div class="heart" style="flex:1;min-width:140px"><i id="heartbar"></i><span id="hearttxt"></span></div><button class="btn sm" onclick="say(HUBLINE.es?[HUBLINE.es]:[],null,'v')">🔊</button></div>
+    </div>
+  </div>
   <div class="grid" id="zones"></div>
   <div class="card mt">
     <h2 class="pix">SKILL METER</h2>
@@ -237,6 +268,8 @@ th{background:#0d1430;color:var(--info);font-size:13px}
   <div class="card" id="boss-body"></div>
 </section>
 
+<!-- cutscene dialogue -->
+<div id="scene"><div class="box" id="scene-box"></div></div>
 <!-- feedback sheet -->
 <div id="fb"><div class="sheet" id="fb-sheet"></div></div>
 
@@ -314,8 +347,8 @@ async function aload(key){if(AUD.buf[key])return AUD.buf[key];if(AUD.miss[key])r
   try{const r=await fetch('audio/'+key+'.mp3');if(!r.ok)throw 0;const ab=await r.arrayBuffer();const b=await actx().decodeAudioData(ab);AUD.buf[key]=b;return b;}catch(e){AUD.miss[key]=1;return null;}}
 function stopVoice(){AUD.srcs.forEach(s=>{try{s.stop();}catch(e){}});AUD.srcs=[];AUD.tok=null;}
 /* say(['¡Hola!','la mochila']) plays clips back to back; alt = fallback parts if a clip is missing */
-async function say(parts,alt){if(P.muted||P.voice===false)return;stopVoice();const tok={};AUD.tok=tok;
-  let bufs=await Promise.all(parts.map(p=>aload(aslug(p))));if(alt&&bufs.some(b=>!b))bufs=await Promise.all(alt.map(p=>aload(aslug(p))));
+async function say(parts,alt,who){if(P.muted||P.voice===false)return;stopVoice();const tok={};AUD.tok=tok;const pre=who?who+'-':'';
+  let bufs=await Promise.all(parts.map(p=>aload(pre+aslug(p))));if(alt&&bufs.some(b=>!b))bufs=await Promise.all(alt.map(p=>aload(pre+aslug(p))));
   if(AUD.tok!==tok)return;const ac=actx();if(!ac)return;let t=ac.currentTime+0.03;
   bufs.forEach(b=>{if(!b)return;const s=ac.createBufferSource();s.buffer=b;const g=ac.createGain();g.gain.value=1;s.connect(g);g.connect(ac.destination);s.start(t);t+=b.duration+0.1;AUD.srcs.push(s);});}
 function playSfx(name,fallback,vol=0.55){if(P.muted)return;const b=AUD.buf['sfx-'+name];if(b){const ac=actx();const s=ac.createBufferSource();s.buffer=b;const g=ac.createGain();g.gain.value=vol;s.connect(g);g.connect(ac.destination);s.start();}else{fallback&&fallback();aload('sfx-'+name);}}
@@ -488,8 +521,9 @@ function renderHub(){
   $('#xpbar').style.width=((P.xp%250)/250*100)+'%';$('#mute').textContent=P.muted?'🔇':'🔊';
   const z=$('#zones');z.innerHTML='';
   ZONES.forEach(zn=>{const st=P.zones[zn.id]||{};const c=el('div','card zone'+(zn.boss?' boss':''));
-    c.innerHTML=`<div class="best">${zn.boss?(P.bossBest!=null?'best '+P.bossBest+'/23':''):(st.best!=null?'best '+Math.round(st.best*100)+'%':'')}</div><div class="ico">${zn.ico}</div><div class="ttl">${zn.ttl}</div><div class="meta">${zn.meta}</div><div class="sub" style="font-size:15px;margin-bottom:10px">${zn.desc}</div><div class="stars">${zn.boss?(P.bossBest!=null?'👑':''):'★'.repeat(st.stars||0)+'<span style="opacity:.25">'+'★'.repeat(3-(st.stars||0))+'</span>'}</div>`;
-    c.onclick=()=>{AC||(AC=null);zn.start();};z.appendChild(c);});
+    c.innerHTML=`<div class="best">${zn.boss?(P.bossBest!=null?'best '+P.bossBest+'/23':''):(st.best!=null?'best '+Math.round(st.best*100)+'%':'')}</div><div class="ico">${zn.ico}</div><div class="ttl">${zn.ttl}</div><div class="meta">${zn.meta}</div><div class="sub" style="font-size:15px;margin-bottom:10px">${zn.desc}</div><div class="stars">${zn.boss?(P.bossBest!=null?'👑':''):'★'.repeat(st.stars||0)+'<span style="opacity:.25">'+'★'.repeat(3-(st.stars||0))+'</span>'}</div><button class="btn sm ghost" style="position:absolute;right:8px;bottom:8px" title="Replay scene" onclick="event.stopPropagation();replayIntro('${zn.id}')">💬</button>`;
+    c.onclick=()=>playIntro(zn);z.appendChild(c);});
+  renderValentina();
   const s=$('#skills');s.innerHTML='';let weakest=null;
   Object.entries(SK).forEach(([k,l])=>{const d=P.skills[k];const pct=d?Math.round(d.ok/d.n*100):null;if(d&&d.n>=3&&(weakest==null||pct<weakest.pct))weakest={k,l,pct};
     s.appendChild(el('div','skill',`<div class="lbl"><span>${l}</span><span>${pct==null?'—':pct+'%'}</span></div><div class="bar"><i class="${pct!=null&&pct<60?'low':''}" style="width:${pct||0}%"></i></div>`));});
@@ -501,13 +535,13 @@ function renderHub(){
 const run={id:null,title:'',total:0,done:0,correct:0,combo:0,xp:0,mist:[],again:null};
 function startRun(id,title,total,again){Object.assign(run,{id,title,total,done:0,correct:0,combo:0,xp:0,mist:[],again});$('#g-title').textContent=title;$('#g-timer').classList.add('hidden');hud();go('s-game');$('#stage').innerHTML='';}
 function hud(){$('#g-prog').style.width=(run.total?run.done/run.total*100:0)+'%';$('#g-score').textContent=run.correct+' ✔';const c=$('#g-combo');c.textContent=run.combo>=2?'COMBO x'+Math.min(run.combo,5):'';c.className='combo'+(run.combo>=4?' hot':'');}
-function mark(ok,mist){run.done++;if(ok){run.correct++;run.combo++;const g=10*Math.min(run.combo,3);run.xp+=g;sfx.ok();if(run.combo===3||run.combo===5)setTimeout(()=>sfx.combo(),250);}else{run.combo=0;sfx.bad();if(mist)run.mist.push(mist);}hud();}
+function mark(ok,mist){run.done++;if(ok){run.correct++;run.combo++;const g=10*Math.min(run.combo,3);run.xp+=g;sfx.ok();if(run.combo===3||run.combo===5)setTimeout(()=>sfx.combo(),250);addHearts(2);}else{run.combo=0;sfx.bad();if(mist)run.mist.push(mist);}hud();}
 function quitGame(){Z4.stop();Z5.pause();go('s-hub');}
 function finishRun(){
   Z4.stop();Z5.pause();
   const acc=run.total?run.correct/run.total:0;const st=stars(acc);const bonus=st*25;run.xp+=bonus;addXP(run.xp);
   const z=P.zones[run.id]=P.zones[run.id]||{};z.stars=Math.max(z.stars||0,st);z.best=Math.max(z.best||0,acc);save();
-  if(st===0)sfx.lose();else sfx.win();for(let i=0;i<st;i++)setTimeout(()=>sfx.star(),900+i*350);setTimeout(()=>say([st===3?'¡Tres estrellas!':st>0?'¡Zona completada!':'Sigue practicando.']),st?2000:1200);
+  if(st===0)sfx.lose();else sfx.win();for(let i=0;i<st;i++)setTimeout(()=>sfx.star(),900+i*350);addHearts(st*5,true);setTimeout(()=>say([st===3?'¡Tres estrellas!':st>0?'¡Zona completada!':'Sigue practicando.']),st?2000:1200);
   $('#r-zone').textContent=run.title.toUpperCase()+(acc===1?' · PERFECT!':st>0?' · CLEAR':' · KEEP GOING');
   $('#r-stars').innerHTML='★'.repeat(st)+'<span style="opacity:.2">'+'★'.repeat(3-st)+'</span>';
   $('#r-acc').textContent=Math.round(acc*100)+'%';$('#r-xp').textContent=`+${run.xp} XP (includes ${bonus} star bonus) · ${run.correct}/${run.total} correct`;
@@ -724,7 +758,8 @@ const Boss={
   T.s5.forEach((sp,i)=>{const Lp=locParts(sp);const v=$(`[data-k=e5-${i}]`).value;const g=grade(v,Lp.accepted);pts+=g==='ok'?1:g==='acc'?.5:0;setK('e5-'+i,g,Lp.sentence);const w=norm(v).split(' ');logSkill('estar_in',ESTAR.some(e=>w.includes(strip(e))));logSkill('art',g!=='no');if(g!=='ok')res.push({sec:5,why:`${whyEstar({t:Lp.A.t,p:Lp.A.p})}. Don't drop <b>estar</b> or the articles.${Lp.del?' <b>de + el = del</b>.':''}`});});
   pts=Math.round(pts*2)/2;$('#boss-grade').disabled=true;document.querySelectorAll('#boss-body input,#boss-body select').forEach(x=>x.disabled=true);
   const pct=Math.round(pts/23*100);addXP(Math.round(pts*8)+(pct>=90?100:0));if(P.bossBest==null||pts>P.bossBest)P.bossBest=pts;save();
-  if(pct>=90){sfx.fanfare();setTimeout(()=>say(['¡Has derrotado al jefe!']),2200);}else if(pct>=50){sfx.win();setTimeout(()=>say(['¡Muy bien!','Sigue practicando.']),1800);}else{sfx.lose();setTimeout(()=>say(['Sigue practicando.']),1400);}
+  if(pct>=90){sfx.fanfare();addHearts(20,true);}else if(pct>=50){sfx.win();addHearts(5,true);}else{sfx.lose();}
+  setTimeout(()=>scene(pct>=90?DIALOG.win:pct>=75?DIALOG.almost:DIALOG.no,()=>{if(pct>=90){P.ending=true;save();}}),pct>=90?2600:1500);
   const r=$('#boss-res');r.innerHTML=`<div class="card center"><div class="stars-big">${pct>=90?'👑👑👑':pct>=75?'👑👑':pct>=50?'👑':'💀'}</div><div class="big">${pts} / 23 · ${pct}%</div><div class="sub">${pct>=90?'Boss defeated! That\'s an A.':pct>=75?'Solid. A few more reps and it\'s yours.':'Keep training the zones, then come back.'} Yellow = right word, missing accent (half credit).</div>
    ${res.length?`<div style="text-align:left;margin-top:12px"><b>What to fix:</b>${res.map(x=>`<div class="mist"><span class="sub">§${x.sec}</span> ${x.why}</div>`).join('')}</div>`:''}
    <div class="row mt" style="justify-content:center"><button class="btn primary" onclick="Boss.start()">↻ New Boss Test</button><button class="btn" onclick="go('s-hub')">🗺 Map</button></div></div>`;r.scrollIntoView({behavior:'smooth'});}
@@ -740,6 +775,79 @@ document.addEventListener('click',e=>{const b=e.target.closest('.btn');if(b&&!b.
   const td=e.target.closest('#ref td, #ref-vocab b');if(td){say([td.textContent.trim()]);}});
 document.querySelectorAll('#ref td').forEach(td=>td.style.cursor='pointer');
 (function(){$('#voice')&&($('#voice').textContent=P.voice===false?'🗣️✕':'🗣️');})();
+
+/* ===================== CRUSH QUEST: characters, dialogue, hearts ===================== */
+function svgV(mood='happy'){ // Valentina — cartoon portrait
+  const eyes=mood==='love'?`<text x="77" y="106" font-size="22" text-anchor="middle">💖</text><text x="123" y="106" font-size="22" text-anchor="middle">💖</text>`
+    :`<ellipse cx="77" cy="99" rx="9" ry="11" fill="#fff"/><ellipse cx="123" cy="99" rx="9" ry="11" fill="#fff"/><circle cx="79" cy="101" r="5.5" fill="#2b1a10"/><circle cx="125" cy="101" r="5.5" fill="#2b1a10"/><circle cx="81" cy="98" r="2" fill="#fff"/><circle cx="127" cy="98" r="2" fill="#fff"/>`;
+  const mouth=mood==='neutral'?`<path d="M88 128 q12 5 24 0" stroke="#b3405a" stroke-width="4" fill="none" stroke-linecap="round"/>`:`<path d="M82 124 q18 22 36 0 z" fill="#b3405a"/><path d="M88 125 q12 7 24 0 z" fill="#fff"/>`;
+  return `<svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg" aria-label="Valentina">
+  <path d="M30 200 v-34 q0 -24 26 -32 l44 -10 l44 10 q26 8 26 32 v34 z" fill="#e63946"/><path d="M70 136 l30 24 l30 -24 l-6 -4 l-24 18 l-24 -18 z" fill="#ffd6dc"/>
+  <path d="M86 122 h28 v18 q-14 12 -28 0 z" fill="#e9b48f"/>
+  <path d="M50 96 q-4 -56 50 -58 q54 2 50 58 l4 68 q-4 10 -16 4 l-4 -50 h-68 l-4 50 q-12 6 -16 -4 z" fill="#3b2314"/>
+  <ellipse cx="100" cy="98" rx="46" ry="52" fill="#f1c6a7"/>
+  <path d="M54 94 q4 -48 46 -48 q42 0 46 48 q-6 -22 -28 -24 q-16 -2 -26 8 q-6 8 -16 8 q-14 0 -22 8 z" fill="#3b2314"/>
+  <circle cx="54" cy="114" r="4" fill="#ffd166"/><circle cx="146" cy="114" r="4" fill="#ffd166"/>
+  <circle cx="66" cy="117" r="7" fill="#ff8fa3" opacity=".5"/><circle cx="134" cy="117" r="7" fill="#ff8fa3" opacity=".5"/>
+  <path d="M65 85 q12 -7 24 -1" stroke="#2b1a10" stroke-width="3.5" fill="none" stroke-linecap="round"/><path d="M111 84 q12 -6 24 1" stroke="#2b1a10" stroke-width="3.5" fill="none" stroke-linecap="round"/>
+  ${eyes}${mouth}</svg>`;}
+function svgL(mood='happy'){ // Luca — cartoon portrait
+  const eyes=mood==='love'?`<text x="77" y="106" font-size="22" text-anchor="middle">💖</text><text x="123" y="106" font-size="22" text-anchor="middle">💖</text>`
+    :`<ellipse cx="77" cy="99" rx="8" ry="10" fill="#fff"/><ellipse cx="123" cy="99" rx="8" ry="10" fill="#fff"/><circle cx="78" cy="101" r="5" fill="#1a2a3a"/><circle cx="124" cy="101" r="5" fill="#1a2a3a"/><circle cx="80" cy="98" r="2" fill="#fff"/><circle cx="126" cy="98" r="2" fill="#fff"/>`;
+  const mouth=mood==='nervous'?`<path d="M86 128 q14 -2 28 2" stroke="#9c4a3a" stroke-width="4" fill="none" stroke-linecap="round"/><path d="M150 92 q6 10 0 16 q-6 -6 0 -16 z" fill="#4cc9f0"/>`:`<path d="M84 124 q16 18 32 0 z" fill="#9c4a3a"/><path d="M90 125 q10 6 20 0 z" fill="#fff"/>`;
+  return `<svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg" aria-label="Luca">
+  <path d="M28 200 v-32 q0 -26 28 -34 l44 -12 l44 12 q28 8 28 34 v32 z" fill="#2563eb"/><path d="M72 134 l28 30 l28 -30 q-28 -10 -56 0 z" fill="#1d4ed8"/><path d="M96 150 h8 v50 h-8 z" fill="#1d4ed8"/>
+  <path d="M86 122 h28 v18 q-14 12 -28 0 z" fill="#e0b088"/>
+  <ellipse cx="100" cy="98" rx="45" ry="51" fill="#f3cfae"/>
+  <path d="M55 88 q2 -30 20 -40 l8 10 l10 -16 l10 14 l10 -14 l10 14 l8 -10 q16 10 14 42 q-10 -18 -26 -20 q-14 -2 -24 6 q-8 8 -18 6 q-14 -2 -22 8 z" fill="#5b3a1e"/>
+  <circle cx="70" cy="118" r="2" fill="#d9a07a"/><circle cx="78" cy="122" r="2" fill="#d9a07a"/><circle cx="130" cy="118" r="2" fill="#d9a07a"/><circle cx="122" cy="122" r="2" fill="#d9a07a"/>
+  <path d="M66 86 q12 -6 22 -2" stroke="#3b2314" stroke-width="3.5" fill="none" stroke-linecap="round"/><path d="M112 84 q10 -4 22 2" stroke="#3b2314" stroke-width="3.5" fill="none" stroke-linecap="round"/>
+  ${eyes}${mouth}</svg>`;}
+
+const DIALOG={
+ intro:[{who:'n',en:'New girl in Spanish class. Valentina, from Madrid. She only speaks Spanish, and the dance is Friday.'},
+  {who:'v',es:'¡Hola! Soy Valentina. ¿Hablas español?',en:"Hi! I'm Valentina. Do you speak Spanish?"},
+  {who:'l',mood:'nervous',es:'Eh... sí. Un poco.',en:'Uh... yes. A little.'},
+  {who:'v',es:'¡Perfecto! Conversamos en español, ¿no?',en:"Perfect! We'll chat in Spanish, right?"},
+  {who:'n',en:'Every correct answer fills her heart meter. Clear the five zones, then beat the Boss Test to ask her to the dance.'}],
+ z1:[{who:'v',es:'Me gusta la música y me gusta dibujar. No me gusta trabajar mucho.',en:"I like music and I like drawing. I don't like working a lot."},
+  {who:'v',es:'¿Y a ti? ¿Qué te gusta?',en:'And you? What do you like?'},
+  {who:'n',en:'Match what people say to what they like. Nail me / te and gusta / gustan and she knows you were listening.'}],
+ z2:[{who:'v',es:'¿Estudias contabilidad? Yo estudio psicología. Héctor y yo compramos libros en la librería.',en:'Do you study accounting? I study psychology. Héctor and I buy books at the bookstore.'},
+  {who:'n',en:'Text her back. Build each reply from the fragments. The right verb ending is the difference between smooth and awkward.'}],
+ z3:[{who:'v',es:'Mi primera clase es a las ocho de la mañana. Desayuno a las siete y miro televisión.',en:'My first class is at eight in the morning. I eat breakfast at seven and watch TV.'},
+  {who:'n',en:"She's telling you about her day, but you keep missing words. Pick the verb that makes sense, then type its form."}],
+ z4:[{who:'v',es:'¿Dónde estás? Yo estoy en la cafetería con Mónica. ¿Estás en la biblioteca?',en:"Where are you? I'm in the cafeteria with Mónica. Are you in the library?"},
+  {who:'n',en:'Find her. Sixty seconds, every form of estar, fast.'}],
+ z5:[{who:'v',es:'Estoy entre la ventana y la puerta. ¿Dónde está tu mochila?',en:"I'm between the window and the door. Where is your backpack?"},
+  {who:'l',mood:'nervous',es:'Mi mochila está... eh...',en:'My backpack is... uh...'},
+  {who:'n',en:'The seat next to her is open. Describe where things are with estar: the right form, the articles, and del.'}],
+ boss:[{who:'v',es:'El baile es el viernes. Paulina y Esteban bailan, Héctor y Mónica bailan...',en:'The dance is Friday. Paulina and Esteban are dancing, Héctor and Mónica are dancing...'},
+  {who:'v',es:'¿Y tú? ¿Bailas?',en:'And you? Do you dance?'},
+  {who:'n',en:'This is it. Score 90% on the full test and you get to ask her.'}],
+ win:[{who:'l',mood:'nervous',es:'Valentina... ¿deseas bailar conmigo en el baile?',en:'Valentina... do you want to dance with me at the dance?'},
+  {who:'v',mood:'love',es:'¡Sí! Me gusta bailar... y me gustas tú.',en:'Yes! I like dancing... and I like you.'},
+  {who:'l',mood:'love',es:'¡Excelente!',en:'Excellent!'},
+  {who:'n',en:'💖 She said yes. Now go get that A for real.'}],
+ almost:[{who:'v',mood:'neutral',es:'Casi... Estudia más y pregúntame otra vez.',en:'Almost... Study more and ask me again.'}],
+ no:[{who:'v',mood:'neutral',es:'Hmm. Necesitas estudiar más, ¿no?',en:"Hmm. You need to study more, right?"}]
+};
+const HUBLINES=[[0,'Hola.','Hi.','neutral'],[20,'¡Hola! ¿Estudias mucho?','Hi! Do you study a lot?','happy'],[45,'Me gusta conversar contigo.','I like talking with you.','happy'],[70,'¿Bailas el viernes?','Are you dancing on Friday?','happy'],[90,'Pregúntame...','Ask me...','happy']];
+let HUBLINE={};
+ZONES[0].intro=DIALOG.z1;ZONES[1].intro=DIALOG.z2;ZONES[2].intro=DIALOG.z3;ZONES[3].intro=DIALOG.z4;ZONES[4].intro=DIALOG.z5;ZONES[5].intro=DIALOG.boss;
+function scene(lines,onDone){let i=0;const box=$('#scene-box');$('#scene').classList.add('on');
+  const show=()=>{const ln=lines[i],who=ln.who;const svg=who==='v'?svgV(ln.mood):who==='l'?svgL(ln.mood):'';
+    box.innerHTML=`<div class="who ${who}">${svg}<div style="flex:1"><div class="name">${who==='v'?'VALENTINA':who==='l'?'LUCA':'NARRATOR'}</div><div class="bubble ${who==='n'?'n':who==='l'?'right':''}">${ln.es||ln.en}${ln.es?`<span class="tr">${ln.en}</span>`:''}</div></div></div><div class="row end mt"><button class="btn sm ghost" id="sc-skip">Skip</button>${ln.es?'<button class="btn sm" id="sc-say">🔊</button>':''}<button class="btn primary" id="sc-next">${i<lines.length-1?'Next →':'Continue'}</button></div>`;
+    if(ln.es)say([ln.es],null,who);$('#sc-next').onclick=()=>{i++;i<lines.length?show():end();};$('#sc-skip').onclick=end;const sb=$('#sc-say');if(sb)sb.onclick=()=>say([ln.es],null,who);};
+  const end=()=>{$('#scene').classList.remove('on');stopVoice();onDone&&onDone();};show();}
+function startStory(){P.intro=P.intro||{};if(P.intro.main){go('s-hub');say(['¡Hola, Luca!','¿Listo para jugar?']);return;}P.intro.main=1;save();scene(DIALOG.intro,()=>go('s-hub'));}
+function playIntro(zn){P.intro=P.intro||{};if(zn.intro&&!P.intro[zn.id]){P.intro[zn.id]=1;save();scene(zn.intro,zn.start);}else zn.start();}
+function replayIntro(id){const zn=ZONES.find(z=>z.id===id);scene(zn.intro);}
+function addHearts(n,quiet){P.hearts=Math.min(100,(P.hearts||0)+n);save();if(!quiet){const h=el('div','pop-heart','💗');h.style.left=(60+Math.random()*30)+'%';h.style.top='70px';document.body.appendChild(h);setTimeout(()=>h.remove(),1000);}if($('#s-hub').classList.contains('on'))renderValentina();}
+function renderValentina(){const h=P.hearts||0;const ln=P.ending?[100,'¡Me gustas tú!','I like you!','love']:HUBLINES.filter(x=>h>=x[0]).pop();HUBLINE={es:ln[1],en:ln[2]};
+  $('#hub-v').innerHTML=svgV(ln[3]);$('#hub-line').innerHTML=`${ln[1]}<span class="tr">${ln[2]}</span>`;$('#heartbar').style.width=h+'%';$('#hearttxt').textContent=h+'%';}
+function AUDIO_TEXTS_BY_VOICE(){const v=new Set(),l=new Set();Object.values(DIALOG).flat().forEach(x=>{if(x.es)(x.who==='v'?v:l).add(x.es);});HUBLINES.forEach(x=>v.add(x[1]));v.add('¡Me gustas tú!');return {v:[...v],l:[...l]};}
+$('#title-chars').innerHTML=svgL('nervous')+svgV('happy');
 go('s-title');
 </script>
 </body>
